@@ -219,6 +219,7 @@ Window::Window(QWidget *parent)
         int currentPage = settings.value(KEY_PAGE, 0).toInt()+1;
         pageSpinBox_->setValue(currentPage);//sends signal for loading page
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
+        setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
     }
     animationFinished_ = true;
 }
@@ -246,6 +247,8 @@ void Window::openFile(const QString &filePath)
         pageSpinBox_->setRange(1, document_->numPages());
         labelNbPages_->setText(tr("of %1").arg(document_->numPages()));
         pageSpinBox_->setValue(1);
+        //set window title
+        setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
     } else {
         QMessageBox::warning(this, tr("PDF Viewer - Failed to open file"),
                              tr("The specified file could not be opened"));
