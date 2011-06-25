@@ -59,8 +59,13 @@ public:
     }
     int currentIndex() const
     {
-        return currentPage_%BUFFER_LEN;
+        return currentIndex_;
     }
+    void setCurrentIndex(int currentIndex)
+    {
+        currentIndex_ = currentIndex;
+    }
+
     int numPages() const
     {
         return doc_->numPages();
@@ -80,16 +85,16 @@ public:
     }
     void showCurrentPageUpper()
     {
-        scrollAreas_[currentPage_%BUFFER_LEN]->verticalScrollBar()->setValue(0);
+        scrollAreas_[currentIndex_]->verticalScrollBar()->setValue(0);
     }
     void showCurrentPageLower()
     {
-        QScrollBar *scroll = scrollAreas_[currentPage_%BUFFER_LEN]->verticalScrollBar();
+        QScrollBar *scroll = scrollAreas_[currentIndex_]->verticalScrollBar();
         scroll->setValue(scroll->maximum());
     }
     void showCurrentPageVertical(int length)
     {
-        QScrollBar *scroll = scrollAreas_[currentPage_%BUFFER_LEN]->verticalScrollBar();
+        QScrollBar *scroll = scrollAreas_[currentIndex_]->verticalScrollBar();
         scroll->setValue(scroll->value()+length);
     }
 
@@ -110,6 +115,7 @@ private:
 
     Poppler::Document *doc_;
     int currentPage_;
+    int currentIndex_;
     unsigned int maxNumPages_;
     qreal scaleFactor_;
     QList<QImage*> images_;

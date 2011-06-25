@@ -34,9 +34,10 @@ void FileBrowser::setDir(const QString &path)
     QDir dir(path, nameFilter_, QDir::DirsFirst | QDir::Name, QDir::AllDirs | QDir::Files);
     if (!dir.isReadable()) {
         return;
-    }    
+    }
 
     basePath_ = dir.canonicalPath();
+    setWindowTitle("Current folder: " + basePath_);
 
     //load icons for future reuse    
     image_ = new QImage(thumbnailSize_, QImage::Format_RGB32);

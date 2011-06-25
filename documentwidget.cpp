@@ -43,6 +43,7 @@
 DocumentWidget::DocumentWidget(QWidget */*parent*/)
     : doc_(NULL),
       currentPage_(-1),
+      currentIndex_(-1),
       maxNumPages_(0),
       scaleFactor_(1.0),
       physicalDpiX_(0), physicalDpiY_(0)
@@ -74,7 +75,7 @@ void DocumentWidget::loadImage(unsigned int page)
         return;
     }
 
-    (*images_[page%BUFFER_LEN]) = doc_->page(page)
+    (*images_[currentIndex_]) = doc_->page(page)
                       ->renderToImage(scaleFactor_ * physicalDpiX_,
                                       scaleFactor_ * physicalDpiY_);
 }
@@ -83,15 +84,15 @@ void DocumentWidget::showPage(int page)
 {
     if (page != -1 && page != currentPage_ + 1) {
         currentPage_ = page - 1;
+        qDebug() << "currentPage: " << currentPage_;
+        currentIndex_ = (currentIndex_+1)%BUFFER_LEN;
         emit pageChanged(page);
     }
 
-    loadImage(currentPage_);
+    loadImage(currentPage_);//TODO: should be moved to secondary thread
 
-    qDebug() << "current page " << currentPage_;
-    QLabel *label = (QLabel*)scrollAreas_[currentPage_%BUFFER_LEN]->widget();
-    qDebug() << "after current page";
-    label->setPixmap(QPixmap::fromImage(*images_[currentPage_%BUFFER_LEN]));
+    QLabel *label = (QLabel*)scrollAreas_[currentIndex_]->widget();
+    label->setPixmap(QPixmap::fromImage(*images_[currentIndex_]));
 }
 
 bool DocumentWidget::setDocument(const QString &filePath)
@@ -115,6 +116,7 @@ void DocumentWidget::setPage(int page)
     {
         showPage(page);
     }
+    qDebug() << "setPage " << page;
 }
 
 void DocumentWidget::setScale(qreal scale)

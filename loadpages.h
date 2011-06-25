@@ -13,7 +13,7 @@ public:
     void run();
 
 public slots:
-    void renderPage(int page);
+    void loadPages(int currentPage);
 
 private:
     DocumentWidget *doc_;

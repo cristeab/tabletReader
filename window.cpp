@@ -101,6 +101,7 @@ Window::Window(QWidget *parent)
     slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
     slidingStacked_->setWrap(true);
     slidingStacked_->setVerticalMode(false);
+    //assuming that the first index of the sliding stacked widget is always zero
 
     gridLayout->addWidget(slidingStacked_, 0, 0, 1, 1);
 
@@ -169,7 +170,7 @@ Window::Window(QWidget *parent)
     connect(document_, SIGNAL(pageChanged(int)),
             pageSpinBox_, SLOT(setValue(int)));
     connect(document_, SIGNAL(pageChanged(int)),
-            loadPagesThread_, SLOT(renderPage(int)));
+            loadPagesThread_, SLOT(loadPages(int)));
     connect(scaleComboBox_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(scaleDocument(int)));
     connect(slidingStacked_, SIGNAL(animationFinished()),
@@ -208,25 +209,24 @@ Window::Window(QWidget *parent)
         return;//nothing to do
     }
     if (document_->setDocument(filePath))
-    {
+    {        
         lastFilePath_ = filePath;
         scaleComboBox_->setEnabled(true);
-        pageSpinBox_->setEnabled(true);
-        pageSpinBox_->setMinimum(1);
-        int numPages = document_->numPages();
-        pageSpinBox_->setMaximum(numPages);
+        pageSpinBox_->setEnabled(true);        
+        int numPages = document_->numPages();        
         labelNbPages_->setText(tr("/ %1  ").arg(numPages));
         int currentPage = settings.value(KEY_PAGE, 0).toInt()+1;
         pageSpinBox_->setValue(currentPage);//sends signal for loading page
+        pageSpinBox_->setRange(1, numPages);//avoid to resend the signal
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
         setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
+        qDebug() << "Loaded document: " << filePath;
     }
     animationFinished_ = true;
 }
 
 Window::~Window()
 {
-    delete loadPagesThread_;
 }
 
 void Window::showFileBrowser()
@@ -244,10 +244,10 @@ void Window::openFile(const QString &filePath)
         lastFilePath_ = filePath;
         scaleComboBox_->setEnabled(true);
         pageSpinBox_->setEnabled(true);
-        pageSpinBox_->setRange(1, document_->numPages());
-        labelNbPages_->setText(tr("of %1").arg(document_->numPages()));
+        int numPages = document_->numPages();
+        pageSpinBox_->setRange(1, numPages);
+        labelNbPages_->setText(tr("of %1").arg(numPages));
         pageSpinBox_->setValue(1);
-        //set window title
         setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
     } else {
         QMessageBox::warning(this, tr("PDF Viewer - Failed to open file"),

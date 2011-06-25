@@ -6,7 +6,6 @@ LoadPages::LoadPages(DocumentWidget* doc) :
     doc_(doc)
 {    
     start(QThread::IdlePriority);
-    QObject::moveToThread(this);
 }
 
 void LoadPages::run()
@@ -14,10 +13,9 @@ void LoadPages::run()
     exec();
 }
 
-void LoadPages::renderPage(int page)
+void LoadPages::loadPages(int currentPage)
 {
-    static int prevPage = 0;
-    qDebug() << "current page " << page;
-    qDebug() << "previous page" << prevPage;
-    prevPage = page;
+    static int prevPage = 0;    
+    prevPage = currentPage;
+    qDebug() << "LoadPages::loadPages(" << currentPage << ")";
 }
