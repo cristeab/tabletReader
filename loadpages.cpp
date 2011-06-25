@@ -15,7 +15,6 @@ void LoadPages::run()
 
 void LoadPages::loadPages(int currentPage)
 {
-    static int prevPage = 0;    
+    static int prevPage = -1;
     prevPage = currentPage;
-    qDebug() << "LoadPages::loadPages(" << currentPage << ")";
 }

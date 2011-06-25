@@ -210,16 +210,8 @@ Window::Window(QWidget *parent)
     }
     if (document_->setDocument(filePath))
     {        
-        lastFilePath_ = filePath;
-        scaleComboBox_->setEnabled(true);
-        pageSpinBox_->setEnabled(true);        
-        int numPages = document_->numPages();        
-        labelNbPages_->setText(tr("/ %1  ").arg(numPages));
-        int currentPage = settings.value(KEY_PAGE, 0).toInt()+1;
-        pageSpinBox_->setValue(currentPage);//sends signal for loading page
-        pageSpinBox_->setRange(1, numPages);//avoid to resend the signal
+        setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
-        setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
         qDebug() << "Loaded document: " << filePath;
     }
     animationFinished_ = true;
@@ -241,14 +233,7 @@ void Window::openFile(const QString &filePath)
     fileBrowser_->close();
     //open document
     if (document_->setDocument(filePath)) {
-        lastFilePath_ = filePath;
-        scaleComboBox_->setEnabled(true);
-        pageSpinBox_->setEnabled(true);
-        int numPages = document_->numPages();
-        pageSpinBox_->setRange(1, numPages);
-        labelNbPages_->setText(tr("of %1").arg(numPages));
-        pageSpinBox_->setValue(1);
-        setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
+        setupDocDisplay(1, filePath);
     } else {
         QMessageBox::warning(this, tr("PDF Viewer - Failed to open file"),
                              tr("The specified file could not be opened"));
@@ -447,4 +432,16 @@ void Window::closeEvent(QCloseEvent *evt)
 void Window::setAnimationFlag()
 {
     animationFinished_ = true;
+}
+
+void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
+{
+    lastFilePath_ = filePath;
+    scaleComboBox_->setEnabled(true);
+    pageSpinBox_->setEnabled(true);
+    int numPages = document_->numPages();
+    pageSpinBox_->setValue(pageNumber);//sends signal for loading document page
+    pageSpinBox_->setRange(1, numPages);
+    labelNbPages_->setText(tr("/ %1").arg(numPages));
+    setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
 }

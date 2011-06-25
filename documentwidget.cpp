@@ -86,7 +86,7 @@ void DocumentWidget::showPage(int page)
         currentPage_ = page - 1;
         qDebug() << "currentPage: " << currentPage_;
         currentIndex_ = (currentIndex_+1)%BUFFER_LEN;
-        emit pageChanged(page);
+        emit pageChanged(currentPage_);//TODO: should be send AFTER displaying the page
     }
 
     loadImage(currentPage_);//TODO: should be moved to secondary thread
