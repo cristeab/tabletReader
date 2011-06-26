@@ -10,6 +10,7 @@ class LoadPages : public QThread
 
 public:
     LoadPages(DocumentWidget* doc = NULL);
+    void preloadPage(unsigned int page);
     void run();
 
 public slots:

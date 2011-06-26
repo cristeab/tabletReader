@@ -208,11 +208,12 @@ Window::Window(QWidget *parent)
     {
         return;//nothing to do
     }
+    qDebug() << "Window::Window: Preparing to load an old document";
     if (document_->setDocument(filePath))
     {        
         setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
-        qDebug() << "Loaded document: " << filePath;
+        qDebug() << "Window::Window: Loaded document: " << filePath;
     }
     animationFinished_ = true;
 }
@@ -229,6 +230,7 @@ void Window::showFileBrowser()
 
 void Window::openFile(const QString &filePath)
 {
+    qDebug() << "Window::openFile: " << filePath;
     //close dialog
     fileBrowser_->close();
     //open document
@@ -366,6 +368,7 @@ bool Window::eventFilter(QObject *, QEvent *event)
 
 bool Window::showNextPage()
 {
+    qDebug() << "Window::showNextPage";
     if (false == document_->isLoaded() || false == animationFinished_)
     {
         return false;
@@ -390,6 +393,7 @@ bool Window::showNextPage()
 
 bool Window::showPrevPage()
 {
+    qDebug() << "Window::showPrevPage";
     if (false == document_->isLoaded() || false == animationFinished_)
     {
         return false;
@@ -439,9 +443,10 @@ void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
     lastFilePath_ = filePath;
     scaleComboBox_->setEnabled(true);
     pageSpinBox_->setEnabled(true);
+    loadPagesThread_->preloadPage(pageNumber-1);//preload first page(s) to be displayed
     int numPages = document_->numPages();
-    pageSpinBox_->setValue(pageNumber);//sends signal for loading document page
     pageSpinBox_->setRange(1, numPages);
+    pageSpinBox_->setValue(pageNumber);//sends signal for loading document page    
     labelNbPages_->setText(tr("/ %1").arg(numPages));
     setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
 }

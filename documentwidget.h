@@ -98,7 +98,7 @@ public:
         scroll->setValue(scroll->value()+length);
     }
 
-    void loadImage(unsigned int page);
+    void loadImage(int page, int currentIndex);
 
     enum {BUFFER_LEN = 3};
 

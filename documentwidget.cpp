@@ -68,28 +68,34 @@ qreal DocumentWidget::scale() const
     return scaleFactor_;
 }
 
-void DocumentWidget::loadImage(unsigned int page)
+void DocumentWidget::loadImage(int page, int index)
 {
-    if (page >= maxNumPages_)
+    qDebug() << "DocumentWidget::loadImage" << page << "," << index;
+    if (int(maxNumPages_) <= page || 0 > page)
     {
+        qDebug() << "DocumentWidget::loadImage: input page is out of bounds";
         return;
     }
 
-    (*images_[currentIndex_]) = doc_->page(page)
+    //transform input index into an index into the circular buffer
+    int cb_index = index%BUFFER_LEN;
+    if (0 > cb_index) {
+        cb_index += BUFFER_LEN;
+    }
+
+    (*images_[cb_index]) = doc_->page(page)
                       ->renderToImage(scaleFactor_ * physicalDpiX_,
                                       scaleFactor_ * physicalDpiY_);
 }
 
 void DocumentWidget::showPage(int page)
 {
+    qDebug() << "DocumentWidget::showPage " << page;
     if (page != -1 && page != currentPage_ + 1) {
-        currentPage_ = page - 1;
-        qDebug() << "currentPage: " << currentPage_;
+        currentPage_ = page - 1;        
         currentIndex_ = (currentIndex_+1)%BUFFER_LEN;
         emit pageChanged(currentPage_);//TODO: should be send AFTER displaying the page
     }
-
-    loadImage(currentPage_);//TODO: should be moved to secondary thread
 
     QLabel *label = (QLabel*)scrollAreas_[currentIndex_]->widget();
     label->setPixmap(QPixmap::fromImage(*images_[currentIndex_]));
@@ -112,11 +118,11 @@ bool DocumentWidget::setDocument(const QString &filePath)
 
 void DocumentWidget::setPage(int page)
 {
+    qDebug() << "DocumentWidget::setPage " << page;
     if (page != currentPage_ + 1)
     {
         showPage(page);
-    }
-    qDebug() << "setPage " << page;
+    }    
 }
 
 void DocumentWidget::setScale(qreal scale)
