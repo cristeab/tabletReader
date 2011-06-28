@@ -285,6 +285,7 @@ bool Window::eventFilter(QObject *, QEvent *event)
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);        
         if (0 > wheelEvent->delta())
         {
+            qDebug() << "Window::eventFilter: next";
             showNextPage();
             return true;//stop further processing
         }
@@ -424,6 +425,7 @@ void Window::showPageNumber(int currentPage, int nbPages)
 
 void Window::closeEvent(QCloseEvent *evt)
 {
+    qDebug() << "Window::closeEvent";
     if (!lastFilePath_.isEmpty()) {
         QSettings settings(ORGANIZATION, APPLICATION);
         settings.setValue(KEY_PAGE, document_->currentPage());
