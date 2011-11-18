@@ -43,11 +43,18 @@
 #include <QRectF>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QMutex>
+#include <QDebug>
 #include <poppler-qt4.h>
+
+class SlidingStackedWidget;
+class ProgressDlg;
 
 class DocumentWidget : public QObject
 {
     Q_OBJECT
+
+    friend class Worker;
 
 public:
     DocumentWidget(QWidget *parent = 0);
@@ -59,13 +66,8 @@ public:
     }
     int currentIndex() const
     {
-        return currentIndex_;
+        return currentPage_%CACHE_SIZE;
     }
-    void setCurrentIndex(int currentIndex)
-    {
-        currentIndex_ = currentIndex;
-    }
-
     int numPages() const
     {
         return doc_->numPages();
@@ -79,28 +81,51 @@ public:
         physicalDpiX_ = physicalDpiX;
         physicalDpiY_ = physicalDpiY;
     }
-    void setScrollArea(QScrollArea *scroll)
+    void setStackedWidget(SlidingStackedWidget *stackedWidget)
     {
-        scrollAreas_.append(scroll);
+        stackedWidget_ = stackedWidget;
     }
+
     void showCurrentPageUpper()
     {
-        scrollAreas_[currentIndex_]->verticalScrollBar()->setValue(0);
+        if (NULL != currentScrollArea_)
+        {
+            currentScrollArea_->verticalScrollBar()->setValue(0);
+        }
     }
     void showCurrentPageLower()
     {
-        QScrollBar *scroll = scrollAreas_[currentIndex_]->verticalScrollBar();
-        scroll->setValue(scroll->maximum());
+        if (NULL != currentScrollArea_)
+        {
+            QScrollBar *scroll = currentScrollArea_->verticalScrollBar();
+            scroll->setValue(scroll->maximum());
+        }
     }
-    void showCurrentPageVertical(int length)
+    void invalidateCache(void)
     {
-        QScrollBar *scroll = scrollAreas_[currentIndex_]->verticalScrollBar();
-        scroll->setValue(scroll->value()+length);
+        qDebug() << "DocumentWidget::invalidateCache";
+        cacheMutex_.lock();
+        for (int n = 0; n < CACHE_SIZE; ++n) {
+            pageCache_[n]->valid = false;
+        }
+        cacheMutex_.unlock();
+    }
+    bool invalidatePageCache(int page)
+    {
+        qDebug() << "DocumentWidget::invalidatePageCache" << page;
+        if (0 > page || maxNumPages_ <= page) {
+            qDebug() << "DocumentWidget::invalidatePageCache: nothing to do";
+            return false;//operation failed
+        }
+        cacheMutex_.lock();
+        pageCache_[page%CACHE_SIZE]->valid = false;
+        cacheMutex_.unlock();
+        return true;//operation successful
     }
 
-    void loadImage(int page, int currentIndex);
+    void loadImage(int page);
 
-    enum {BUFFER_LEN = 3};
+    enum {CACHE_SIZE = 3};
 
 public slots:
     bool setDocument(const QString &filePath);
@@ -108,7 +133,7 @@ public slots:
     void setScale(qreal scale);
 
 signals:
-    void pageChanged(int currentPage);
+    void pageLoaded(int currentPage);
 
 private:
     void showPage(int page = -1);    
@@ -116,10 +141,16 @@ private:
     Poppler::Document *doc_;
     int currentPage_;
     int currentIndex_;
-    unsigned int maxNumPages_;
+    int maxNumPages_;
     qreal scaleFactor_;
-    QList<QImage*> images_;
-    QList<QScrollArea*> scrollAreas_;    
+    struct ImageCache {
+        QImage image;
+        bool valid;
+    };
+    QList<ImageCache*> pageCache_;
+    QMutex cacheMutex_;//used to protect the access to image list
+    SlidingStackedWidget *stackedWidget_;
+    QScrollArea *currentScrollArea_;
     int physicalDpiX_;
     int physicalDpiY_;
 };

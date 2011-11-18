@@ -44,17 +44,18 @@
 #include <QTimer>
 #include <QElapsedTimer>
 #include "documentwidget.h"
-#include "loadpages.h"
+#include "worker.h"
 
 class QScrollArea;
 class QSpinBox;
 class QComboBox;
 class SlidingStackedWidget;
 class FileBrowser;
+class Flickable;
 
 class Window : public QMainWindow
 {
-    Q_OBJECT
+    Q_OBJECT    
 
 public:
     Window(QWidget *parent = NULL);
@@ -62,6 +63,9 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *);
+
+signals:
+    void updateCache(int);
 
 private slots:
     void showFileBrowser();
@@ -72,6 +76,7 @@ private slots:
     void increaseScale();
     void decreaseScale();
     void setAnimationFlag();
+    void togglePageDisplay();
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
@@ -97,10 +102,12 @@ private:
     QPoint endPoint_;
     QMenu *pagePopupMenu_;
     QMenu *commandPopupMenu_;
-    LoadPages *loadPagesThread_;
     bool animationFinished_;
     FileBrowser *fileBrowser_;
     QElapsedTimer pressTimer_;
+    Worker *worker_;
+    bool showPageNumber_;
+    Flickable *flickable_;
 };
 
 #endif

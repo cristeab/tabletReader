@@ -39,32 +39,46 @@
 #include <QApplication>
 #include <signal.h>
 #include "window.h"
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
+#include <QDir>
 
-Window *pWindow = NULL;
-
-void sig_term_hnd(int /*sig_num*/)
+static QTextStream ts;
+void debugMessageHandler(QtMsgType type, const char *msg)
 {
-    if (NULL != pWindow)
-    {
-        pWindow->close();
-    }
+        QString txt;
+        switch (type) {
+        case QtDebugMsg:
+                txt = QString("Debug: %1").arg(msg);
+                break;
+        case QtWarningMsg:
+                txt = QString("Warning: %1").arg(msg);
+        break;
+        case QtCriticalMsg:
+                txt = QString("Critical: %1").arg(msg);
+        break;
+        case QtFatalMsg:
+                txt = QString("Fatal: %1").arg(msg);
+                abort();
+        }
+        ts << QDateTime::currentDateTime().toMSecsSinceEpoch()
+           << " " << txt << endl;
 }
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    pWindow = new Window();
 
-    struct sigaction act;
-    memset(&act, 0, sizeof(act));
-    act.sa_handler = sig_term_hnd;
-    if (0 != sigaction(SIGTERM, &act, NULL))
-    {
-        return EXIT_FAILURE;
-    }
+    QFile outFile(QDir::homePath()+
+                  QDir::toNativeSeparators("/tabletReader.log"));
+    outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    ts.setDevice(&outFile);
+    qInstallMsgHandler(debugMessageHandler);
+    qDebug() << "\n\nSTART" << QDateTime::currentDateTime().toString(Qt::ISODate)
+             << "START\n";
 
-    pWindow->show();
-    int rc = app.exec();
-    delete pWindow;
-    return rc;
+    Window wnd;
+    wnd.show();
+    return app.exec();
 }

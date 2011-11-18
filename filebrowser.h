@@ -1,8 +1,11 @@
 #ifndef FILEBROWSER_H
 #define FILEBROWSER_H
 
-#include <QListWidget>
 #include <QDialog>
+
+class QListWidget;
+class QListWidgetItem;
+class Flickable;
 
 class FileBrowser : public QDialog
 {
@@ -23,12 +26,11 @@ private slots:
 private:
     QString nameFilter_;
     QString basePath_;
-    QString appDirPath_;
-    QHash<int, QImage> imageTable_;
-    enum {PDF, FOLDER, UP};
+    enum {PDF = 0, FOLDER, UP, IMG_TABLE_LEN};
+    QPixmap pixmapTable_[IMG_TABLE_LEN];
     static const QSize thumbnailSize_;
-    QImage *image_;
     QListWidget *listWidget_;
+    Flickable *flickable_;
 };
 
 #endif // FILEBROWSER_H

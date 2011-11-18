@@ -39,6 +39,7 @@
 #include <QtGui>
 #include <poppler-qt4.h>
 #include "documentwidget.h"
+#include "SlidingStackedWidget.h"
 
 DocumentWidget::DocumentWidget(QWidget */*parent*/)
     : doc_(NULL),
@@ -46,19 +47,22 @@ DocumentWidget::DocumentWidget(QWidget */*parent*/)
       currentIndex_(-1),
       maxNumPages_(0),
       scaleFactor_(1.0),
+      stackedWidget_(NULL),
+      currentScrollArea_(NULL),
       physicalDpiX_(0), physicalDpiY_(0)
 {
-    for (int n = 0; n < BUFFER_LEN; ++n)
+    for (int n = 0; n < CACHE_SIZE; ++n)
     {
-        images_.append(new QImage);
+        pageCache_.append(new ImageCache);
+        pageCache_[n]->valid = false;
     }
 }
 
 DocumentWidget::~DocumentWidget()
 {
-    for (int n = 0; n < images_.size(); ++n)
+    for (int n = 0; n < pageCache_.size(); ++n)
     {
-        delete images_[n];
+        delete pageCache_[n];
     }
     delete doc_;
 }
@@ -68,37 +72,61 @@ qreal DocumentWidget::scale() const
     return scaleFactor_;
 }
 
-void DocumentWidget::loadImage(int page, int index)
+void DocumentWidget::loadImage(int page)
 {
-    qDebug() << "DocumentWidget::loadImage" << page << "," << index;
-    if (int(maxNumPages_) <= page || 0 > page)
+    qDebug() << "DocumentWidget::loadImage begin";
+    if ((0 > page) || (maxNumPages_ <= page))
     {
-        qDebug() << "DocumentWidget::loadImage: input page is out of bounds";
+        qDebug() << "DocumentWidget::loadImage: nothing to do";
         return;
     }
 
-    //transform input index into an index into the circular buffer
-    int cb_index = index%BUFFER_LEN;
-    if (0 > cb_index) {
-        cb_index += BUFFER_LEN;
-    }
-
-    (*images_[cb_index]) = doc_->page(page)
+    pageCache_[page%CACHE_SIZE]->image = doc_->page(page)
                       ->renderToImage(scaleFactor_ * physicalDpiX_,
                                       scaleFactor_ * physicalDpiY_);
+    pageCache_[page%CACHE_SIZE]->valid = true;
+    qDebug() << "DocumentWidget::loadImage end";
 }
 
 void DocumentWidget::showPage(int page)
 {
-    qDebug() << "DocumentWidget::showPage " << page;
+    qDebug() << "DocumentWidget::showPage" << page;
     if (page != -1 && page != currentPage_ + 1) {
-        currentPage_ = page - 1;        
-        currentIndex_ = (currentIndex_+1)%BUFFER_LEN;
-        emit pageChanged(currentPage_);//TODO: should be send AFTER displaying the page
+        currentIndex_ = stackedWidget_->currentIndex();
+        if (NULL != currentScrollArea_) { //do nothing if no page has been loaded
+            if (currentPage_ < (page - 1)) {
+                ++currentIndex_;
+                if (CACHE_SIZE == currentIndex_) {
+                    currentIndex_ = 0;
+                }
+            } else {
+                --currentIndex_;
+                if (currentIndex_ < 0) {
+                    currentIndex_ = CACHE_SIZE-1;
+                }
+            }
+        }
+        currentPage_ = page - 1;
     }
 
-    QLabel *label = (QLabel*)scrollAreas_[currentIndex_]->widget();
-    label->setPixmap(QPixmap::fromImage(*images_[currentIndex_]));
+    //set image on the scroll area
+    currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next widget
+    QLabel *label = (QLabel*)currentScrollArea_->widget();
+    cacheMutex_.lock();
+    if (false == pageCache_[currentPage_%CACHE_SIZE]->valid) {
+        qDebug() << "DocumentWidget::showPage: invalid cache";
+        loadImage(currentPage_);//load image into memory
+        pageCache_[currentPage_%CACHE_SIZE]->valid = true;
+    } else {
+        qDebug() << "DocumentWidget::showPage: valid cache";
+    }
+    qDebug() << "DocumentWidget::showPage: begin setPixmap";
+    label->setPixmap(QPixmap::fromImage(pageCache_[currentPage_%CACHE_SIZE]->image));
+    qDebug() << "DocumentWidget::showPage: end setPixmap";
+    cacheMutex_.unlock();
+    //label->update();//TODO: use repaint
+
+    emit pageLoaded(page);//change value in the spin box
 }
 
 bool DocumentWidget::setDocument(const QString &filePath)
@@ -118,11 +146,10 @@ bool DocumentWidget::setDocument(const QString &filePath)
 
 void DocumentWidget::setPage(int page)
 {
-    qDebug() << "DocumentWidget::setPage " << page;
     if (page != currentPage_ + 1)
     {
         showPage(page);
-    }    
+    }
 }
 
 void DocumentWidget::setScale(qreal scale)

@@ -41,6 +41,8 @@
 #include "window.h"
 #include "SlidingStackedWidget.h"
 #include "filebrowser.h"
+#include "worker.h"
+#include "flickable.h"
 
 #define ORGANIZATION "home"
 #define APPLICATION "tabletReader"
@@ -49,7 +51,9 @@
 #define KEY_ZOOM_LEVEL "current_zoom_level"
 
 Window::Window(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      showPageNumber_(false),
+      flickable_(NULL)
 {
     //main window
     resize(858, 600);
@@ -77,14 +81,20 @@ Window::Window(QWidget *parent)
     //create main document
     document_ = new DocumentWidget(this);
 
+    //worker thread
+    worker_ = new Worker(centralWidget, document_);
+
     //create sliding animation
     slidingStacked_ = new SlidingStackedWidget(this);
+
+    //create flickable object
+    flickable_ = new Flickable(this);
 
     //init document pages and the sliding animation
     QScrollArea *scroll = NULL;
     QLabel *label = NULL;
     register int n = 0;
-    for (n = 0; n < DocumentWidget::BUFFER_LEN; ++n)
+    for (n = 0; n < DocumentWidget::CACHE_SIZE; ++n)
     {
         //scroll areas (one for each page)
         scroll = new QScrollArea(centralWidget);
@@ -93,15 +103,15 @@ Window::Window(QWidget *parent)
         label = new QLabel();//QLabel is used to display a page
         label->setAlignment(Qt::AlignCenter);
         scroll->setWidget(label);
-        scroll->installEventFilter(this);
-        document_->setScrollArea(scroll);//scroll areas used by the document widget
+        scroll->installEventFilter(this);        
         slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
+        flickable_->activateOn(scroll);
     }
+    document_->setStackedWidget(slidingStacked_);
     document_->setPhysicalDpi(label->physicalDpiX(), label->physicalDpiY());
     slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
     slidingStacked_->setWrap(true);
     slidingStacked_->setVerticalMode(false);
-    //assuming that the first index of the sliding stacked widget is always zero
 
     gridLayout->addWidget(slidingStacked_, 0, 0, 1, 1);
 
@@ -113,29 +123,25 @@ Window::Window(QWidget *parent)
     addToolBar(Qt::TopToolBarArea, toolBar_);
 
     //setup button icons
-    QString appDirPath = QCoreApplication::applicationDirPath();
     QToolButton *toolButton_open = new QToolButton(toolBar_);
-    QIcon iconOpen = QIcon(appDirPath+
-                           "/icons/Folder-Blue-Documents-icon.png");
+    QIcon iconOpen = QIcon(":/toolbar/icons/Folder-Blue-Documents-icon.png");
     toolButton_open->setIcon(iconOpen);
     toolButton_open->setText(tr("&Open"));
-    toolButton_open->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolButton_open->setToolButtonStyle(Qt::ToolButtonIconOnly);
     toolBar_->addWidget(toolButton_open);
 
     QToolButton *toolButton_fullScreen = new QToolButton(toolBar_);
-    QIcon iconFullScreen = QIcon(appDirPath+
-                                 "/icons/window-full-screen-icon.png");
+    QIcon iconFullScreen = QIcon(":/toolbar/icons/window-full-screen-icon.png");
     toolButton_fullScreen->setIcon(iconFullScreen);
     toolButton_fullScreen->setText(tr("&Full Screen"));
-    toolButton_fullScreen->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolButton_fullScreen->setToolButtonStyle(Qt::ToolButtonIconOnly);
     toolBar_->addWidget(toolButton_fullScreen);
 
     QToolButton *toolButton_exit = new QToolButton(toolBar_);
-    QIcon iconExit = QIcon(appDirPath+
-                           "/icons/Button-Close-icon.png");
+    QIcon iconExit = QIcon(":/toolbar/icons/Button-Close-icon.png");
     toolButton_exit->setIcon(iconExit);
     toolButton_exit->setText(tr("E&xit"));
-    toolButton_exit->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    toolButton_exit->setToolButtonStyle(Qt::ToolButtonIconOnly);
     toolBar_->addWidget(toolButton_exit);
 
     QLabel *pageLabel = new QLabel();
@@ -159,33 +165,27 @@ Window::Window(QWidget *parent)
     }
     toolBar_->addWidget(scaleComboBox_);
 
-    loadPagesThread_ = new LoadPages(document_);
-
     connect(toolButton_fullScreen, SIGNAL(clicked()), this, SLOT(fullScreen()));
     connect(toolButton_open, SIGNAL(clicked()), this, SLOT(showFileBrowser()));
     connect(toolButton_exit, SIGNAL(clicked()), this, SLOT(close()));
 
-    connect(pageSpinBox_, SIGNAL(valueChanged(int)),
-            document_, SLOT(setPage(int)));
-    connect(document_, SIGNAL(pageChanged(int)),
+    connect(document_, SIGNAL(pageLoaded(int)),
             pageSpinBox_, SLOT(setValue(int)));
-    connect(document_, SIGNAL(pageChanged(int)),
-            loadPagesThread_, SLOT(loadPages(int)));
     connect(scaleComboBox_, SIGNAL(currentIndexChanged(int)),
             this, SLOT(scaleDocument(int)));
     connect(slidingStacked_, SIGNAL(animationFinished()),
             this, SLOT(setAnimationFlag()));
-
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
     connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
+    connect(this, SIGNAL(updateCache(int)), worker_, SLOT(updateCache(int)));
 
     statusBar()->hide();
 
     //page number popup menu
     pagePopupMenu_ = new QMenu(this);
     pagePopupMenu_->setBackgroundRole(QPalette::ToolTipText);
-    pagePopupMenu_->installEventFilter(this);
-    pagePopupMenu_->addAction("");//this contains the page number
+    pagePopupMenu_->addAction("");
+    pagePopupMenu_->setEnabled(false);
 
     //command popup menu
     commandPopupMenu_ = new QMenu(this);
@@ -196,10 +196,15 @@ Window::Window(QWidget *parent)
     connect(act, SIGNAL(triggered()), this, SLOT(normalScreen()));
     act = commandPopupMenu_->addAction(iconExit, tr("Exit"));
     connect(act, SIGNAL(triggered()), this, SLOT(close()));
-    commandPopupMenu_->addAction(tr("Go To Page ..."));
-    //TODO: add goto page
-    commandPopupMenu_->addAction(tr("Zoom ..."));
-    //TODO: add zoom page
+    commandPopupMenu_->addAction(tr("Go To Page ..."));//TODO: add goto page
+    commandPopupMenu_->addAction(tr("Zoom ..."));//TODO: add zoom page
+    act = commandPopupMenu_->addAction(tr("Display Page Number"));
+    act->setCheckable(true);
+    connect(act, SIGNAL(triggered()), this, SLOT(togglePageDisplay()));
+    commandPopupMenu_->addAction(tr("About ..."));//TODO: add about dialog
+    commandPopupMenu_->setStyleSheet("QMenu {font-size: 20px; margin: 2px;}"
+                                     "QMenu::item {padding: 10px 25px 10px 20px;}"
+                                     "QMenu::item:selected {background-color: lightGray;}");
 
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
@@ -208,34 +213,39 @@ Window::Window(QWidget *parent)
     {
         return;//nothing to do
     }
-    qDebug() << "Window::Window: Preparing to load an old document";
     if (document_->setDocument(filePath))
-    {        
+    {
         setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
-        qDebug() << "Window::Window: Loaded document: " << filePath;
     }
     animationFinished_ = true;
+    fullScreen();
+
+    worker_->start();
 }
 
 Window::~Window()
 {
+    worker_->terminate();//terminate worker thread
+    while(true != worker_->isFinished());//wait thread to finish
 }
 
 void Window::showFileBrowser()
 {
+    qDebug() << "Window::showFileBrowser";
     fileBrowser_->setMinimumSize(size());
     fileBrowser_->show();
 }
 
 void Window::openFile(const QString &filePath)
 {
-    qDebug() << "Window::openFile: " << filePath;
+    qDebug() << "Window::openFile";
     //close dialog
     fileBrowser_->close();
     //open document
     if (document_->setDocument(filePath)) {
         setupDocDisplay(1, filePath);
+        slidingStacked_->slideInNext();
     } else {
         QMessageBox::warning(this, tr("PDF Viewer - Failed to open file"),
                              tr("The specified file could not be opened"));
@@ -244,23 +254,29 @@ void Window::openFile(const QString &filePath)
 
 void Window::fullScreen()
 {
+    qDebug() << "Window::fullScreen";
     showFullScreen();
     toolBar_->hide();
+    QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
 }
 
 void Window::normalScreen()
 {
+    qDebug() << "Window::normalScreen";
     showNormal();
     toolBar_->show();
+    QApplication::restoreOverrideCursor ();
 }
 
 void Window::scaleDocument(int index)
 {
+    qDebug() << "Window::scaleDocument";
     document_->setScale(scaleFactors_[index]);
 }
 
 void Window::increaseScale()
 {
+    qDebug() << "Window::increaseScale";
     int nextIdx = scaleComboBox_->currentIndex()+1;
     if (scaleComboBox_->count() > nextIdx)
     {
@@ -270,6 +286,7 @@ void Window::increaseScale()
 
 void Window::decreaseScale()
 {
+    qDebug() << "Window::decreaseScale";
     int prevIdx = scaleComboBox_->currentIndex()-1;
     if (0 <= prevIdx)
     {
@@ -285,7 +302,6 @@ bool Window::eventFilter(QObject *, QEvent *event)
         QWheelEvent *wheelEvent = static_cast<QWheelEvent*>(event);        
         if (0 > wheelEvent->delta())
         {
-            qDebug() << "Window::eventFilter: next";
             showNextPage();
             return true;//stop further processing
         }
@@ -306,16 +322,12 @@ bool Window::eventFilter(QObject *, QEvent *event)
         //process distance and direction
         int xDiff = qAbs(startPoint_.x() - endPoint_.x());
         int yDiff = qAbs(startPoint_.y() - endPoint_.y());
-        if (xDiff <= SWIPE_THRESHOLD && yDiff <= SWIPE_THRESHOLD) {
+        if (xDiff <= 2*SWIPE_THRESHOLD && yDiff <= SWIPE_THRESHOLD) {
             if (pressTimer_.isValid() && pressTimer_.elapsed() >= LONG_PRESS_TIMEOUT_MS) {
-                pressTimer_.invalidate();
-                if(isFullScreen()) {
-                    //enable full screen action
-                    commandPopupMenu_->actions()[1]->setEnabled(true);
-                } else {
-                    commandPopupMenu_->actions()[1]->setDisabled(true);
-                }
-                commandPopupMenu_->exec(QCursor::pos());
+                pressTimer_.invalidate();                   
+                commandPopupMenu_->actions()[1]->setEnabled(isFullScreen());//enable full screen action
+                commandPopupMenu_->exec(mapToGlobal(QPoint((width()-commandPopupMenu_->width())/2,
+                                                           (height()-commandPopupMenu_->height())/2)));
             }
         } else if( xDiff > yDiff )
         {            
@@ -329,10 +341,8 @@ bool Window::eventFilter(QObject *, QEvent *event)
                 //right swipe
                 showPrevPage();
             }
-        } else {
-            // vertical swipe detected
-            document_->showCurrentPageVertical(endPoint_.y()-startPoint_.y());
         }
+        // vertical swipe is handled by Flickable class
     } else if (QEvent::KeyPress == event->type())
     {
         // * handle key events
@@ -340,27 +350,22 @@ bool Window::eventFilter(QObject *, QEvent *event)
         if (Qt::Key_Escape == keyEvent->key() && isFullScreen())
         {
             normalScreen();
-            return true;
         }
         if (Qt::Key_PageDown == keyEvent->key())
         {
             showNextPage();
-            return true;
         }
         if (Qt::Key_PageUp == keyEvent->key())
         {
             showPrevPage();
-            return true;
         }
         if (Qt::Key_Home == keyEvent->key())
         {
             document_->setPage(1);
-            return true;
         }
         if (Qt::Key_End == keyEvent->key())
         {
             document_->setPage(document_->numPages());
-            return true;
         }
     }
 
@@ -386,6 +391,10 @@ bool Window::showNextPage()
         //make sure that the next page is ready
         animationFinished_ = false;
         slidingStacked_->slideInNext();
+        //emit signal to update the cache
+        if (true == document_->invalidatePageCache(currentPage)) {
+            emit updateCache(currentPage);//preload next page (page no starts from 0)
+        }
         return true;
     }
 
@@ -409,6 +418,10 @@ bool Window::showPrevPage()
         showPageNumber(currentPage, nbPages);
         animationFinished_ = false;
         slidingStacked_->slideInPrev();
+        //emit signal to update the cache
+        if (true == document_->invalidatePageCache(currentPage-2)) {
+            emit updateCache(currentPage-2);//preload previous page (page no starts from 0)
+        }
         return true;
     }
 
@@ -417,38 +430,60 @@ bool Window::showPrevPage()
 
 void Window::showPageNumber(int currentPage, int nbPages)
 {
+    if (false == showPageNumber_) {
+        return;//do nothing if show page number is not enabled
+    }
     QAction *act = pagePopupMenu_->actions()[0];
     act->setText(tr("page %1 of %2").arg(currentPage).arg(nbPages));
-    pagePopupMenu_->popup(mapToGlobal(QPoint(width(), height()))+QPoint(10-width(), -40));
+    pagePopupMenu_->popup(mapToGlobal(QPoint(width(),
+                                             height()))+QPoint(10-width(), -40));
     QTimer::singleShot(TOOLTIP_VISIBLE_TIME_MS, pagePopupMenu_, SLOT(hide()));
 }
 
 void Window::closeEvent(QCloseEvent *evt)
 {
-    qDebug() << "Window::closeEvent";
-    if (!lastFilePath_.isEmpty()) {
-        QSettings settings(ORGANIZATION, APPLICATION);
-        settings.setValue(KEY_PAGE, document_->currentPage());
-        settings.setValue(KEY_FILE_PATH, lastFilePath_);
-        settings.setValue(KEY_ZOOM_LEVEL, scaleComboBox_->currentIndex());
-        QWidget::closeEvent(evt);
-    }
+    qDebug() << "Window::closeEvent" << lastFilePath_ << document_->currentPage();    
+    QSettings settings(ORGANIZATION, APPLICATION);
+    settings.setValue(KEY_PAGE, document_->currentPage());
+    settings.setValue(KEY_FILE_PATH, lastFilePath_);
+    settings.setValue(KEY_ZOOM_LEVEL, scaleComboBox_->currentIndex());
+    QWidget::closeEvent(evt);
 }
 
 void Window::setAnimationFlag()
 {
+    qDebug() << "Window::setAnimationFlag";
     animationFinished_ = true;
+}
+
+void Window::togglePageDisplay()
+{
+    qDebug() << "Window::togglePageDisplay";
+    showPageNumber_ ^= true;
 }
 
 void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 {
+    qDebug() << "Window::setupDocDisplay" << pageNumber;
     lastFilePath_ = filePath;
     scaleComboBox_->setEnabled(true);
     pageSpinBox_->setEnabled(true);
-    loadPagesThread_->preloadPage(pageNumber-1);//preload first page(s) to be displayed
     int numPages = document_->numPages();
-    pageSpinBox_->setRange(1, numPages);
-    pageSpinBox_->setValue(pageNumber);//sends signal for loading document page    
+    document_->invalidateCache();
+    document_->setPage(pageNumber);
+    pageSpinBox_->setRange(1, numPages);    
     labelNbPages_->setText(tr("/ %1").arg(numPages));
     setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
+    //preload next page
+    if ((numPages-pageNumber) > 0)
+    {
+        qDebug() << "Window::setupDocDisplay: preload next page";
+        emit updateCache(pageNumber);//next page (index starts from 0)
+    }
+    //preload previous page
+    if (pageNumber > 1)
+    {
+        qDebug() << "Window::setupDocDisplay: preload previous page";
+        emit updateCache(pageNumber-2);//previous page (index starts from 0)
+    }
 }
