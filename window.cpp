@@ -130,6 +130,14 @@ Window::Window(QWidget *parent)
     toolButton_open->setToolButtonStyle(Qt::ToolButtonIconOnly);
     toolBar_->addWidget(toolButton_open);
 
+    //goto page icons
+    QToolButton *toolButton_goto = new QToolButton(toolBar_);
+    QIcon iconGoto = QIcon(":/toolbar/icons/goto-page-icon.png");
+    toolButton_goto->setIcon(iconGoto);
+    toolButton_goto->setText(tr("&Goto"));
+    toolButton_goto->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    toolBar_->addWidget(toolButton_goto);
+
     QToolButton *toolButton_fullScreen = new QToolButton(toolBar_);
     QIcon iconFullScreen = QIcon(":/toolbar/icons/window-full-screen-icon.png");
     toolButton_fullScreen->setIcon(iconFullScreen);
@@ -167,6 +175,7 @@ Window::Window(QWidget *parent)
 
     connect(toolButton_fullScreen, SIGNAL(clicked()), this, SLOT(fullScreen()));
     connect(toolButton_open, SIGNAL(clicked()), this, SLOT(showFileBrowser()));
+    connect(toolButton_goto, SIGNAL(clicked()), this, SLOT(gotoPage()));
     connect(toolButton_exit, SIGNAL(clicked()), this, SLOT(close()));
 
     connect(document_, SIGNAL(pageLoaded(int)),
@@ -235,6 +244,11 @@ void Window::showFileBrowser()
     qDebug() << "Window::showFileBrowser";
     fileBrowser_->setMinimumSize(size());
     fileBrowser_->show();
+}
+
+void Window::gotoPage()
+{
+    qDebug() << "Window::gotoPage";
 }
 
 void Window::openFile(const QString &filePath)

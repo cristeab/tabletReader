@@ -69,7 +69,8 @@ signals:
 
 private slots:
     void showFileBrowser();
-    void openFile(const QString &filePath);
+    void gotoPage();
+    void openFile(const QString &filePath);    
     void fullScreen();
     void normalScreen();
     void scaleDocument(int index);
