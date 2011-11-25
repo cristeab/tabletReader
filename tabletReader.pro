@@ -12,6 +12,7 @@ SOURCES       = documentwidget.cpp \
     flickable.cpp \
     worker.cpp
 
+QT += declarative
 INCLUDEPATH  += /usr/include/poppler/qt4
 LIBS         += -L/usr/lib -lpoppler-qt4
 

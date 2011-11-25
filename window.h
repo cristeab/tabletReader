@@ -51,6 +51,7 @@ class QSpinBox;
 class QComboBox;
 class SlidingStackedWidget;
 class FileBrowser;
+class QDeclarativeView;
 class Flickable;
 
 class Window : public QMainWindow
@@ -105,6 +106,7 @@ private:
     QMenu *commandPopupMenu_;
     bool animationFinished_;
     FileBrowser *fileBrowser_;
+    QDeclarativeView *gotoPage_;
     QElapsedTimer pressTimer_;
     Worker *worker_;
     bool showPageNumber_;

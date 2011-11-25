@@ -38,6 +38,7 @@
 
 #include <QtGui>
 #include <QScrollArea>
+#include <QtDeclarative/QDeclarativeView>
 #include "window.h"
 #include "SlidingStackedWidget.h"
 #include "filebrowser.h"
@@ -52,7 +53,8 @@
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
-      showPageNumber_(false),
+      gotoPage_(NULL),
+      showPageNumber_(false),      
       flickable_(NULL)
 {
     //main window
@@ -248,7 +250,30 @@ void Window::showFileBrowser()
 
 void Window::gotoPage()
 {
-    qDebug() << "Window::gotoPage";
+    if ((NULL != gotoPage_) && (true == gotoPage_->isVisible()))
+    {
+        qDebug() << "Window::gotoPage: close";
+        if (true == gotoPage_->close())
+        {
+            qDebug() << "widget closed";
+            gotoPage_ = NULL;
+        }
+        //document_->setPage(0);
+    } else {
+        qDebug() << "Window::gotoPage: show";
+        if (NULL == gotoPage_)
+        {
+            gotoPage_ = new QDeclarativeView(this);
+            gotoPage_->setSource(QUrl::fromLocalFile("qml/calculator.qml"));
+            gotoPage_->setStyleSheet("background:transparent");
+            gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
+            gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
+            gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
+            gotoPage_->move((width()-gotoPage_->width())/2, (height()-gotoPage_->height())/2);
+            connect((const QObject*)(gotoPage_->engine()), SIGNAL(quit()), this, SLOT(gotoPage()));
+            gotoPage_->show();
+        }
+    }
 }
 
 void Window::openFile(const QString &filePath)
