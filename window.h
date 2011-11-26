@@ -70,7 +70,8 @@ signals:
 
 private slots:
     void showFileBrowser();
-    void gotoPage();
+    void showGotoPage();
+    void closeGotoPage(const QString &pageNb);
     void openFile(const QString &filePath);    
     void fullScreen();
     void normalScreen();

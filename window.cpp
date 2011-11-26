@@ -177,7 +177,7 @@ Window::Window(QWidget *parent)
 
     connect(toolButton_fullScreen, SIGNAL(clicked()), this, SLOT(fullScreen()));
     connect(toolButton_open, SIGNAL(clicked()), this, SLOT(showFileBrowser()));
-    connect(toolButton_goto, SIGNAL(clicked()), this, SLOT(gotoPage()));
+    connect(toolButton_goto, SIGNAL(clicked()), this, SLOT(showGotoPage()));
     connect(toolButton_exit, SIGNAL(clicked()), this, SLOT(close()));
 
     connect(document_, SIGNAL(pageLoaded(int)),
@@ -248,31 +248,39 @@ void Window::showFileBrowser()
     fileBrowser_->show();
 }
 
-void Window::gotoPage()
+void Window::showGotoPage()
 {
-    if ((NULL != gotoPage_) && (true == gotoPage_->isVisible()))
+    qDebug() << "Window::showGotoPage";
+    if (NULL == gotoPage_)
     {
-        qDebug() << "Window::gotoPage: close";
-        if (true == gotoPage_->close())
+        gotoPage_ = new QDeclarativeView(this);
+        gotoPage_->setSource(QUrl::fromLocalFile("qml/calculator.qml"));
+        gotoPage_->setStyleSheet("background:transparent");
+        gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
+        gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
+        gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
+        gotoPage_->move((width()-gotoPage_->width())/2, (height()-gotoPage_->height())/2);
+        QObject *pDisp = gotoPage_->rootObject()->findChild<QObject*>("disp");
+        if (NULL != pDisp)
         {
-            qDebug() << "widget closed";
+            connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
+            gotoPage_->show();
+        } else {
+            qDebug() << "cannot get disp object";
+            delete gotoPage_;
             gotoPage_ = NULL;
         }
-        //document_->setPage(0);
-    } else {
-        qDebug() << "Window::gotoPage: show";
-        if (NULL == gotoPage_)
-        {
-            gotoPage_ = new QDeclarativeView(this);
-            gotoPage_->setSource(QUrl::fromLocalFile("qml/calculator.qml"));
-            gotoPage_->setStyleSheet("background:transparent");
-            gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
-            gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
-            gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
-            gotoPage_->move((width()-gotoPage_->width())/2, (height()-gotoPage_->height())/2);
-            connect((const QObject*)(gotoPage_->engine()), SIGNAL(quit()), this, SLOT(gotoPage()));
-            gotoPage_->show();
-        }
+    }
+}
+
+void Window::closeGotoPage(const QString &pageNb)
+{
+    qDebug() << "Window::closeGotoPage: " << pageNb;
+    if ((NULL != gotoPage_) && (true == gotoPage_->close()))
+    {
+        qDebug() << "widget closed";
+        gotoPage_ = NULL;
+        document_->setPage(pageNb.toInt());
     }
 }
 
