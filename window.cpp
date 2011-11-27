@@ -280,7 +280,16 @@ void Window::closeGotoPage(const QString &pageNb)
     {
         qDebug() << "widget closed";
         gotoPage_ = NULL;
-        document_->setPage(pageNb.toInt());
+        //set current page
+        int newPageNb = pageNb.toInt();
+        int currentPage = document_->currentPage();
+        gotoPage(newPageNb, currentPage);
+        if (currentPage < newPageNb)
+        {
+            slidingStacked_->slideInNext();
+        } else if (currentPage > newPageNb) {
+            slidingStacked_->slideInPrev();
+        }
     }
 }
 
@@ -515,22 +524,30 @@ void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
     lastFilePath_ = filePath;
     scaleComboBox_->setEnabled(true);
     pageSpinBox_->setEnabled(true);
-    int numPages = document_->numPages();
-    document_->invalidateCache();
-    document_->setPage(pageNumber);
+    int numPages = document_->numPages();    
     pageSpinBox_->setRange(1, numPages);    
     labelNbPages_->setText(tr("/ %1").arg(numPages));
     setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
+    //set current page
+    gotoPage(pageNumber, numPages);
+}
+
+void Window::gotoPage(int pageNb, int numPages)
+{
+    qDebug() << "Window::gotoPage";
+    //set current page
+    document_->invalidateCache();
+    document_->setPage(pageNb);
     //preload next page
-    if ((numPages-pageNumber) > 0)
+    if ((numPages-pageNb) > 0)
     {
-        qDebug() << "Window::setupDocDisplay: preload next page";
-        emit updateCache(pageNumber);//next page (index starts from 0)
+        qDebug() << "Window::gotoPage: preload next page";
+        emit updateCache(pageNb);//next page (index starts from 0)
     }
     //preload previous page
-    if (pageNumber > 1)
+    if (pageNb > 1)
     {
-        qDebug() << "Window::setupDocDisplay: preload previous page";
-        emit updateCache(pageNumber-2);//previous page (index starts from 0)
+        qDebug() << "Window::gotoPage: preload previous page";
+        emit updateCache(pageNb-2);//previous page (index starts from 0)
     }
 }

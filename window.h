@@ -92,6 +92,7 @@ private:
     bool showPrevPage();
     void showPageNumber(int currentPage, int nbPages);
     void setupDocDisplay(unsigned int pageNumber, const QString &filePath);
+    void gotoPage(int pageNb, int numPages);
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;

@@ -110,7 +110,7 @@ void DocumentWidget::showPage(int page)
     }
 
     //set image on the scroll area
-    currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next widget
+    currentScrollArea_ = (QScrollArea*)stackedWidget_->widget(currentIndex_);//get next/prev widget
     QLabel *label = (QLabel*)currentScrollArea_->widget();
     cacheMutex_.lock();
     if (false == pageCache_[currentPage_%CACHE_SIZE]->valid) {
