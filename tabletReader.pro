@@ -3,14 +3,16 @@ HEADERS       = documentwidget.h \
     SlidingStackedWidget.h \
     filebrowser.h \
     flickable.h \
-    worker.h
+    worker.h \
+    logger.h
 SOURCES       = documentwidget.cpp \
                 main.cpp \
                 window.cpp \
     SlidingStackedWidget.cpp \
     filebrowser.cpp \
     flickable.cpp \
-    worker.cpp
+    worker.cpp \
+    logger.cpp
 
 QT += declarative
 INCLUDEPATH  += /usr/include/poppler/qt4

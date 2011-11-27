@@ -37,46 +37,14 @@
 ****************************************************************************/
 
 #include <QApplication>
-#include <signal.h>
 #include "window.h"
-#include <QFile>
-#include <QTextStream>
-#include <QDateTime>
-#include <QDir>
-
-static QTextStream ts;
-void debugMessageHandler(QtMsgType type, const char *msg)
-{
-    QString txt;
-    switch (type) {
-    case QtDebugMsg:
-        txt = QString("Debug: %1").arg(msg);
-        break;
-    case QtWarningMsg:
-        txt = QString("Warning: %1").arg(msg);
-        break;
-    case QtCriticalMsg:
-        txt = QString("Critical: %1").arg(msg);
-        break;
-    case QtFatalMsg:
-        txt = QString("Fatal: %1").arg(msg);
-        abort();
-    }
-    ts << QDateTime::currentDateTime().toMSecsSinceEpoch()
-       << " " << txt << endl;
-}
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QFile outFile(QDir::homePath()+
-                  QDir::toNativeSeparators("/tabletReader.log"));
-    outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-    ts.setDevice(&outFile);
-    qInstallMsgHandler(debugMessageHandler);
-    qDebug() << "\n\nSTART" << QDateTime::currentDateTime().toString(Qt::ISODate)
-             << "START\n";
+    Logger log("tabletReader.log");
 
     Window wnd;
     wnd.show();
