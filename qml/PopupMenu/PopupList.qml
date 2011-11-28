@@ -1,6 +1,6 @@
 import QtQuick 1.0
 
-// Accordion list
+// Popup list
 Item {
     id: container
 
@@ -27,7 +27,7 @@ Item {
 
     signal itemClicked(string itemTitle)
 
-    AccordionListModel {
+    PopupListModel {
         id: mainModel
     }
 

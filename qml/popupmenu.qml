@@ -3,10 +3,9 @@ import "PopupMenu" as Comp
 
 Item {
     id: container
-    width: 360
-    height: 640
-
-    Comp.AccordionList {
+    width: 200
+    height: 450 
+   Comp.PopupList {
         id: list
         anchors.fill: parent
     }
