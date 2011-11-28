@@ -49,7 +49,7 @@ Item {
         Item {
             id: delegate
             // Modify appearance from these properties
-            property int itemHeight: 64
+            property int itemHeight: 54
 
             // Flag to indicate if this delegate is expanded
             property bool expanded: false

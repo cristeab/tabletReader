@@ -40,4 +40,8 @@ OTHER_FILES += \
     qml/Core/images/button-.png \
     qml/Core/Display.qml \
     qml/Core/calculator.js \
-    qml/Core/Button.qml
+    qml/Core/Button.qml \
+    qml/popupmenu.qml \
+    qml/PopupMenu/PopupListModel.qml \
+    qml/PopupMenu/PopupList.qml \
+    qml/PopupMenu/ListItem.qml

@@ -72,6 +72,8 @@ private slots:
     void showFileBrowser();
     void showGotoPage();
     void closeGotoPage(const QString &pageNb);
+    void showCommandPopupMenu();
+    void closeCommandPopupMenu(const QString &cmd);
     void openFile(const QString &filePath);    
     void fullScreen();
     void normalScreen();
@@ -104,11 +106,11 @@ private:
     QComboBox *scaleComboBox_;
     QPoint startPoint_;
     QPoint endPoint_;
-    QMenu *pagePopupMenu_;
-    QMenu *commandPopupMenu_;
+    QMenu *pagePopupMenu_;    
     bool animationFinished_;
     FileBrowser *fileBrowser_;
     QDeclarativeView *gotoPage_;
+    QDeclarativeView *commandPopupMenu_;
     QElapsedTimer pressTimer_;
     Worker *worker_;
     bool showPageNumber_;

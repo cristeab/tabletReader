@@ -54,6 +54,7 @@
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
       gotoPage_(NULL),
+      commandPopupMenu_(NULL),
       showPageNumber_(false),      
       flickable_(NULL)
 {
@@ -198,25 +199,6 @@ Window::Window(QWidget *parent)
     pagePopupMenu_->addAction("");
     pagePopupMenu_->setEnabled(false);
 
-    //command popup menu
-    commandPopupMenu_ = new QMenu(this);
-    QAction *act = commandPopupMenu_->addAction(iconOpen, tr("Open ..."));
-    connect(act, SIGNAL(triggered()), this, SLOT(showFileBrowser()));
-    act = commandPopupMenu_->addAction(iconFullScreen, tr("Normal Screen"));
-    act->setDisabled(true);
-    connect(act, SIGNAL(triggered()), this, SLOT(normalScreen()));
-    act = commandPopupMenu_->addAction(iconExit, tr("Exit"));
-    connect(act, SIGNAL(triggered()), this, SLOT(close()));
-    commandPopupMenu_->addAction(tr("Go To Page ..."));//TODO: add goto page
-    commandPopupMenu_->addAction(tr("Zoom ..."));//TODO: add zoom page
-    act = commandPopupMenu_->addAction(tr("Display Page Number"));
-    act->setCheckable(true);
-    connect(act, SIGNAL(triggered()), this, SLOT(togglePageDisplay()));
-    commandPopupMenu_->addAction(tr("About ..."));//TODO: add about dialog
-    commandPopupMenu_->setStyleSheet("QMenu {font-size: 20px; margin: 2px;}"
-                                     "QMenu::item {padding: 10px 25px 10px 20px;}"
-                                     "QMenu::item:selected {background-color: lightGray;}");
-
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
     QString filePath;
@@ -299,6 +281,57 @@ void Window::closeGotoPage(const QString &pageNb)
             }
         } else {
             qDebug() << "nothing to do";
+        }
+    }
+}
+
+void Window::showCommandPopupMenu()
+{
+    qDebug() << "Window::showCommandPopupMenu";
+    if (NULL == commandPopupMenu_)
+    {
+        commandPopupMenu_ = new QDeclarativeView(this);
+        commandPopupMenu_->setSource(QUrl("qrc:/qml/qml/popupmenu.qml"));
+        commandPopupMenu_->setStyleSheet("background:transparent");
+        commandPopupMenu_->setAttribute(Qt::WA_TranslucentBackground);
+        commandPopupMenu_->setAttribute(Qt::WA_DeleteOnClose);
+        commandPopupMenu_->setWindowFlags(Qt::FramelessWindowHint);
+        commandPopupMenu_->move((width()-commandPopupMenu_->width())/2, (height()-commandPopupMenu_->height())/2);
+        QObject *pDisp = commandPopupMenu_->rootObject()->findChild<QObject*>("popuplist");
+        if (NULL != pDisp)
+        {
+            connect(pDisp, SIGNAL(itemClicked(QString)), this, SLOT(closeCommandPopupMenu(QString)));
+            commandPopupMenu_->show();
+        } else {
+            qDebug() << "cannot get popuplist object";
+            delete commandPopupMenu_;
+            commandPopupMenu_ = NULL;
+        }
+    }
+}
+
+void Window::closeCommandPopupMenu(const QString &cmd)
+{
+    qDebug() << "Window::closeCommandPopupMenu" << cmd;
+    if ((NULL != commandPopupMenu_) && (true == commandPopupMenu_->close()))
+    {
+        qDebug() << "widget closed";
+        commandPopupMenu_ = NULL;
+        if (QString("Open ...") == cmd)
+        {
+            showFileBrowser();
+        } else if (QString("Go To Page ...") == cmd)
+        {
+            showGotoPage();
+        } else if (QString("Show Page Number") == cmd)
+        {
+            togglePageDisplay();
+        } else if (QString("About ...") == cmd)
+        {
+            qDebug() << "about command";
+        } else if (QString("Exit") == cmd)
+        {
+            close();//TODO: close is not done properly
         }
     }
 }
@@ -391,12 +424,10 @@ bool Window::eventFilter(QObject *, QEvent *event)
         if (xDiff <= 2*SWIPE_THRESHOLD && yDiff <= SWIPE_THRESHOLD) {
             if (pressTimer_.isValid() && pressTimer_.elapsed() >= LONG_PRESS_TIMEOUT_MS) {
                 pressTimer_.invalidate();                   
-                commandPopupMenu_->actions()[1]->setEnabled(isFullScreen());//enable full screen action
-                commandPopupMenu_->exec(mapToGlobal(QPoint((width()-commandPopupMenu_->width())/2,
-                                                           (height()-commandPopupMenu_->height())/2)));
+                showCommandPopupMenu();
             }
         } else if( xDiff > yDiff )
-        {            
+        {
             // horizontal swipe detected, now find direction
             if( startPoint_.x() > endPoint_.x() )
             {

@@ -20,5 +20,13 @@
         <file>qml/Core/images/button-green.png</file>
         <file>qml/Core/images/button-purple.png</file>
         <file>qml/Core/images/display.png</file>
+        <file>qml/popupmenu.qml</file>
+        <file>qml/PopupMenu/ListItem.qml</file>
+        <file>qml/PopupMenu/PopupList.qml</file>
+        <file>qml/PopupMenu/PopupListModel.qml</file>
+        <file>qml/PopupMenu/gfx/list_item.png</file>
+        <file>qml/PopupMenu/gfx/list_item_active.png</file>
+        <file>qml/PopupMenu/gfx/list_item_pressed.png</file>
+        <file>qml/PopupMenu/gfx/list_item_selected.png</file>
     </qresource>
 </RCC>
