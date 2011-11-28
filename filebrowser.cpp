@@ -4,7 +4,7 @@
 #include <QGridLayout>
 #include <QScrollBar>
 #include <QListWidgetItem>
-#include <flickable.h>
+#include "flickable.h"
 #include <QDebug>
 
 const QSize FileBrowser::thumbnailSize_ = QSize(50, 50);
