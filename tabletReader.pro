@@ -14,9 +14,10 @@ SOURCES       = documentwidget.cpp \
     worker.cpp \
     logger.cpp
 
-QT += declarative
-INCLUDEPATH  += /usr/include/poppler/qt4
-LIBS         += -L/usr/lib -lpoppler-qt4
+QT           +=     declarative
+INCLUDEPATH  +=     /usr/include/poppler/qt4
+LIBS         +=     -L/usr/lib -lpoppler-qt4
+DEFINES      +=     DEBUG
 
 #install
 target.path = $$[install_prefix]/bin
@@ -29,3 +30,14 @@ INSTALLS += target icon desktop
 
 RESOURCES += \
     images.qrc
+
+OTHER_FILES += \
+    qml/gotopage.qml \
+    qml/Core/images/display.png \
+    qml/Core/images/button-purple.png \
+    qml/Core/images/button-green.png \
+    qml/Core/images/button-blue.png \
+    qml/Core/images/button-.png \
+    qml/Core/Display.qml \
+    qml/Core/calculator.js \
+    qml/Core/Button.qml

@@ -47,7 +47,6 @@ Rectangle {
     id: window
 
     width: 240; height: 300
-    //color: "#282828"
     color: "transparent"
 
     function doOp(operation) { CalcEngine.doOperation(operation) }
@@ -62,8 +61,30 @@ Rectangle {
 
             anchors { fill: parent; topMargin: 6; bottomMargin: 6; leftMargin: 6; rightMargin: 6 }
 
+            Rectangle {
+                width: box.width-3
+                height: 20
+                //color: "white"
+                smooth: true
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: "white" }
+                    GradientStop { position: 1.0; color: "darkgray" }
+                }
+                Text {
+                    id: titledarkblue
+                    width: box.width
+                    height: 16
+                    color:  "darkblue"
+                    text: "GoTo Page"
+                    horizontalAlignment: Text.AlignHCenter
+                    font.bold: true
+                    font.pixelSize: 16
+                }
+            }
+
             Display {
                 id: display
+                objectName: "disp"
                 width: box.width-3
                 height: 56
                 text: ""
@@ -72,7 +93,7 @@ Rectangle {
             Column {
                 id: column; spacing: 6
 
-                property real h: ((box.height - 60) / 4) - ((spacing * (4 - 1)) / 4)
+                property real h: ((box.height - 90) / 4) - ((spacing * (4 - 1)) / 4)
                 property real w: (box.width / 4) - ((spacing * (4 - 1)) / 4)
 
                 Grid {

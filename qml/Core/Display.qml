@@ -44,6 +44,7 @@ import QtQuick 1.0
 BorderImage {
     id: image
 
+    signal setPage(string value)
     property alias text : displayText.text
     property alias currentOperation : operationText
 

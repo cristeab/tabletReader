@@ -10,4 +10,15 @@
         <file>icons/Button-Upload-icon.png</file>
         <file>icons/My-Ebooks-icon.png</file>
     </qresource>
+    <qresource prefix="/qml">
+        <file>qml/gotopage.qml</file>
+        <file>qml/Core/Button.qml</file>
+        <file>qml/Core/calculator.js</file>
+        <file>qml/Core/Display.qml</file>
+        <file>qml/Core/images/button-.png</file>
+        <file>qml/Core/images/button-blue.png</file>
+        <file>qml/Core/images/button-green.png</file>
+        <file>qml/Core/images/button-purple.png</file>
+        <file>qml/Core/images/display.png</file>
+    </qresource>
 </RCC>

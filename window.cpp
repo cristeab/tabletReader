@@ -230,7 +230,9 @@ Window::Window(QWidget *parent)
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
     }
     animationFinished_ = true;
+#ifndef DEBUG
     fullScreen();
+#endif
 
     worker_->start();
 }
@@ -254,7 +256,7 @@ void Window::showGotoPage()
     if (NULL == gotoPage_)
     {
         gotoPage_ = new QDeclarativeView(this);
-        gotoPage_->setSource(QUrl::fromLocalFile("qml/calculator.qml"));
+        gotoPage_->setSource(QUrl("qrc:/qml/qml/gotopage.qml"));
         gotoPage_->setStyleSheet("background:transparent");
         gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
         gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
@@ -281,14 +283,22 @@ void Window::closeGotoPage(const QString &pageNb)
         qDebug() << "widget closed";
         gotoPage_ = NULL;
         //set current page
-        int newPageNb = pageNb.toInt();
-        int currentPage = document_->currentPage();
-        gotoPage(newPageNb, currentPage);
-        if (currentPage < newPageNb)
+        bool ok = false;
+        int newPageNb = pageNb.toInt(&ok);
+        int currentPage = document_->currentPage()+1;
+        int numPages = document_->numPages();
+        if ((true == ok) && (newPageNb != currentPage) &&
+                (0 != newPageNb) && (newPageNb <= numPages))
         {
-            slidingStacked_->slideInNext();
-        } else if (currentPage > newPageNb) {
-            slidingStacked_->slideInPrev();
+            gotoPage(newPageNb, numPages);
+            if (currentPage < newPageNb)
+            {
+                slidingStacked_->slideInNext();
+            } else {
+                slidingStacked_->slideInPrev();
+            }
+        } else {
+            qDebug() << "nothing to do";
         }
     }
 }

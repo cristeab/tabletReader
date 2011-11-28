@@ -17,10 +17,11 @@ function doOperation(op) {
     lastOp = op
 
     if (op == "OK") {
-        Qt.quit();
+        display.setPage(display.text)
+        console.debug("OK")
     } else if (op == "DEL") {
         display.text = ""
         lastOp = ""
+        console.debug("DEL")
     }
 }
-
