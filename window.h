@@ -70,6 +70,7 @@ signals:
 
 private slots:
     void showFileBrowser();
+    void closeFileBrowser(const QString &doc);
     void showGotoPage();
     void closeGotoPage(const QString &pageNb);
     void showCommandPopupMenu();
@@ -108,7 +109,7 @@ private:
     QPoint endPoint_;
     QMenu *pagePopupMenu_;    
     bool animationFinished_;
-    FileBrowser *fileBrowser_;
+    QDeclarativeView *fileBrowser_;
     QDeclarativeView *gotoPage_;
     QDeclarativeView *commandPopupMenu_;
     QElapsedTimer pressTimer_;

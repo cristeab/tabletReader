@@ -28,5 +28,6 @@
         <file>qml/PopupMenu/gfx/list_item_active.png</file>
         <file>qml/PopupMenu/gfx/list_item_pressed.png</file>
         <file>qml/PopupMenu/gfx/list_item_selected.png</file>
+        <file>qml/filebrowser.qml</file>
     </qresource>
 </RCC>

@@ -38,10 +38,11 @@
 
 #include <QtGui>
 #include <QScrollArea>
-#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative>
 #include "window.h"
 #include "SlidingStackedWidget.h"
-#include "filebrowser.h"
+#include "filebrowser.h"//TODO: to delete
+#include "filebrowsermodel.h"
 #include "worker.h"
 #include "flickable.h"
 
@@ -53,6 +54,7 @@
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
+      fileBrowser_(NULL),
       gotoPage_(NULL),
       commandPopupMenu_(NULL),
       showPageNumber_(false),      
@@ -64,10 +66,6 @@ Window::Window(QWidget *parent)
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
     setCentralWidget(centralWidget);
     setWindowTitle(tr(APPLICATION));
-
-    //browser dialog
-    fileBrowser_  = new FileBrowser("*.pdf", this);
-    connect(fileBrowser_, SIGNAL(picked(QString)), this, SLOT(openFile(QString)));
 
     //actions for zoom in/out
     QAction *increaseScaleAction = new QAction(this);
@@ -228,8 +226,41 @@ Window::~Window()
 void Window::showFileBrowser()
 {
     qDebug() << "Window::showFileBrowser";
-    fileBrowser_->setMinimumSize(size());
-    fileBrowser_->show();
+    if (NULL == fileBrowser_)
+    {
+        fileBrowser_ = new QDeclarativeView(this);
+        FileBrowserModel* model = new FileBrowserModel();
+        model->searchPdfFiles();
+        fileBrowser_->engine()->rootContext()->setContextProperty("pdfPreviewModel", model);
+        fileBrowser_->setSource(QUrl("qrc:/qml/qml/filebrowser.qml"));
+        fileBrowser_->setStyleSheet("background:transparent");
+        fileBrowser_->setAttribute(Qt::WA_TranslucentBackground);
+        fileBrowser_->setAttribute(Qt::WA_DeleteOnClose);
+        fileBrowser_->setWindowFlags(Qt::FramelessWindowHint);
+        fileBrowser_->move(0, 0);
+        //fileBrowser_->size(size());
+        QObject *pDisp = fileBrowser_->rootObject();
+        if (NULL != pDisp)
+        {
+            connect(pDisp, SIGNAL(changeDirectory(int)), model, SLOT(changeCurrentDir(int)));
+            connect(pDisp, SIGNAL(showDocument(QString)), this, SLOT(closeFileBrowser(QString)));
+            fileBrowser_->show();
+        } else {
+            qDebug() << "cannot get disp object";
+            delete fileBrowser_;
+            fileBrowser_ = NULL;
+        }
+    }
+}
+
+void Window::closeFileBrowser(const QString &doc)
+{
+    qDebug() << "Window::closeFileBrowser" << doc;
+    if ((NULL != fileBrowser_) && (true == fileBrowser_->close()))
+    {
+        qDebug() << "widget closed";
+        fileBrowser_ = NULL;
+    }
 }
 
 void Window::showGotoPage()

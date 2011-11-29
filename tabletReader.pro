@@ -4,7 +4,8 @@ HEADERS       = documentwidget.h \
     filebrowser.h \
     flickable.h \
     worker.h \
-    logger.h
+    logger.h \
+    filebrowsermodel.h
 SOURCES       = documentwidget.cpp \
                 main.cpp \
                 window.cpp \
@@ -12,7 +13,8 @@ SOURCES       = documentwidget.cpp \
     filebrowser.cpp \
     flickable.cpp \
     worker.cpp \
-    logger.cpp
+    logger.cpp \
+    filebrowsermodel.cpp
 
 QT           +=     declarative
 INCLUDEPATH  +=     /usr/include/poppler/qt4
@@ -44,4 +46,5 @@ OTHER_FILES += \
     qml/popupmenu.qml \
     qml/PopupMenu/PopupListModel.qml \
     qml/PopupMenu/PopupList.qml \
-    qml/PopupMenu/ListItem.qml
+    qml/PopupMenu/ListItem.qml \
+    qml/filebrowser.qml
