@@ -26,7 +26,7 @@ Rectangle {
     id: box
     objectName: "box"
     width: 1024; height: 600
-    color: "transparent"
+    color:  "#80000080"
 
     signal changeDirectory(int index)
     signal showDocument(string document)
@@ -69,6 +69,7 @@ Rectangle {
                     verticalAlignment: Text.AlignBottom
                 }
                 MouseArea {
+                    id: mouseArea
                     anchors.fill: parent
                     onClicked:  {
                         if (model.file) {
@@ -81,6 +82,12 @@ Rectangle {
                         }
                     }
                 }
+                states: [
+                    State {
+                        name: 'pressed'; when: mouseArea.pressed
+                        PropertyChanges { target: previewBox; color: "lightgreen" }
+                    }
+                ]
            }
         }
      }

@@ -260,6 +260,7 @@ void Window::closeFileBrowser(const QString &doc)
     {
         qDebug() << "widget closed";
         fileBrowser_ = NULL;
+        openFile(doc);
     }
 }
 
@@ -370,8 +371,6 @@ void Window::closeCommandPopupMenu(const QString &cmd)
 void Window::openFile(const QString &filePath)
 {
     qDebug() << "Window::openFile";
-    //close dialog
-    fileBrowser_->close();
     //open document
     if (document_->setDocument(filePath)) {
         setupDocDisplay(1, filePath);
