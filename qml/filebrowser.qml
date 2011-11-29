@@ -26,7 +26,7 @@ Rectangle {
     id: box
     objectName: "box"
     width: 1024; height: 600
-    color: "black"
+    color: "transparent"
 
     signal changeDirectory(int index)
     signal showDocument(string document)
@@ -40,7 +40,7 @@ Rectangle {
             Rectangle {
                 id: previewBox
                 width: box.width
-                height:80
+                height:64
                 color: ((index % 2) ? "navy" : "steelblue")
                 Image {
                     id: previewImage
@@ -49,7 +49,7 @@ Rectangle {
                         width: height
                         height: height
                     }
-                    width: 100
+                    width: 64
                     height: previewBox.height
                     anchors.left: parent.left
                     anchors.top: parent.top
@@ -67,17 +67,6 @@ Rectangle {
                     anchors.bottom: parent.verticalCenter
                     anchors.leftMargin: 10
                     verticalAlignment: Text.AlignBottom
-                }
-                Text {
-                    id: pages
-                    elide: Text.ElideRight
-                    color: "#aaa"
-                    text: ((model.file) ?  model.pages  : "")
-                    font.pointSize: 10
-                    anchors.top: title.bottom
-                    anchors.left: previewImage.right
-                    anchors.leftMargin: 10
-                    verticalAlignment: Text.AlignTop
                 }
                 MouseArea {
                     anchors.fill: parent

@@ -8,10 +8,6 @@ Item {
     width: 360
     // Default height
     height: 640
-    // Subitem expansion duration
-    property int animationDuration: 100
-    // Subitem indentation
-    property int indent: 20
     // Scrollbar width
     property int scrollBarWidth: 8
     // Background for list item

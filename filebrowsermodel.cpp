@@ -21,7 +21,6 @@
 
 
 #include <QDir>
-#include <poppler/qt4/poppler-qt4.h>
 #include "filebrowsermodel.h"
 #include <qdebug.h>
 
@@ -39,13 +38,13 @@ FileBrowserModel::FileBrowserModel(QObject *parent) :
     _currentDir = QDir::homePath();
 }
 
-void FileBrowserModel::addDirToSearch(QString &dir)
+/*void FileBrowserModel::addDirToSearch(QString &dir)
 {
 }
 
 void FileBrowserModel::removeDirToSearch(QString &dir)
 {
-}
+}*/
 
 void FileBrowserModel::changeCurrentDir(int index)
 {
@@ -95,8 +94,7 @@ void FileBrowserModel::searchPdfFiles()
     }
 }
 
-
-int FileBrowserModel::rowCount(const QModelIndex &parent) const
+int FileBrowserModel::rowCount(const QModelIndex&) const
 {
     return (_dirs.count() + _pdfFiles.count());
 }
@@ -118,47 +116,32 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 return QDir(_pdfFiles[fileRow]).dirName();
                 break;
             case IMAGE:
-               return (QString(
-                    "image://pdf_preview_provider/" +
-                    _pdfFiles[fileRow]
-                ));
+               return QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
                 break;
             case PAGES:
-                Poppler::Document* document;
-                document = Poppler::Document::load(_pdfFiles[fileRow]);
-                if (document)
-                    return document->numPages();
-                else
-                    return 0;
-                break;
+                return 0;
             case IS_FILE:
                 return 1;
-                break;
             case PATH:
                 return _pdfFiles[fileRow];
-                break;
        }
     } else {
         switch (role) {
             case TITLE:
                 return _dirs[dirRow];
-                break;
             case IMAGE:
                 if (dirRow == 0 && _dirs[dirRow].startsWith("Go")) {
-                    return QString("images/back_dir.png");
+                    return QString(":/filebrowser/icons/Button-Upload-icon.png");
                 } else {
-                    return QString("images/enter_dir.png");
+                    return QString(":/filebrowser/icons/My-Ebooks-icon.png");
                 }
                 break;
             case PAGES:
                 return 0;
-                break;
             case IS_FILE:
                 return 0;
-                break;
             case PATH:
                 return _dirs[dirRow];
-                break;
         }
     }
 

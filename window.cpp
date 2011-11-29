@@ -246,7 +246,7 @@ void Window::showFileBrowser()
             connect(pDisp, SIGNAL(showDocument(QString)), this, SLOT(closeFileBrowser(QString)));
             fileBrowser_->show();
         } else {
-            qDebug() << "cannot get disp object";
+            qDebug() << "cannot get root object";
             delete fileBrowser_;
             fileBrowser_ = NULL;
         }
