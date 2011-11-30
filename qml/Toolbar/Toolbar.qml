@@ -2,7 +2,6 @@ import Qt 4.7
 import "toolbar.js" as ToolbarJS
 
 Item {
-    id: toolbar
     width: parent.width
     height: 64
 
@@ -12,6 +11,8 @@ Item {
     property int current: 0
     property int minimumItemHeight: toolbarImage.height
     property int minimumItemWidth: toolbarImage.height
+
+    signal sendCommand(string cmd)
 
     // A black background for the item to prevent the white
     // background from showing in any situation
@@ -57,6 +58,10 @@ Item {
                 delegate: ToolbarItem {
                     width: toolbarItems.itemWidth > contentWidth ? toolbarItems.itemWidth : contentWidth
                     height: toolbar.minimumItemHeight
+                    onDoAction: {
+                        sendCommand(btnText)
+                        console.debug(btnText)
+                    }
                 }
             }
         }

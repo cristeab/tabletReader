@@ -10,6 +10,7 @@ Rectangle {
 
     Toolbar {
         id: toolbar
+        objectName: "toolbar"
 
         ToolbarView {
             toolbarItemTitle: "Open"

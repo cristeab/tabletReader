@@ -83,6 +83,7 @@ private slots:
     void decreaseScale();
     void setAnimationFlag();
     void togglePageDisplay();
+    void onSendCommand(const QString &cmd);
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
@@ -102,9 +103,6 @@ private:
     QDeclarativeView *toolBar_;
     QString lastFilePath_;
     QVector<qreal> scaleFactors_;
-    QSpinBox *pageSpinBox_;
-    QLabel *labelNbPages_;
-    QComboBox *scaleComboBox_;
     QPoint startPoint_;
     QPoint endPoint_;
     QMenu *pagePopupMenu_;    

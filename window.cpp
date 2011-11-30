@@ -74,6 +74,14 @@ Window::Window(QWidget *parent)
     if (NULL != pDisp)
     {
         pDisp->setProperty("width", width());
+        QObject *pToolbar = pDisp->findChild<QObject*>("toolbar");
+        if (NULL != pToolbar)
+        {
+            connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
+        } else
+        {
+            qDebug() << "cannot find toolbar object";
+        }
     }
     toolBar_->show();
     gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
@@ -168,6 +176,36 @@ Window::~Window()
 {
     worker_->terminate();//terminate worker thread
     while(true != worker_->isFinished());//wait thread to finish
+}
+
+void Window::onSendCommand(const QString &cmd)
+{
+    qDebug() << "Window::onSendCommand" << cmd;
+    if ("Open" == cmd)
+    {
+        showFileBrowser();
+    } else if ("Full Screen" == cmd)
+    {
+        fullScreen();
+    } else if ("Go To Page" == cmd)
+    {
+        showGotoPage();
+    } else if ("Zoom" == cmd)
+    {
+        qDebug() << "Zoom";
+    } else if ("Help" == cmd)
+    {
+        qDebug() << "Help";
+    } else if ("About" == cmd)
+    {
+        qDebug() << "About";
+    } else if ("Exit" == cmd)
+    {
+        close();
+    } else
+    {
+        qDebug() << "unknown command";
+    }
 }
 
 void Window::showFileBrowser()
@@ -352,21 +390,11 @@ void Window::scaleDocument(int index)
 void Window::increaseScale()
 {
     qDebug() << "Window::increaseScale";
-    int nextIdx = scaleComboBox_->currentIndex()+1;
-    if (scaleComboBox_->count() > nextIdx)
-    {
-        scaleComboBox_->setCurrentIndex(nextIdx);
-    }
 }
 
 void Window::decreaseScale()
 {
     qDebug() << "Window::decreaseScale";
-    int prevIdx = scaleComboBox_->currentIndex()-1;
-    if (0 <= prevIdx)
-    {
-        scaleComboBox_->setCurrentIndex(prevIdx);
-    }
 }
 
 bool Window::eventFilter(QObject *, QEvent *event)
@@ -519,7 +547,7 @@ void Window::closeEvent(QCloseEvent *evt)
     QSettings settings(ORGANIZATION, APPLICATION);
     settings.setValue(KEY_PAGE, document_->currentPage());
     settings.setValue(KEY_FILE_PATH, lastFilePath_);
-    settings.setValue(KEY_ZOOM_LEVEL, scaleComboBox_->currentIndex());
+    //settings.setValue(KEY_ZOOM_LEVEL, scaleComboBox_->currentIndex());
     QWidget::closeEvent(evt);
 }
 

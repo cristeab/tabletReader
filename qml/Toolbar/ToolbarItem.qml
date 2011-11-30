@@ -7,7 +7,7 @@ Rectangle {
     height: parent.minimumItemHeight
     color: "black"
 
-    signal clicked
+    signal doAction(string btnText)
 
     // Toolbar item background
     BorderImage {
@@ -60,10 +60,8 @@ Rectangle {
     MouseArea {
         id: mouseArea
         anchors.fill: toolbarItemImage
-        // send signal when button clicked
         onClicked: {
-            clicked
-            console.debug("clicked "+toolbarItemText.text)
+            doAction(toolbarItemText.text)
         }
     }
 
