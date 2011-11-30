@@ -19,9 +19,6 @@ ListModel {
         itemTitle: "Show Page Number"
     }
     ListElement {
-        itemTitle: "About ..."
-    }
-    ListElement {
         itemTitle: "Exit"
     }
 }

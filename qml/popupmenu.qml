@@ -4,7 +4,7 @@ import "PopupMenu" as Comp
 Item {
     id: container
     width: 200
-    height: 380 
+    height: 325
    Comp.PopupList {
         id: list
         anchors.fill: parent
