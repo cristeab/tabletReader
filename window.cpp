@@ -60,11 +60,23 @@ Window::Window(QWidget *parent)
       flickable_(NULL)
 {
     //main window
-    resize(858, 600);
+    resize(800, 600);
     QWidget *centralWidget = new QWidget(this);
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
     setCentralWidget(centralWidget);
     setWindowTitle(tr(APPLICATION));
+    setStyleSheet("background-color: gray");
+
+    //main toolbar
+    toolBar_ = new QDeclarativeView(this);
+    toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
+    QObject *pDisp = toolBar_->rootObject();
+    if (NULL != pDisp)
+    {
+        pDisp->setProperty("width", width());
+    }
+    toolBar_->show();
+    gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
 
     //actions for zoom in/out
     QAction *increaseScaleAction = new QAction(this);
@@ -103,7 +115,7 @@ Window::Window(QWidget *parent)
         label = new QLabel();//QLabel is used to display a page
         label->setAlignment(Qt::AlignCenter);
         scroll->setWidget(label);
-        scroll->installEventFilter(this);        
+        scroll->installEventFilter(this);
         slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
         flickable_->activateOn(scroll);
     }
@@ -112,76 +124,14 @@ Window::Window(QWidget *parent)
     slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
     slidingStacked_->setWrap(true);
     slidingStacked_->setVerticalMode(false);
+    slidingStacked_->setStyleSheet("background:transparent");
+    slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
+    gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
 
-    gridLayout->addWidget(slidingStacked_, 0, 0, 1, 1);
-
-    //main toolbar
-    toolBar_ = new QToolBar(this);
-    toolBar_->setMovable(false);
-    toolBar_->setAllowedAreas(Qt::TopToolBarArea);
-    toolBar_->setFloatable(false);
-    addToolBar(Qt::TopToolBarArea, toolBar_);
-
-    //setup button icons
-    QToolButton *toolButton_open = new QToolButton(toolBar_);
-    QIcon iconOpen = QIcon(":/toolbar/icons/Folder-Blue-Documents-icon.png");
-    toolButton_open->setIcon(iconOpen);
-    toolButton_open->setText(tr("&Open"));
-    toolButton_open->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    toolBar_->addWidget(toolButton_open);
-
-    //goto page icons
-    QToolButton *toolButton_goto = new QToolButton(toolBar_);
-    QIcon iconGoto = QIcon(":/toolbar/icons/goto-page-icon.png");
-    toolButton_goto->setIcon(iconGoto);
-    toolButton_goto->setText(tr("&Goto"));
-    toolButton_goto->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    toolBar_->addWidget(toolButton_goto);
-
-    QToolButton *toolButton_fullScreen = new QToolButton(toolBar_);
-    QIcon iconFullScreen = QIcon(":/toolbar/icons/window-full-screen-icon.png");
-    toolButton_fullScreen->setIcon(iconFullScreen);
-    toolButton_fullScreen->setText(tr("&Full Screen"));
-    toolButton_fullScreen->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    toolBar_->addWidget(toolButton_fullScreen);
-
-    QToolButton *toolButton_exit = new QToolButton(toolBar_);
-    QIcon iconExit = QIcon(":/toolbar/icons/Button-Close-icon.png");
-    toolButton_exit->setIcon(iconExit);
-    toolButton_exit->setText(tr("E&xit"));
-    toolButton_exit->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    toolBar_->addWidget(toolButton_exit);
-
-    QLabel *pageLabel = new QLabel();
-    toolBar_->addWidget(pageLabel);
-
-    pageSpinBox_ = new QSpinBox();
-    toolBar_->addWidget(pageSpinBox_);
-
-    labelNbPages_ = new QLabel();
-    labelNbPages_->setText("      ");
-    toolBar_->addWidget(labelNbPages_);
-
-    scaleComboBox_ = new QComboBox();
-    for (int n = 0; n < scaleFactors_.size(); ++n)
-    {
-        scaleComboBox_->addItem(QString("%1%").arg(scaleFactors_[n]*100));
-        if (1 == scaleFactors_[n])
-        {
-            scaleComboBox_->setCurrentIndex(n);
-        }
-    }
-    toolBar_->addWidget(scaleComboBox_);
-
-    connect(toolButton_fullScreen, SIGNAL(clicked()), this, SLOT(fullScreen()));
-    connect(toolButton_open, SIGNAL(clicked()), this, SLOT(showFileBrowser()));
-    connect(toolButton_goto, SIGNAL(clicked()), this, SLOT(showGotoPage()));
-    connect(toolButton_exit, SIGNAL(clicked()), this, SLOT(close()));
-
-    connect(document_, SIGNAL(pageLoaded(int)),
-            pageSpinBox_, SLOT(setValue(int)));
-    connect(scaleComboBox_, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(scaleDocument(int)));
+    /*connect(document_, SIGNAL(pageLoaded(int)),
+            pageSpinBox_, SLOT(setValue(int)));*/
+    /*connect(scaleComboBox_, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(scaleDocument(int)));*/
     connect(slidingStacked_, SIGNAL(animationFinished()),
             this, SLOT(setAnimationFlag()));
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
@@ -206,7 +156,7 @@ Window::Window(QWidget *parent)
     if (document_->setDocument(filePath))
     {
         setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
-        scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
+        //scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
     }
     animationFinished_ = true;
     //fullScreen();
@@ -589,11 +539,11 @@ void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 {
     qDebug() << "Window::setupDocDisplay" << pageNumber;
     lastFilePath_ = filePath;
-    scaleComboBox_->setEnabled(true);
-    pageSpinBox_->setEnabled(true);
+    //scaleComboBox_->setEnabled(true);
+    //pageSpinBox_->setEnabled(true);
     int numPages = document_->numPages();    
-    pageSpinBox_->setRange(1, numPages);    
-    labelNbPages_->setText(tr("/ %1").arg(numPages));
+    //pageSpinBox_->setRange(1, numPages);
+    //labelNbPages_->setText(tr("/ %1").arg(numPages));
     setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
     //set current page
     gotoPage(pageNumber, numPages);

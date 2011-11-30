@@ -1,7 +1,6 @@
 HEADERS       = documentwidget.h \
                 window.h \
     SlidingStackedWidget.h \
-    filebrowser.h \
     flickable.h \
     worker.h \
     logger.h \
@@ -46,4 +45,9 @@ OTHER_FILES += \
     qml/PopupMenu/PopupListModel.qml \
     qml/PopupMenu/PopupList.qml \
     qml/PopupMenu/ListItem.qml \
-    qml/filebrowser.qml
+    qml/filebrowser.qml \
+    qml/maintoolbar.qml \
+    qml/Toolbar/ToolbarView.qml \
+    qml/Toolbar/ToolbarItem.qml \
+    qml/Toolbar/Toolbar.qml \
+    qml/Toolbar/toolbar.js

@@ -99,7 +99,7 @@ private:
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;
-    QToolBar *toolBar_;
+    QDeclarativeView *toolBar_;
     QString lastFilePath_;
     QVector<qreal> scaleFactors_;
     QSpinBox *pageSpinBox_;
