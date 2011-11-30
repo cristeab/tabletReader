@@ -210,9 +210,7 @@ Window::Window(QWidget *parent)
         scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
     }
     animationFinished_ = true;
-#ifndef DEBUG
-    fullScreen();
-#endif
+    //fullScreen();
 
     worker_->start();
 }
@@ -229,7 +227,7 @@ void Window::showFileBrowser()
     if (NULL == fileBrowser_)
     {
         fileBrowser_ = new QDeclarativeView(this);
-        FileBrowserModel* model = new FileBrowserModel();
+        FileBrowserModel* model = new FileBrowserModel(this);
         model->searchPdfFiles();
         fileBrowser_->engine()->rootContext()->setContextProperty("pdfPreviewModel", model);
         fileBrowser_->setSource(QUrl("qrc:/qml/qml/filebrowser.qml"));
@@ -238,7 +236,6 @@ void Window::showFileBrowser()
         fileBrowser_->setAttribute(Qt::WA_DeleteOnClose);
         fileBrowser_->setWindowFlags(Qt::FramelessWindowHint);
         fileBrowser_->move(0, 0);
-        //fileBrowser_->size(size());
         QObject *pDisp = fileBrowser_->rootObject();
         if (NULL != pDisp)
         {

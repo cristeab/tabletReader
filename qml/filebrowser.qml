@@ -26,7 +26,7 @@ Rectangle {
     id: box
     objectName: "box"
     width: 1024; height: 600
-    color:  "#80000080"
+    color:  "transparent"
 
     signal changeDirectory(int index)
     signal showDocument(string document)
@@ -38,19 +38,20 @@ Rectangle {
 
         delegate: Component {
             Rectangle {
+                property int margin: 7
                 id: previewBox
                 width: box.width
                 height:64
-                color: ((index % 2) ? "navy" : "steelblue")
+                color: ((index%2)?"gray":"dimgray")
                 Image {
                     id: previewImage
                     source: model.image
                     sourceSize {
                         width: height
                         height: height
-                    }
-                    width: 64
-                    height: previewBox.height
+                    }                    
+                    width: 64-margin
+                    height: previewBox.height-margin
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.leftMargin: (parent.height - width)/2
@@ -60,7 +61,8 @@ Rectangle {
                     id: title
                     elide: Text.ElideRight
                     text: model.title
-                    color: "white"
+                    color: "black"
+                    font.pointSize: 11
                     font.bold: true
                     anchors.top: parent.top
                     anchors.left: previewImage.right

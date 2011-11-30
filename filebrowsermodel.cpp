@@ -19,13 +19,14 @@
  *
  */
 
-
+#include <QMainWindow>
 #include <QDir>
 #include "filebrowsermodel.h"
 #include <qdebug.h>
 
 FileBrowserModel::FileBrowserModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractListModel(parent),
+    _parent(parent)
 {
     QHash<int, QByteArray> roles;
     roles[TITLE] = "title";
@@ -36,29 +37,24 @@ FileBrowserModel::FileBrowserModel(QObject *parent) :
     setRoleNames(roles);
 
     _currentDir = QDir::homePath();
+    setMainWindowTitle(_currentDir);
 }
-
-/*void FileBrowserModel::addDirToSearch(QString &dir)
-{
-}
-
-void FileBrowserModel::removeDirToSearch(QString &dir)
-{
-}*/
 
 void FileBrowserModel::changeCurrentDir(int index)
 {
     if (index >= _dirs.count()) {
         return;
     }
-    // XXX: The "Go" thing is ugly is hell. Store paths differently
     if (index == 0 && _dirs[index].startsWith("Go")) {
         _currentDir += "/..";
+        QDir dir = QDir(_currentDir);
+        _currentDir = dir.absolutePath();
     } else {
         _currentDir += "/" +  _dirs[index];
     }
     searchPdfFiles();
     reset();
+    setMainWindowTitle(_currentDir);
 }
 
 void FileBrowserModel::searchPdfFiles()
@@ -66,13 +62,17 @@ void FileBrowserModel::searchPdfFiles()
     _pdfFiles.clear();
     _dirs.clear();
 
-    QDir directory = QDir(_currentDir);
+    QDir directory = QDir(_currentDir, "*.pdf *.PDF *.Pdf", QDir::Name | QDir::IgnoreCase |
+                          QDir::LocaleAware);
+
+    //fill file list
     directory.setFilter(QDir::Files);
-    foreach (QString file, directory.entryList(QStringList("*pdf"))) {
+    foreach (QString file, directory.entryList()) {
         _pdfFiles.append(directory.absoluteFilePath(file));
     }
 
-    directory.setFilter(QDir::Dirs);
+    //fill folder list
+    directory.setFilter(QDir::AllDirs);
     foreach (QString file, directory.entryList()) {
         QString dirToAdd;
         QString absPath = directory.absoluteFilePath(file);
@@ -80,7 +80,6 @@ void FileBrowserModel::searchPdfFiles()
             continue;
         if (file == "..") {
             QDir dir = QDir(absPath);
-            // XXX Ugly as hell. Do not transform paths here
             if (!dir.isRoot()) {
                 dirToAdd =
                     "Go Back To '" + QDir(dir.canonicalPath()).dirName() + "'";
@@ -114,10 +113,8 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         switch (role) {
             case TITLE:
                 return QDir(_pdfFiles[fileRow]).dirName();
-                break;
             case IMAGE:
                return QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
-                break;
             case PAGES:
                 return 0;
             case IS_FILE:
@@ -135,7 +132,6 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 } else {
                     return QString(":/filebrowser/icons/My-Ebooks-icon.png");
                 }
-                break;
             case PAGES:
                 return 0;
             case IS_FILE:
@@ -147,3 +143,13 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
 
     return QVariant();
 }
+
+void FileBrowserModel::setMainWindowTitle(const QString &title)
+{
+    QMainWindow *pWin = dynamic_cast<QMainWindow*>(_parent);
+    if (NULL != pWin)
+    {
+        pWin->setWindowTitle("Current folder: " + title);
+    }
+}
+
