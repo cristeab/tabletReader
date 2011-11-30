@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/toolbar">
         <file>qml/Toolbar/pics/back.png</file>
-        <file>qml/Toolbar/pics/Button-Close-icon.png</file>
         <file>qml/Toolbar/pics/Folder-Blue-Documents-icon.png</file>
         <file>qml/Toolbar/pics/goto-page-icon.png</file>
         <file>qml/Toolbar/pics/toolbaritem.png</file>
@@ -10,6 +9,7 @@
         <file>qml/Toolbar/pics/zoom-icon.png</file>
         <file>qml/Toolbar/pics/help-icon.png</file>
         <file>qml/Toolbar/pics/About-icon.png</file>
+        <file>qml/Toolbar/pics/Button-Close-icon.png</file>
     </qresource>
     <qresource prefix="/filebrowser">
         <file>icons/Adobe-PDF-Document-icon.png</file>

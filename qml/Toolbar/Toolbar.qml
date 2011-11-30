@@ -17,7 +17,7 @@ Item {
     // background from showing in any situation
     Rectangle {
         anchors.fill: parent
-        color: "black"
+        color: "black"        
     }
 
     BorderImage {
