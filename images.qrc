@@ -7,6 +7,9 @@
         <file>qml/Toolbar/pics/toolbaritem.png</file>
         <file>qml/Toolbar/pics/toolbaritem_p.png</file>
         <file>qml/Toolbar/pics/window-full-screen-icon.png</file>
+        <file>qml/Toolbar/pics/zoom-icon.png</file>
+        <file>qml/Toolbar/pics/help-icon.png</file>
+        <file>qml/Toolbar/pics/About-icon.png</file>
     </qresource>
     <qresource prefix="/filebrowser">
         <file>icons/Adobe-PDF-Document-icon.png</file>
