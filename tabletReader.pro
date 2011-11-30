@@ -10,7 +10,6 @@ SOURCES       = documentwidget.cpp \
                 main.cpp \
                 window.cpp \
     SlidingStackedWidget.cpp \
-    filebrowser.cpp \
     flickable.cpp \
     worker.cpp \
     logger.cpp \

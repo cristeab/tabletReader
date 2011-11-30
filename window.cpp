@@ -41,7 +41,6 @@
 #include <QtDeclarative>
 #include "window.h"
 #include "SlidingStackedWidget.h"
-#include "filebrowser.h"//TODO: to delete
 #include "filebrowsermodel.h"
 #include "worker.h"
 #include "flickable.h"

@@ -30,7 +30,6 @@ FileBrowserModel::FileBrowserModel(QObject *parent) :
 {
     QHash<int, QByteArray> roles;
     roles[TITLE] = "title";
-    roles[PAGES] = "pages";
     roles[IMAGE] = "image";
     roles[IS_FILE] = "file";
     roles[PATH] = "path";
@@ -115,8 +114,6 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 return QDir(_pdfFiles[fileRow]).dirName();
             case IMAGE:
                return QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
-            case PAGES:
-                return 0;
             case IS_FILE:
                 return 1;
             case PATH:
@@ -132,8 +129,6 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 } else {
                     return QString(":/filebrowser/icons/My-Ebooks-icon.png");
                 }
-            case PAGES:
-                return 0;
             case IS_FILE:
                 return 0;
             case PATH:
