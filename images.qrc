@@ -40,5 +40,11 @@
         <file>qml/Toolbar/Toolbar.qml</file>
         <file>qml/Toolbar/ToolbarItem.qml</file>
         <file>qml/Toolbar/ToolbarView.qml</file>
+        <file>qml/zoompage.qml</file>
+        <file>qml/zoompage/gfx/button.png</file>
+        <file>qml/zoompage/gfx/button_pressed.png</file>
+        <file>qml/zoompage/Button.qml</file>
+        <file>qml/zoompage/Reel.qml</file>
+        <file>qml/zoompage/ZoomReel.qml</file>
     </qresource>
 </RCC>

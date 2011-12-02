@@ -94,7 +94,7 @@ void DocumentWidget::showPage(int page)
     if (page != -1 && page != currentPage_ + 1) {
         currentIndex_ = stackedWidget_->currentIndex();
         if (NULL != currentScrollArea_) { //do nothing if no page has been loaded
-            if (currentPage_ < (page - 1)) {
+            if (currentPage_ <= (page - 1)) {
                 ++currentIndex_;
                 if (CACHE_SIZE == currentIndex_) {
                     currentIndex_ = 0;

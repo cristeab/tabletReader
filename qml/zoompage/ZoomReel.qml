@@ -12,6 +12,10 @@ Item {
     property color fontColor: "#666666"
     // Spacing between items
     property int spacing: 8
+    //zoom index
+    property int zoomIndex: 0
+
+    signal setZoomFactor(int index)
 
     property Component itemBackground: Component {
         BorderImage {
@@ -40,22 +44,25 @@ Item {
             fontSize: container.fontSize
             bg: itemBackground
             bgPressed: itemBackgroundPressed
-            onClicked: { zoom.index = index; zoom.toggle() }
+            onClicked: {
+                zoom.index = index
+                zoom.toggle()
+                if (true == zoom.clip) {
+                    setZoomFactor(index)
+                    console.debug("index " + index)
+                }
+            }
         }
     }
 
-    Row {
-        id: reels
-        spacing: container.spacing
-
-        Reel {
-            id: zoom
-            width: container.zoomWidth
-            height: container.zoomHeight
-            model: zoomfactors
-            delegate: zoomDelegate
-            autoClose: false            
-        }
+    Reel {
+        id: zoom
+        width: container.zoomWidth
+        height: container.zoomHeight
+        model: zoomfactors
+        delegate: zoomDelegate
+        autoClose: false
+        index:  zoomIndex
     }
 
     ListModel{

@@ -17,7 +17,6 @@ SOURCES       = documentwidget.cpp \
 QT           +=     declarative
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
-DEFINES      +=     DEBUG
 
 #install
 target.path = $$[install_prefix]/bin
@@ -50,4 +49,8 @@ OTHER_FILES += \
     qml/Toolbar/ToolbarView.qml \
     qml/Toolbar/ToolbarItem.qml \
     qml/Toolbar/Toolbar.qml \
-    qml/Toolbar/toolbar.js
+    qml/Toolbar/toolbar.js \
+    qml/zoompage.qml \
+    qml/zoompage/ZoomReel.qml \
+    qml/zoompage/Reel.qml \
+    qml/zoompage/Button.qml

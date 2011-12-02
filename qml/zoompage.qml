@@ -33,6 +33,7 @@ Rectangle {
 
     Comp.ZoomReel {
         id: dateReel
+        objectName: "zoomreel"
         width: parent.width
         anchors.verticalCenter: parent.verticalCenter
     }

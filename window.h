@@ -71,8 +71,10 @@ signals:
 private slots:
     void showFileBrowser();
     void closeFileBrowser(const QString &doc);
-    void showGotoPage();
+    void showGotoPage();    
     void closeGotoPage(const QString &pageNb);
+    void showZoomPage();
+    void closeZoomPage(int index);
     void showCommandPopupMenu();
     void closeCommandPopupMenu(const QString &cmd);
     void openFile(const QString &filePath);    
@@ -103,17 +105,19 @@ private:
     QDeclarativeView *toolBar_;
     QString lastFilePath_;
     QVector<qreal> scaleFactors_;
+    int currentZoomIndex_;
     QPoint startPoint_;
     QPoint endPoint_;
     QMenu *pagePopupMenu_;    
     bool animationFinished_;
     QDeclarativeView *fileBrowser_;
     QDeclarativeView *gotoPage_;
+    QDeclarativeView *zoomPage_;
     QDeclarativeView *commandPopupMenu_;
     QElapsedTimer pressTimer_;
     Worker *worker_;
     bool showPageNumber_;
-    Flickable *flickable_;
+    Flickable *flickable_;    
 };
 
 #endif

@@ -55,6 +55,7 @@ Window::Window(QWidget *parent)
     : QMainWindow(parent),
       fileBrowser_(NULL),
       gotoPage_(NULL),
+      zoomPage_(NULL),
       commandPopupMenu_(NULL),
       showPageNumber_(false),      
       flickable_(NULL)
@@ -97,6 +98,7 @@ Window::Window(QWidget *parent)
     //zoom scale factors
     scaleFactors_ << 0.25 << 0.5 << 0.75 << 1.
                   << 1.25 << 1.5 << 2. << 3. << 4.;
+    currentZoomIndex_ = 3;//zoom 100%
 
     //create main document
     document_ = new DocumentWidget(this);
@@ -136,10 +138,6 @@ Window::Window(QWidget *parent)
     slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
     gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
 
-    /*connect(document_, SIGNAL(pageLoaded(int)),
-            pageSpinBox_, SLOT(setValue(int)));*/
-    /*connect(scaleComboBox_, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(scaleDocument(int)));*/
     connect(slidingStacked_, SIGNAL(animationFinished()),
             this, SLOT(setAnimationFlag()));
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
@@ -163,8 +161,8 @@ Window::Window(QWidget *parent)
     }
     if (document_->setDocument(filePath))
     {
+        currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
         setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
-        //scaleComboBox_->setCurrentIndex(settings.value(KEY_ZOOM_LEVEL, 3).toInt());
     }
     animationFinished_ = true;
     //fullScreen();
@@ -192,7 +190,7 @@ void Window::onSendCommand(const QString &cmd)
         showGotoPage();
     } else if ("Zoom" == cmd)
     {
-        qDebug() << "Zoom";
+        showZoomPage();
     } else if ("Help" == cmd)
     {
         qDebug() << "Help";
@@ -298,6 +296,52 @@ void Window::closeGotoPage(const QString &pageNb)
         } else {
             qDebug() << "nothing to do";
         }
+    }
+}
+
+void Window::showZoomPage()
+{
+    qDebug() << "Window::showZoomPage";
+    if (NULL == zoomPage_)
+    {
+        zoomPage_ = new QDeclarativeView(this);
+        zoomPage_->setSource(QUrl("qrc:/qml/qml/zoompage.qml"));
+        zoomPage_->setStyleSheet("background:transparent");
+        zoomPage_->setAttribute(Qt::WA_TranslucentBackground);
+        zoomPage_->setAttribute(Qt::WA_DeleteOnClose);
+        zoomPage_->setWindowFlags(Qt::FramelessWindowHint);
+        zoomPage_->move((width()-zoomPage_->width())/2, (height()-zoomPage_->height())/2);
+        zoomPage_->show();
+        QObject *pZoomReel = zoomPage_->rootObject()->findChild<QObject*>("zoomreel");
+        if (NULL != pZoomReel)
+        {
+            if (false == pZoomReel->setProperty("zoomIndex", currentZoomIndex_))
+            {
+                qDebug() << "cannot set property";
+            }
+            connect(pZoomReel, SIGNAL(setZoomFactor(int)), this, SLOT(closeZoomPage(int)));
+            zoomPage_->show();
+        } else {
+            qDebug() << "cannot get disp object";
+            delete zoomPage_;
+            zoomPage_ = NULL;
+        }
+    }
+}
+
+void Window::closeZoomPage(int index)
+{
+    qDebug() << "Window::closeZoomPage" << scaleFactors_[index];
+    if ((NULL != zoomPage_) && (true == zoomPage_->close()))
+    {
+        qDebug() << "widget closed";
+        zoomPage_ = NULL;
+        //set zoom factor
+        currentZoomIndex_ = index;
+        document_->setScale(scaleFactors_[currentZoomIndex_]);
+        //update all pages from circular buffer
+        gotoPage(document_->currentPage()+1, document_->numPages());
+        slidingStacked_->slideInNext();
     }
 }
 
@@ -547,7 +591,7 @@ void Window::closeEvent(QCloseEvent *evt)
     QSettings settings(ORGANIZATION, APPLICATION);
     settings.setValue(KEY_PAGE, document_->currentPage());
     settings.setValue(KEY_FILE_PATH, lastFilePath_);
-    //settings.setValue(KEY_ZOOM_LEVEL, scaleComboBox_->currentIndex());
+    settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
     QWidget::closeEvent(evt);
 }
 
@@ -567,12 +611,10 @@ void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 {
     qDebug() << "Window::setupDocDisplay" << pageNumber;
     lastFilePath_ = filePath;
-    //scaleComboBox_->setEnabled(true);
-    //pageSpinBox_->setEnabled(true);
     int numPages = document_->numPages();    
-    //pageSpinBox_->setRange(1, numPages);
-    //labelNbPages_->setText(tr("/ %1").arg(numPages));
     setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
+    //set document zoom factor
+    document_->setScale(scaleFactors_[currentZoomIndex_]);
     //set current page
     gotoPage(pageNumber, numPages);
 }
