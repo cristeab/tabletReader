@@ -64,7 +64,7 @@ Rectangle {
             Rectangle {
                 width: box.width-3
                 height: 20
-                //color: "white"
+                radius: 10
                 smooth: true
                 gradient: Gradient {
                     GradientStop { position: 0.0; color: "white" }
