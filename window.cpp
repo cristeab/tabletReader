@@ -161,7 +161,7 @@ Window::Window(QWidget *parent)
     }
     if (document_->setDocument(filePath))
     {
-        //TODOcurrentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
+        currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
         setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
     }
     animationFinished_ = true;
@@ -428,12 +428,6 @@ void Window::normalScreen()
     QApplication::restoreOverrideCursor ();
 }
 
-void Window::scaleDocument(int index)
-{
-    qDebug() << "Window::scaleDocument";
-    document_->setScale(scaleFactors_[index]);
-}
-
 void Window::increaseScale()
 {
     qDebug() << "Window::increaseScale";
@@ -646,6 +640,10 @@ void Window::setZoomFactor(int index)
 {
     qDebug() << "Window::setZoomFactor " << index;
     //set zoom factor
+    if (currentZoomIndex_ == index)
+    {
+        return;//nothing to do
+    }
     currentZoomIndex_ = index;
     document_->setScale(scaleFactors_[currentZoomIndex_]);
     //update all pages from circular buffer

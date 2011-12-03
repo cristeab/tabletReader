@@ -67,11 +67,6 @@ DocumentWidget::~DocumentWidget()
     delete doc_;
 }
 
-qreal DocumentWidget::scale() const
-{
-    return scaleFactor_;
-}
-
 void DocumentWidget::loadImage(int page)
 {
     qDebug() << "DocumentWidget::loadImage begin";
@@ -149,13 +144,5 @@ void DocumentWidget::setPage(int page)
     if (page != currentPage_ + 1)
     {
         showPage(page);
-    }
-}
-
-void DocumentWidget::setScale(qreal scale)
-{
-    if (scaleFactor_ != scale) {
-        scaleFactor_ = scale;
-        showPage();
     }
 }

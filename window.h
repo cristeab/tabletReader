@@ -80,7 +80,6 @@ private slots:
     void openFile(const QString &filePath);    
     void fullScreen();
     void normalScreen();
-    void scaleDocument(int index);
     void increaseScale();
     void decreaseScale();
     void setAnimationFlag();

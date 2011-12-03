@@ -59,7 +59,10 @@ class DocumentWidget : public QObject
 public:
     DocumentWidget(QWidget *parent = 0);
     ~DocumentWidget();
-    qreal scale() const;
+    qreal scale() const
+    {
+        return scaleFactor_;
+    }
     int currentPage() const
     {
         return currentPage_;
@@ -130,7 +133,10 @@ public:
 public slots:
     bool setDocument(const QString &filePath);
     void setPage(int page = -1);
-    void setScale(qreal scale);
+    void setScale(qreal scale)
+    {
+        scaleFactor_ = scale;
+    }
 
 signals:
     void pageLoaded(int currentPage);
