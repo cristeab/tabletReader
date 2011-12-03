@@ -18,17 +18,17 @@ Item {
     // background from showing in any situation
     Rectangle {
         anchors.fill: parent
-        color: "black"        
+        color: "black"
     }
 
     BorderImage {
-            id: toolbarImage
-            source: ":/toolbar/qml/Toolbar/pics/toolbaritem.png"
-            width: parent.width
+        id: toolbarImage
+        source: ":/toolbar/qml/Toolbar/pics/toolbaritem.png"
+        width: parent.width
 
-            height: toolbar.height
-            border.left: 10; border.top: 10
-            border.right: 10; border.bottom: 10
+        height: toolbar.height
+        border.left: 10; border.top: 10
+        border.right: 10; border.bottom: 10
     }
 
     // Flickable area for the toolbar items

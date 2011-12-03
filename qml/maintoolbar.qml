@@ -1,8 +1,6 @@
 import Qt 4.7
-//import "Lists"
+
 import "Toolbar"
-//import "Scrollable"
-//import "text.js" as TextJS
 
 Rectangle {
     width: 360
