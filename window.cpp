@@ -351,6 +351,10 @@ void Window::closeZoomPage(int index)
 void Window::showCommandPopupMenu()
 {
     qDebug() << "Window::showCommandPopupMenu";
+    if (false == isFullScreen())
+    {
+        return;//show command popup menu only in full screen mode
+    }
     if (NULL == commandPopupMenu_)
     {
         commandPopupMenu_ = new QDeclarativeView(this);
@@ -394,7 +398,13 @@ void Window::closeCommandPopupMenu(const QString &cmd)
             qDebug() << "about command";
         } else if (QString("Exit") == cmd)
         {
-            close();//TODO: close is not done properly
+            close();//TODO: close is not done
+        } else if (QString("Normal Screen") == cmd)
+        {
+            normalScreen();
+        } else
+        {
+            qDebug() << "unknown command";
         }
     }
 }
