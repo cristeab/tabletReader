@@ -91,7 +91,7 @@ void DocumentWidget::loadImage(int page)
 void DocumentWidget::showPage(int page)
 {
     qDebug() << "DocumentWidget::showPage" << page;
-    if (page != -1) {
+    if (page != -1) {//if we show the same page nothing should be done, but this verification is done by the routines above
         currentIndex_ = stackedWidget_->currentIndex();
         if (NULL != currentScrollArea_) { //do nothing if no page has been loaded
             if (currentPage_ <= (page - 1)) {
