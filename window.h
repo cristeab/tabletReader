@@ -99,6 +99,7 @@ private:
     void showPageNumber(int currentPage, int nbPages);
     void setupDocDisplay(unsigned int pageNumber, const QString &filePath);
     void gotoPage(int pageNb, int numPages);
+    void setZoomFactor(int index);
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;

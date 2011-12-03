@@ -66,7 +66,7 @@ Window::Window(QWidget *parent)
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
     setCentralWidget(centralWidget);
     setWindowTitle(tr(APPLICATION));
-    setStyleSheet("background-color: gray");
+    setStyleSheet("background-color: black");
 
     //main toolbar
     toolBar_ = new QDeclarativeView(this);
@@ -134,7 +134,7 @@ Window::Window(QWidget *parent)
     slidingStacked_->setSpeed(HORIZONTAL_SLIDE_SPEED_MS);
     slidingStacked_->setWrap(true);
     slidingStacked_->setVerticalMode(false);
-    slidingStacked_->setStyleSheet("background:transparent");
+    slidingStacked_->setStyleSheet("background:black");
     slidingStacked_->setAttribute(Qt::WA_DeleteOnClose);
     gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
 
@@ -161,7 +161,7 @@ Window::Window(QWidget *parent)
     }
     if (document_->setDocument(filePath))
     {
-        currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
+        //TODOcurrentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
         setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
     }
     animationFinished_ = true;
@@ -224,6 +224,14 @@ void Window::showFileBrowser()
         QObject *pDisp = fileBrowser_->rootObject();
         if (NULL != pDisp)
         {
+            if (false == pDisp->setProperty("width", width()))
+            {
+                qDebug() << "cannot set width";
+            }
+            if (false == pDisp->setProperty("height", height()))
+            {
+                qDebug() << "cannot set height";
+            }
             connect(pDisp, SIGNAL(changeDirectory(int)), model, SLOT(changeCurrentDir(int)));
             connect(pDisp, SIGNAL(showDocument(QString)), this, SLOT(closeFileBrowser(QString)));
             fileBrowser_->show();
@@ -336,12 +344,7 @@ void Window::closeZoomPage(int index)
     {
         qDebug() << "widget closed";
         zoomPage_ = NULL;
-        //set zoom factor
-        currentZoomIndex_ = index;
-        document_->setScale(scaleFactors_[currentZoomIndex_]);
-        //update all pages from circular buffer
-        gotoPage(document_->currentPage()+1, document_->numPages());
-        slidingStacked_->slideInNext();
+        setZoomFactor(index);
     }
 }
 
@@ -637,4 +640,31 @@ void Window::gotoPage(int pageNb, int numPages)
         qDebug() << "Window::gotoPage: preload previous page";
         emit updateCache(pageNb-2);//previous page (index starts from 0)
     }
+}
+
+void Window::setZoomFactor(int index)
+{
+    qDebug() << "Window::setZoomFactor " << index;
+    //set zoom factor
+    currentZoomIndex_ = index;
+    document_->setScale(scaleFactors_[currentZoomIndex_]);
+    //update all pages from circular buffer
+    int pageNb = document_->currentPage()+1;
+    int numPages = document_->numPages();
+    document_->invalidateCache();
+    document_->showPage(pageNb);
+    //preload next page
+    if ((numPages-pageNb) > 0)
+    {
+        qDebug() << "Window::gotoPage: preload next page";
+        emit updateCache(pageNb);//next page (index starts from 0)
+    }
+    //preload previous page
+    if (pageNb > 1)
+    {
+        qDebug() << "Window::gotoPage: preload previous page";
+        emit updateCache(pageNb-2);//previous page (index starts from 0)
+    }
+    //update view
+    slidingStacked_->slideInNext();
 }

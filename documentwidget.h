@@ -135,9 +135,9 @@ public slots:
 signals:
     void pageLoaded(int currentPage);
 
-private:
+public:
     void showPage(int page = -1);    
-
+private:
     Poppler::Document *doc_;
     int currentPage_;
     int currentIndex_;

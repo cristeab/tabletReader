@@ -25,7 +25,8 @@ import Qt 4.7
 Rectangle {
     id: box
     objectName: "box"
-    width: 1024; height: 600
+    width: 1024
+    height: 600
     color:  "transparent"
 
     signal changeDirectory(int index)
