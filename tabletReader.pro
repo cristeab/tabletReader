@@ -53,4 +53,12 @@ OTHER_FILES += \
     qml/zoompage.qml \
     qml/zoompage/ZoomReel.qml \
     qml/zoompage/Reel.qml \
-    qml/zoompage/Button.qml
+    qml/zoompage/Button.qml \
+    qml/aboutdialog.qml \
+    qml/ModalDialog/Visual.qml \
+    qml/ModalDialog/ModalDialog.qml \
+    qml/ModalDialog/Fader.qml \
+    qml/ModalDialog/Button.qml \
+    qml/ModalDialog/gfx/button_pressed.png \
+    qml/ModalDialog/gfx/button_active.png \
+    qml/ModalDialog/gfx/button.png

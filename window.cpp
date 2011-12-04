@@ -58,6 +58,7 @@ Window::Window(QWidget *parent)
       gotoPage_(NULL),
       zoomPage_(NULL),
       commandPopupMenu_(NULL),
+      aboutDialog_(NULL),
       showPageNumber_(false),      
       flickable_(NULL)
 {
@@ -197,7 +198,7 @@ void Window::onSendCommand(const QString &cmd)
         showHelp();
     } else if ("About" == cmd)
     {
-        qDebug() << "About";
+        showAboutDialog();
     } else if ("Exit" == cmd)
     {
         close();
@@ -700,5 +701,55 @@ void Window::showHelp()
     {
         qDebug() << "cannot open help file";
         //TODO: display error message
+    }
+}
+
+void Window::showAboutDialog()
+{
+    qDebug() << "Window::showAboutDialog";
+    if (NULL == aboutDialog_)
+    {
+        aboutDialog_ = new QDeclarativeView(this);
+        aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
+        aboutDialog_->setStyleSheet("background:transparent");
+        aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
+        aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
+        aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
+        QObject *pAbout = aboutDialog_->rootObject();
+        if (NULL != pAbout)
+        {
+            pAbout->setProperty("height", height());
+            pAbout->setProperty("width", width());
+            connect(pAbout, SIGNAL(closeAbout()), this, SLOT(closeAboutDialog()));
+            QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
+            if (NULL != pAboutDlg)
+            {
+            pAboutDlg->setProperty("text", "<H2>tabletReader v1.0</H2><br>"
+                                "<H3>PDF viewer for touch-enabled devices</H3><br>"
+                                "Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
+                                "This program is distributed in the hope that it will be useful, "
+                                "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+                                "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+                                "GNU General Public License for more details.<br><br>");
+            } else
+            {
+                qDebug() << "cannot get aboutDialog object";
+            }
+            aboutDialog_->show();
+        } else {
+            qDebug() << "cannot get disp object";
+            delete aboutDialog_;
+            aboutDialog_ = NULL;
+        }
+    }
+}
+
+void Window::closeAboutDialog()
+{
+    qDebug() << "Window::closeAboutDialog";
+    if ((NULL != aboutDialog_) && (true == aboutDialog_->close()))
+    {
+        qDebug() << "widget closed";
+        aboutDialog_ = NULL;
     }
 }

@@ -86,6 +86,8 @@ private slots:
     void togglePageDisplay();
     void onSendCommand(const QString &cmd);
     void showHelp();
+    void showAboutDialog();
+    void closeAboutDialog();
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
@@ -115,6 +117,7 @@ private:
     QDeclarativeView *gotoPage_;
     QDeclarativeView *zoomPage_;
     QDeclarativeView *commandPopupMenu_;
+    QDeclarativeView *aboutDialog_;
     QElapsedTimer pressTimer_;
     Worker *worker_;
     bool showPageNumber_;

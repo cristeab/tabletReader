@@ -107,7 +107,6 @@ Item {
                     // On click emit "accepted" signal via the main level dialog Item
                     // and hide the dialog.
                     onClicked: {
-                        console.log("Dialog was being accepted.");
                         modalDialog.state = "";
                         modalDialog.accepted();
                     }

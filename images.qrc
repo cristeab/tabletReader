@@ -46,6 +46,14 @@
         <file>qml/zoompage/Button.qml</file>
         <file>qml/zoompage/Reel.qml</file>
         <file>qml/zoompage/ZoomReel.qml</file>
+        <file>qml/aboutdialog.qml</file>
+        <file>qml/ModalDialog/Button.qml</file>
+        <file>qml/ModalDialog/Fader.qml</file>
+        <file>qml/ModalDialog/ModalDialog.qml</file>
+        <file>qml/ModalDialog/Visual.qml</file>
+        <file>qml/ModalDialog/gfx/button.png</file>
+        <file>qml/ModalDialog/gfx/button_active.png</file>
+        <file>qml/ModalDialog/gfx/button_pressed.png</file>
     </qresource>
     <qresource prefix="/help">
         <file>help/tabletReader.pdf</file>
