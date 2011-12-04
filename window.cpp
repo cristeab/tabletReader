@@ -393,9 +393,9 @@ void Window::closeCommandPopupMenu(const QString &cmd)
         } else if (QString("Show Page Number") == cmd)
         {
             togglePageDisplay();
-        } else if (QString("About ...") == cmd)
+        } else if (QString("Zoom ...") == cmd)
         {
-            qDebug() << "about command";
+            showZoomPage();
         } else if (QString("Exit") == cmd)
         {
             close();//TODO: close is not done
