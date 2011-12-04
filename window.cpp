@@ -50,6 +50,7 @@
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
+#define HELP_FILE "help/tabletReader.pdf"
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
@@ -193,7 +194,7 @@ void Window::onSendCommand(const QString &cmd)
         showZoomPage();
     } else if ("Help" == cmd)
     {
-        qDebug() << "Help";
+        openFile(HELP_FILE);
     } else if ("About" == cmd)
     {
         qDebug() << "About";
@@ -593,12 +594,16 @@ void Window::showPageNumber(int currentPage, int nbPages)
 }
 
 void Window::closeEvent(QCloseEvent *evt)
-{
-    qDebug() << "Window::closeEvent" << lastFilePath_ << document_->currentPage();    
-    QSettings settings(ORGANIZATION, APPLICATION);
-    settings.setValue(KEY_PAGE, document_->currentPage());
-    settings.setValue(KEY_FILE_PATH, lastFilePath_);
-    settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+{    
+    qDebug() << "Window::closeEvent" << lastFilePath_ << document_->currentPage();
+    if (QString(HELP_FILE) != lastFilePath_)
+    {
+        //the current settings are not saved if the last file is the help file
+        QSettings settings(ORGANIZATION, APPLICATION);
+        settings.setValue(KEY_PAGE, document_->currentPage());
+        settings.setValue(KEY_FILE_PATH, lastFilePath_);
+        settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+    }
     QWidget::closeEvent(evt);
 }
 
