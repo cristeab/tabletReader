@@ -47,4 +47,7 @@
         <file>qml/zoompage/Reel.qml</file>
         <file>qml/zoompage/ZoomReel.qml</file>
     </qresource>
+    <qresource prefix="/help">
+        <file>help/tabletReader.pdf</file>
+    </qresource>
 </RCC>

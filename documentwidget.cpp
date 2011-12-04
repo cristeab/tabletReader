@@ -139,6 +139,21 @@ bool DocumentWidget::setDocument(const QString &filePath)
     return doc_ != 0;
 }
 
+bool DocumentWidget::loadFromData(const QByteArray &fileContents)
+{
+    Poppler::Document *oldDocument = doc_;
+
+    doc_ = Poppler::Document::loadFromData(fileContents);
+    if (doc_) {
+        delete oldDocument;
+        doc_->setRenderHint(Poppler::Document::Antialiasing);
+        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+        maxNumPages_ = doc_->numPages();
+        currentPage_ = -1;
+    }
+    return doc_ != 0;
+}
+
 void DocumentWidget::setPage(int page)
 {
     if (page != currentPage_ + 1)

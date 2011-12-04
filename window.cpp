@@ -50,7 +50,7 @@
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
-#define HELP_FILE "help/tabletReader.pdf"
+#define HELP_FILE ":/help/help/tabletReader.pdf"
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
@@ -194,7 +194,7 @@ void Window::onSendCommand(const QString &cmd)
         showZoomPage();
     } else if ("Help" == cmd)
     {
-        openFile(HELP_FILE);
+        showHelp();
     } else if ("About" == cmd)
     {
         qDebug() << "About";
@@ -680,4 +680,25 @@ void Window::setZoomFactor(int index)
     }
     //update view
     slidingStacked_->slideInNext();
+}
+
+void Window::showHelp()
+{
+    qDebug() << "Window::showHelp";
+    QFile file(HELP_FILE);
+    if (true == file.open(QIODevice::ReadOnly))
+    {
+        if (document_->loadFromData(file.readAll()))
+        {
+            setupDocDisplay(1, HELP_FILE);
+            slidingStacked_->slideInNext();
+        } else{
+            qDebug() << "cannot load from data";
+        }
+        file.close();
+    } else
+    {
+        qDebug() << "cannot open help file";
+        //TODO: display error message
+    }
 }

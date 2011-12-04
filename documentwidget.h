@@ -130,6 +130,8 @@ public:
 
     enum {CACHE_SIZE = 3};
 
+    bool loadFromData(const QByteArray &fileContents);
+
 public slots:
     bool setDocument(const QString &filePath);
     void setPage(int page = -1);

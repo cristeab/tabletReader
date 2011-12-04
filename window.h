@@ -85,6 +85,7 @@ private slots:
     void setAnimationFlag();
     void togglePageDisplay();
     void onSendCommand(const QString &cmd);
+    void showHelp();
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
