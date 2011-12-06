@@ -88,6 +88,7 @@ private slots:
     void showHelp(bool slideNext = true);
     void showAboutDialog();
     void closeAboutDialog();
+    void showWarningMessage(const QString &title, const QString &explanation);
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,

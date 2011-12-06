@@ -419,12 +419,14 @@ void Window::openFile(const QString &filePath)
 {
     qDebug() << "Window::openFile";
     //open document
-    if (document_->setDocument(filePath)) {
+    if (document_->setDocument(filePath))
+    {
         setupDocDisplay(1, filePath);
         slidingStacked_->slideInNext();
-    } else {
-        QMessageBox::warning(this, tr("PDF Viewer - Failed to open file"),
-                             tr("The specified file could not be opened"));
+    } else
+    {
+        showWarningMessage(tr(APPLICATION " - Failed to open file"),
+                             tr("The specified file cannot be opened"));
     }
 }
 
@@ -745,7 +747,7 @@ void Window::showAboutDialog()
             }
             aboutDialog_->show();
         } else {
-            qDebug() << "cannot get disp object";
+            qDebug() << "cannot get aboutDialog object";
             delete aboutDialog_;
             aboutDialog_ = NULL;
         }
@@ -759,5 +761,43 @@ void Window::closeAboutDialog()
     {
         qDebug() << "widget closed";
         aboutDialog_ = NULL;
+    }
+}
+
+void Window::showWarningMessage(const QString &title, const QString &explanation)
+{
+    qDebug() << "Window::showWarningMessage";
+    if (NULL == aboutDialog_)
+    {
+        aboutDialog_ = new QDeclarativeView(this);
+        aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
+        aboutDialog_->setStyleSheet("background:transparent");
+        aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
+        aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
+        aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
+        QObject *pAbout = aboutDialog_->rootObject();
+        if (NULL != pAbout)
+        {
+            pAbout->setProperty("height", height());
+            pAbout->setProperty("width", width());
+            connect(pAbout, SIGNAL(closeAbout()), this, SLOT(closeAboutDialog()));
+            QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
+            if (NULL != pAboutDlg)
+            {
+                if (false == pAboutDlg->setProperty("text", "<H3 style=\"color:red\">"+title+
+                                       "</H3><br>"+explanation+"<br>"))
+                {
+                    qDebug() << "failed to set text";
+                }
+            } else
+            {
+                qDebug() << "cannot get aboutDialog object";
+            }
+            aboutDialog_->show();
+        } else {
+            qDebug() << "cannot get aboutDialog object";
+            delete aboutDialog_;
+            aboutDialog_ = NULL;
+        }
     }
 }
