@@ -85,7 +85,7 @@ private slots:
     void setAnimationFlag();
     void togglePageDisplay();
     void onSendCommand(const QString &cmd);
-    void showHelp();
+    void showHelp(bool slideNext = true);
     void showAboutDialog();
     void closeAboutDialog();
 

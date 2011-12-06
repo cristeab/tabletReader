@@ -45,7 +45,7 @@
 #include "worker.h"
 #include "flickable.h"
 
-#define ORGANIZATION "home"
+#define ORGANIZATION "cristeab"
 #define APPLICATION "tabletReader"
 #define KEY_PAGE "current_page"
 #define KEY_FILE_PATH "current_file_path"
@@ -154,22 +154,26 @@ Window::Window(QWidget *parent)
     pagePopupMenu_->addAction("");
     pagePopupMenu_->setEnabled(false);
 
+    //start worker thread
+    worker_->start();
+
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);
     QString filePath;
-    if (NULL == (filePath = settings.value(KEY_FILE_PATH).toString()))
+    if (NULL != (filePath = settings.value(KEY_FILE_PATH).toString()))
     {
-        return;//nothing to do
-    }
-    if (document_->setDocument(filePath))
+        if (document_->setDocument(filePath))
+        {
+            currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
+            setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
+        }
+    } else
     {
-        currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
-        setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
+        qDebug() << "no document found";
+        showHelp(false);
     }
     animationFinished_ = true;
-    //fullScreen();
-
-    worker_->start();
+    //fullScreen();    
 }
 
 Window::~Window()
@@ -683,7 +687,7 @@ void Window::setZoomFactor(int index)
     slidingStacked_->slideInNext();
 }
 
-void Window::showHelp()
+void Window::showHelp(bool slideNext)
 {
     qDebug() << "Window::showHelp";
     QFile file(HELP_FILE);
@@ -692,8 +696,12 @@ void Window::showHelp()
         if (document_->loadFromData(file.readAll()))
         {
             setupDocDisplay(1, HELP_FILE);
-            slidingStacked_->slideInNext();
-        } else{
+            if (true == slideNext)
+            {
+                slidingStacked_->slideInNext();
+            }
+        } else
+        {
             qDebug() << "cannot load from data";
         }
         file.close();
