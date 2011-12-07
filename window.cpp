@@ -62,8 +62,7 @@ Window::Window(QWidget *parent)
       showPageNumber_(false),      
       flickable_(NULL)
 {
-    //main window
-    setFixedSize(800, 600);
+    //main window    
     QWidget *centralWidget = new QWidget(this);
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
     setCentralWidget(centralWidget);
@@ -86,7 +85,6 @@ Window::Window(QWidget *parent)
             qDebug() << "cannot find toolbar object";
         }
     }
-    toolBar_->show();
     gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
 
     //actions for zoom in/out
@@ -173,7 +171,8 @@ Window::Window(QWidget *parent)
         showHelp(false);
     }
     animationFinished_ = true;
-    //fullScreen();    
+
+    normalScreen();
 }
 
 Window::~Window()
@@ -447,9 +446,28 @@ void Window::fullScreen()
 void Window::normalScreen()
 {
     qDebug() << "Window::normalScreen";
-    showNormal();
+
+    QDesktopWidget *pDesktop = QApplication::desktop();
+    if (NULL != pDesktop)
+    {
+        int width = pDesktop->width();
+        int height = pDesktop->height();
+        if ((FULL_SCREEN_WIDTH >= width) || (FULL_SCREEN_HEIGHT >= height))
+        {
+            qDebug() << "using full screen mode with toolbar";
+            setFixedSize(width, height);
+            showFullScreen();
+        } else
+        {
+            qDebug() << "using normal mode";
+            showNormal();
+            setFixedSize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
+                         (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
+        }
+    }
+
     toolBar_->show();
-    QApplication::restoreOverrideCursor ();
+    QApplication::restoreOverrideCursor();
 }
 
 void Window::increaseScale()

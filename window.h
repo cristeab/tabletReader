@@ -94,7 +94,11 @@ private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
          HORIZONTAL_SLIDE_SPEED_MS = 500,
          SWIPE_THRESHOLD = 5,
-         LONG_PRESS_TIMEOUT_MS = 1000};
+         LONG_PRESS_TIMEOUT_MS = 1000,
+         FULL_SCREEN_WIDTH = 1024,
+         FULL_SCREEN_HEIGHT = 768,
+         MIN_SCREEN_WIDTH = 800,
+         MIN_SCREEN_HEIGHT = 600};
 
     bool eventFilter(QObject *, QEvent *);
     bool showNextPage();
