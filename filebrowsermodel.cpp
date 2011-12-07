@@ -61,14 +61,15 @@ void FileBrowserModel::searchPdfFiles()
     _pdfFiles.clear();
     _dirs.clear();
 
-    QDir directory = QDir(_currentDir, "*.pdf *.PDF *.Pdf", QDir::Name | QDir::IgnoreCase |
-                          QDir::LocaleAware);
+    QDir directory = QDir(_currentDir, "*.pdf *.PDF *.Pdf *.pDf *.pdF *.PDf *.PdF *.pDF",
+                          QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
     //fill file list
     directory.setFilter(QDir::Files);
     foreach (QString file, directory.entryList()) {
         _pdfFiles.append(directory.absoluteFilePath(file));
     }
+    _pdfFiles.append(CLOSE_FILE_BROWSER_TEXT);
 
     //fill folder list
     directory.setFilter(QDir::AllDirs);
@@ -81,7 +82,7 @@ void FileBrowserModel::searchPdfFiles()
             QDir dir = QDir(absPath);
             if (!dir.isRoot()) {
                 dirToAdd =
-                    "Go Back To '" + QDir(dir.canonicalPath()).dirName() + "'";
+                        "Go Back To '" + QDir(dir.canonicalPath()).dirName() + "'";
             } else {
                 dirToAdd = "Go Back To /";
             }
@@ -110,29 +111,36 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     if (isFile) {
         int fileRow = index.row() - _dirs.count();
         switch (role) {
-            case TITLE:
-                return QDir(_pdfFiles[fileRow]).dirName();
-            case IMAGE:
-               return QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
-            case IS_FILE:
-                return 1;
-            case PATH:
-                return _pdfFiles[fileRow];
-       }
+        case TITLE:
+            return QDir(_pdfFiles[fileRow]).dirName();
+        case IMAGE:
+            if (((fileRow+1) == _pdfFiles.count()) &&
+                    (QString(CLOSE_FILE_BROWSER_TEXT) == _pdfFiles[fileRow]))
+            {
+                return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
+            } else
+            {
+                return QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
+            }
+        case IS_FILE:
+            return 1;
+        case PATH:
+            return _pdfFiles[fileRow];
+        }
     } else {
         switch (role) {
-            case TITLE:
-                return _dirs[dirRow];
-            case IMAGE:
-                if (dirRow == 0 && _dirs[dirRow].startsWith("Go")) {
-                    return QString(":/filebrowser/icons/Button-Upload-icon.png");
-                } else {
-                    return QString(":/filebrowser/icons/My-Ebooks-icon.png");
-                }
-            case IS_FILE:
-                return 0;
-            case PATH:
-                return _dirs[dirRow];
+        case TITLE:
+            return _dirs[dirRow];
+        case IMAGE:
+            if (dirRow == 0 && _dirs[dirRow].startsWith("Go")) {
+                return QString(":/filebrowser/icons/Button-Upload-icon.png");
+            } else {
+                return QString(":/filebrowser/icons/My-Ebooks-icon.png");
+            }
+        case IS_FILE:
+            return 0;
+        case PATH:
+            return _dirs[dirRow];
         }
     }
 
