@@ -60,7 +60,8 @@ Window::Window(QWidget *parent)
       commandPopupMenu_(NULL),
       aboutDialog_(NULL),
       showPageNumber_(false),      
-      flickable_(NULL)
+      flickable_(NULL),
+      fileBrowserModel_(new FileBrowserModel(this))
 {
     //main window    
     QWidget *centralWidget = new QWidget(this);
@@ -179,6 +180,7 @@ Window::~Window()
 {
     worker_->terminate();//terminate worker thread
     while(true != worker_->isFinished());//wait thread to finish
+    delete fileBrowserModel_;
 }
 
 void Window::onSendCommand(const QString &cmd)
@@ -216,10 +218,18 @@ void Window::showFileBrowser()
     qDebug() << "Window::showFileBrowser";
     if (NULL == fileBrowser_)
     {
-        fileBrowser_ = new QDeclarativeView(this);
-        FileBrowserModel* model = new FileBrowserModel(this);
-        model->searchPdfFiles();
-        fileBrowser_->engine()->rootContext()->setContextProperty("pdfPreviewModel", model);
+        if (NULL == (fileBrowser_ = new QDeclarativeView(this)))
+        {
+            showWarningMessage("Cannot create fileBrowser object", "not enough memory");
+            return;
+        }
+        if (NULL == fileBrowserModel_)
+        {
+            showWarningMessage("fileBrowserObject is NULL");
+            return;
+        }
+        fileBrowserModel_->searchPdfFiles();
+        fileBrowser_->engine()->rootContext()->setContextProperty("pdfPreviewModel", fileBrowserModel_);
         fileBrowser_->setSource(QUrl("qrc:/qml/qml/filebrowser.qml"));
         fileBrowser_->setStyleSheet("background:transparent");
         fileBrowser_->setAttribute(Qt::WA_TranslucentBackground);
@@ -237,7 +247,7 @@ void Window::showFileBrowser()
             {
                 qDebug() << "cannot set height";
             }
-            connect(pDisp, SIGNAL(changeDirectory(int)), model, SLOT(changeCurrentDir(int)));
+            connect(pDisp, SIGNAL(changeDirectory(int)), fileBrowserModel_, SLOT(changeCurrentDir(int)));
             connect(pDisp, SIGNAL(showDocument(QString)), this, SLOT(closeFileBrowser(QString)));
             fileBrowser_->show();
         } else {

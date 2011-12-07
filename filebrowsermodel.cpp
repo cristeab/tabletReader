@@ -155,4 +155,3 @@ void FileBrowserModel::setMainWindowTitle(const QString &title)
         pWin->setWindowTitle("Current folder: " + title);
     }
 }
-

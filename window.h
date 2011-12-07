@@ -50,7 +50,7 @@ class QScrollArea;
 class QSpinBox;
 class QComboBox;
 class SlidingStackedWidget;
-class FileBrowser;
+class FileBrowserModel;
 class QDeclarativeView;
 class Flickable;
 
@@ -88,7 +88,7 @@ private slots:
     void showHelp(bool slideNext = true);
     void showAboutDialog();
     void closeAboutDialog();
-    void showWarningMessage(const QString &title, const QString &explanation);
+    void showWarningMessage(const QString &title, const QString &explanation = "");
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
@@ -126,7 +126,8 @@ private:
     QElapsedTimer pressTimer_;
     Worker *worker_;
     bool showPageNumber_;
-    Flickable *flickable_;    
+    Flickable *flickable_;
+    FileBrowserModel* fileBrowserModel_;
 };
 
 #endif
