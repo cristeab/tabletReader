@@ -31,7 +31,6 @@ Rectangle {
             width: faderRect.width
             height: faderRect.height
             z: 100 // Make sure that this is on top.
-            onClicked: console.log("Click captured by Fader!")
         }
     }
 

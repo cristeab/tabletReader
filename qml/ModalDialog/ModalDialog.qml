@@ -128,7 +128,6 @@ Item {
                     // On click emit "cancelled" signal via the main level dialog Item
                     // and hide the dialog.
                     onClicked: {
-                        console.log("Dialog was being cancelled");
                         modalDialog.state = "";
                         modalDialog.cancelled();
                     }

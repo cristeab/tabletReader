@@ -24,8 +24,7 @@ import Qt 4.7
 
 Rectangle {
     id: box
-    objectName: "box"
-    width: 1024
+    width: 800
     height: 600
     color:  "transparent"
 
@@ -43,7 +42,7 @@ Rectangle {
                 id: previewBox
                 width: box.width
                 height:64
-                color: ((index%2)?"gray":"dimgray")
+                color: ((index%2)?"#80a9a9a9":"#80696969")
                 Image {
                     id: previewImage
                     source: model.image
@@ -62,7 +61,7 @@ Rectangle {
                     id: title
                     elide: Text.ElideRight
                     text: model.title
-                    color: "black"
+                    color: "white"
                     font.pointSize: 11
                     font.bold: true
                     anchors.top: parent.top
@@ -77,11 +76,9 @@ Rectangle {
                     onClicked:  {
                         if (model.file) {
                             showDocument(model.path)
-                            console.debug("showDoc"+model.path)
                         } else {
                             // Change dir
                             changeDirectory(index);
-                            console.debug("change directory")
                         }
                     }
                 }

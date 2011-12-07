@@ -60,7 +60,6 @@ Item {
                     height: toolbar.minimumItemHeight
                     onDoAction: {
                         sendCommand(btnText)
-                        console.debug(btnText)
                     }
                 }
             }

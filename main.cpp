@@ -43,9 +43,10 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-
+#ifndef QT_NO_DEBUG_OUTPUT
+    //in release mode the log file is not created
     Logger log("tabletReader.log");
-
+#endif
     Window wnd;
     wnd.show();
     return app.exec();

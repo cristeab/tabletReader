@@ -37,7 +37,6 @@ Rectangle {
 
         onAccepted: {
             closeAbout()
-            console.log("about dialog closed")
         }
     }
 }

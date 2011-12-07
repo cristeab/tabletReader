@@ -18,10 +18,8 @@ function doOperation(op) {
 
     if (op == "OK") {
         display.setPage(display.text)
-        console.debug("OK")
     } else if (op == "DEL") {
         display.text = ""
         lastOp = ""
-        console.debug("DEL")
     }
 }

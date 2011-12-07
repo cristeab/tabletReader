@@ -63,7 +63,7 @@ Window::Window(QWidget *parent)
       flickable_(NULL)
 {
     //main window
-    resize(800, 600);
+    setFixedSize(800, 600);
     QWidget *centralWidget = new QWidget(this);
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
     setCentralWidget(centralWidget);

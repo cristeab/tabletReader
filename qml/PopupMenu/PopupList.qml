@@ -62,7 +62,6 @@ Item {
                 height: parent.itemHeight
                 text: itemTitle
                 onClicked: {
-                    console.debug("Clicked: "+itemTitle)
                     itemClicked(itemTitle)
                 }
 

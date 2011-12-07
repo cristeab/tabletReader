@@ -49,7 +49,6 @@ Item {
                 zoom.toggle()
                 if (true == zoom.clip) {
                     setZoomFactor(index)
-                    console.debug("index " + index)
                 }
             }
         }
