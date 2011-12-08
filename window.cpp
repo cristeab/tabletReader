@@ -178,8 +178,6 @@ Window::Window(QWidget *parent)
 
 Window::~Window()
 {
-    worker_->terminate();//terminate worker thread
-    while(true != worker_->isFinished());//wait thread to finish
     delete fileBrowserModel_;
 }
 
@@ -645,6 +643,9 @@ void Window::closeEvent(QCloseEvent *evt)
         settings.setValue(KEY_FILE_PATH, lastFilePath_);
         settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
     }
+
+    worker_->quit();//terminate worker thread
+
     QWidget::closeEvent(evt);
 }
 
