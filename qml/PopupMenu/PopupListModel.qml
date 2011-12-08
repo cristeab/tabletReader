@@ -4,16 +4,16 @@ ListModel {
     id: model
 
     ListElement {
-        itemTitle: "Open ..."
+        itemTitle: "Open"
     }
     ListElement {
         itemTitle: "Normal Screen"
     }
     ListElement {
-        itemTitle: "Go To Page ..."
+        itemTitle: "Go To Page"
     }
     ListElement {
-        itemTitle: "Zoom ..."
+        itemTitle: "Zoom"
     }
     ListElement {
         itemTitle: "Show Page Number"

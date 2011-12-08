@@ -405,16 +405,16 @@ void Window::closeCommandPopupMenu(const QString &cmd)
     {
         qDebug() << "widget closed";
         commandPopupMenu_ = NULL;
-        if (QString("Open ...") == cmd)
+        if (QString("Open") == cmd)
         {
             showFileBrowser();
-        } else if (QString("Go To Page ...") == cmd)
+        } else if (QString("Go To Page") == cmd)
         {
             showGotoPage();
         } else if (QString("Show Page Number") == cmd)
         {
             togglePageDisplay();
-        } else if (QString("Zoom ...") == cmd)
+        } else if (QString("Zoom") == cmd)
         {
             showZoomPage();
         } else if (QString("Exit") == cmd)
