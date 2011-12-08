@@ -773,7 +773,7 @@ void Window::showAboutDialog()
                                 "<H3>PDF viewer for touch-enabled devices</H3><br>"
                                 "Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
                                 "This program is distributed in the hope that it will be useful, "
-                                "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+                                "but WITHOUT ANY WARRANTY; without even the implied warranty of "
                                 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
                                 "GNU General Public License for more details.<br><br>");
             } else
