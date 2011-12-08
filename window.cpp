@@ -471,7 +471,7 @@ void Window::normalScreen()
         {
             qDebug() << "using normal mode";
             showNormal();
-            setFixedSize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
+            resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
                          (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
         }
     }
