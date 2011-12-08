@@ -372,7 +372,7 @@ void Window::closeZoomPage(int index)
 void Window::showCommandPopupMenu()
 {
     qDebug() << "Window::showCommandPopupMenu";
-    if (true == toolBar_->isHidden())
+    if (false == toolBar_->isHidden())
     {
         return;//show command popup menu only when the toolbar of hidden
     }
