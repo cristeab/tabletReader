@@ -465,17 +465,18 @@ void Window::normalScreen()
             qDebug() << "using full screen mode with toolbar";
             setFixedSize(width, height);
             showFullScreen();
+            QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
         } else
         {
             qDebug() << "using normal mode";
             showNormal();
             resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
                          (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
+            QApplication::restoreOverrideCursor();
         }
     }
 
-    toolBar_->show();
-    QApplication::restoreOverrideCursor();
+    toolBar_->show();    
 }
 
 void Window::increaseScale()
