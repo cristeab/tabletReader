@@ -850,26 +850,24 @@ void Window::showWarningMessage(const QString &title, const QString &explanation
         aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
         aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
         aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
-        QObject *pAbout = aboutDialog_->rootObject();
-        if (NULL != pAbout)
+        connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+        QObject *pRoot = aboutDialog_->rootObject();
+        if (NULL != pRoot)
         {
-            pAbout->setProperty("height", height());
-            pAbout->setProperty("width", width());
-            connect(pAbout, SIGNAL(closeAbout()), this, SLOT(closeAboutDialog()));
-            QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
-            if (NULL != pAboutDlg)
+            pRoot->setProperty("height", height());
+            pRoot->setProperty("width", width());
+            QObject *pAbout = pRoot->findChild<QObject*>("aboutDialog");
+            if (NULL != pAbout)
             {
-                if (false == pAboutDlg->setProperty("text", "<H3 style=\"color:red\">"+title+
-                                       "</H3><br>"+explanation+"<br>"))
-                {
-                    qDebug() << "failed to set text";
-                }
+                pAbout->setProperty("text", "<H3 style=\"color:red\">"+title+
+                                    "</H3><br>"+explanation+"<br>");
             } else
             {
                 qDebug() << "cannot get aboutDialog object";
             }
             aboutDialog_->show();
-        } else {
+        } else
+        {
             qDebug() << "cannot get aboutDialog object";
             delete aboutDialog_;
             aboutDialog_ = NULL;
