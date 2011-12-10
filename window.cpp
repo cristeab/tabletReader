@@ -354,19 +354,29 @@ void Window::showZoomPage()
         zoomPage_->setAttribute(Qt::WA_TranslucentBackground);
         zoomPage_->setAttribute(Qt::WA_DeleteOnClose);
         zoomPage_->setWindowFlags(Qt::FramelessWindowHint);
-        zoomPage_->move((width()-zoomPage_->width())/2, (height()-zoomPage_->height())/2);
-        zoomPage_->show();
-        QObject *pZoomReel = zoomPage_->rootObject()->findChild<QObject*>("zoomreel");
-        if (NULL != pZoomReel)
+        connect(zoomPage_->engine(), SIGNAL(quit()), this, SLOT(closeZoomPage()));
+        QObject *pRoot = zoomPage_->rootObject();
+        if (NULL != pRoot)
         {
-            if (false == pZoomReel->setProperty("zoomIndex", currentZoomIndex_))
+            pRoot->setProperty("height", height());
+            pRoot->setProperty("width", width());
+            QObject *pZoomReel = pRoot->findChild<QObject*>("zoomreel");
+            if (NULL != pZoomReel)
             {
-                qDebug() << "cannot set property";
+                if (false == pZoomReel->setProperty("zoomIndex", currentZoomIndex_))
+                {
+                    qDebug() << "cannot set property";
+                }
+                connect(pZoomReel, SIGNAL(setZoomFactor(int)), this, SLOT(closeZoomPage(int)));
+                zoomPage_->show();
+            } else {
+                qDebug() << "cannot get disp object";
+                delete zoomPage_;
+                zoomPage_ = NULL;
             }
-            connect(pZoomReel, SIGNAL(setZoomFactor(int)), this, SLOT(closeZoomPage(int)));
-            zoomPage_->show();
-        } else {
-            qDebug() << "cannot get disp object";
+        } else
+        {
+            qDebug() << "cannot get root object";
             delete zoomPage_;
             zoomPage_ = NULL;
         }
@@ -375,7 +385,7 @@ void Window::showZoomPage()
 
 void Window::closeZoomPage(int index)
 {
-    qDebug() << "Window::closeZoomPage" << scaleFactors_[index];
+    qDebug() << "Window::closeZoomPage";
     if ((NULL != zoomPage_) && (true == zoomPage_->close()))
     {
         qDebug() << "widget closed";
@@ -715,8 +725,9 @@ void Window::setZoomFactor(int index)
 {
     qDebug() << "Window::setZoomFactor " << index;
     //set zoom factor
-    if (currentZoomIndex_ == index)
+    if ((currentZoomIndex_ == index) || ((0 > index) || (scaleFactors_.count() <= index)))
     {
+        qDebug() << "nothing to do";
         return;//nothing to do
     }
     currentZoomIndex_ = index;
