@@ -31,6 +31,7 @@ Item {
 //    property Component buttonBackground
 //    property Component buttonBackgroundPressed
     property bool showCancelButton: true
+    property bool showOkButton: true
 
     // Signals that are emitted from Ok/Cancel -buttons. Parent should
     // define handlers for these to react to user selection.
@@ -98,11 +99,7 @@ Item {
                     fontColor: modalDialog.fontColorButton
                     fontName: modalDialog.fontName
                     fontSize: modalDialog.buttonFontSize
-
-                    // Enable these, if you would want to change the button
-                    // look 'n' feel from your main qml.
-//                    bg: modalDialog.buttonBackground
-//                    bgPressed: modalDialog.buttonBackgroundPressed
+                    visible: modalDialog.showOkButton
 
                     // On click emit "accepted" signal via the main level dialog Item
                     // and hide the dialog.
@@ -118,11 +115,6 @@ Item {
                     fontColor: modalDialog.fontColorButton
                     fontName: modalDialog.fontName
                     fontSize: modalDialog.buttonFontSize
-
-                    // Enable these, if you would want to change the button
-                    // look 'n' feel from your main qml.
-//                    bg: modalDialog.buttonBackground
-//                    bgPressed: modalDialog.buttonBackgroundPressed
                     visible: modalDialog.showCancelButton
 
                     // On click emit "cancelled" signal via the main level dialog Item

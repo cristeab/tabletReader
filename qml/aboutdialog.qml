@@ -8,8 +8,6 @@ Rectangle {
     height: 640
     color: "transparent"
 
-    signal closeAbout
-
     // Visual is an item that defines some constants for the application
     // look and feel, e.g. the font sizes & colors etc.
     Comp.Visual {
@@ -33,10 +31,7 @@ Rectangle {
         fontColorButton: visual.defaultFontColorButton
         fontSize: visual.defaultFontSize
         showCancelButton: false
+        showOkButton: false
         state: "show"
-
-        onAccepted: {
-            closeAbout()
-        }
     }
 }

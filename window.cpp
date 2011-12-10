@@ -284,14 +284,26 @@ void Window::showGotoPage()
         gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
         gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
         gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
-        gotoPage_->move((width()-gotoPage_->width())/2, (height()-gotoPage_->height())/2);
-        QObject *pDisp = gotoPage_->rootObject()->findChild<QObject*>("disp");
-        if (NULL != pDisp)
+        //gotoPage_->move((width()-gotoPage_->width())/2, (height()-gotoPage_->height())/2);
+        QObject *pRoot = gotoPage_->rootObject();
+        if (NULL != pRoot)
         {
-            connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
-            gotoPage_->show();
-        } else {
-            qDebug() << "cannot get disp object";
+            pRoot->setProperty("width", width());
+            pRoot->setProperty("height", height());
+            connect(gotoPage_->engine(), SIGNAL(quit()), this, SLOT(closeGotoPage()));
+            QObject *pDisp = pRoot->findChild<QObject*>("disp");
+            if (NULL != pDisp)
+            {
+                connect(pDisp, SIGNAL(setPage(QString)), this, SLOT(closeGotoPage(QString)));
+                gotoPage_->show();
+            } else {
+                qDebug() << "cannot get disp object";
+                delete gotoPage_;
+                gotoPage_ = NULL;
+            }
+        } else
+        {
+            qDebug() << "cannot get root object";
             delete gotoPage_;
             gotoPage_ = NULL;
         }
@@ -308,20 +320,25 @@ void Window::closeGotoPage(const QString &pageNb)
         //set current page
         bool ok = false;
         int newPageNb = pageNb.toInt(&ok);
-        int currentPage = document_->currentPage()+1;
-        int numPages = document_->numPages();
-        if ((true == ok) && (newPageNb != currentPage) &&
-                (0 != newPageNb) && (newPageNb <= numPages))
+        if (true == ok)
         {
-            gotoPage(newPageNb, numPages);
-            if (currentPage < newPageNb)
+            int currentPage = document_->currentPage()+1;
+            int numPages = document_->numPages();
+            if ((newPageNb != currentPage) && (0 != newPageNb) && (newPageNb <= numPages))
             {
-                slidingStacked_->slideInNext();
+                gotoPage(newPageNb, numPages);
+                if (currentPage < newPageNb)
+                {
+                    slidingStacked_->slideInNext();
+                } else {
+                    slidingStacked_->slideInPrev();
+                }
             } else {
-                slidingStacked_->slideInPrev();
+                qDebug() << "nothing to do";
             }
-        } else {
-            qDebug() << "nothing to do";
+        } else
+        {
+            qDebug() << "cannot convert input or empty input";
         }
     }
 }
@@ -761,22 +778,22 @@ void Window::showAboutDialog()
         aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
         aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
         aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
+        connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
         QObject *pAbout = aboutDialog_->rootObject();
         if (NULL != pAbout)
         {
             pAbout->setProperty("height", height());
-            pAbout->setProperty("width", width());
-            connect(pAbout, SIGNAL(closeAbout()), this, SLOT(closeAboutDialog()));
+            pAbout->setProperty("width", width());            
             QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
             if (NULL != pAboutDlg)
             {
-            pAboutDlg->setProperty("text", "<H2>tabletReader v1.0</H2><br>"
-                                "<H3>PDF viewer for touch-enabled devices</H3><br>"
-                                "Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
-                                "This program is distributed in the hope that it will be useful, "
-                                "but WITHOUT ANY WARRANTY; without even the implied warranty of "
-                                "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-                                "GNU General Public License for more details.<br><br>");
+                pAboutDlg->setProperty("text", "<H2>tabletReader v1.0</H2><br>"
+                                       "<H3>PDF viewer for touch-enabled devices</H3><br>"
+                                       "Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
+                                       "This program is distributed in the hope that it will be useful, "
+                                       "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+                                       "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+                                       "GNU General Public License for more details.<br><br>");
             } else
             {
                 qDebug() << "cannot get aboutDialog object";

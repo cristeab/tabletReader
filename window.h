@@ -72,7 +72,7 @@ private slots:
     void showFileBrowser();
     void closeFileBrowser(const QString &doc);
     void showGotoPage();    
-    void closeGotoPage(const QString &pageNb);
+    void closeGotoPage(const QString &pageNb = "");
     void showZoomPage();
     void closeZoomPage(int index);
     void showCommandPopupMenu();
