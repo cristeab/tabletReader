@@ -26,6 +26,9 @@
 #include "documentwidget.h"
 #include "worker.h"
 
+//Header for Intel AppUp(TM) software
+#include "adpcppf.h"
+
 class QScrollArea;
 class QSpinBox;
 class QComboBox;
@@ -108,6 +111,7 @@ private:
     bool showPageNumber_;
     Flickable *flickable_;
     FileBrowserModel* fileBrowserModel_;
+	Application *appupApp_;
 };
 
 #endif
