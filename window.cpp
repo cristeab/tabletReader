@@ -409,14 +409,25 @@ void Window::showCommandPopupMenu()
         commandPopupMenu_->setAttribute(Qt::WA_TranslucentBackground);
         commandPopupMenu_->setAttribute(Qt::WA_DeleteOnClose);
         commandPopupMenu_->setWindowFlags(Qt::FramelessWindowHint);
-        commandPopupMenu_->move((width()-commandPopupMenu_->width())/2, (height()-commandPopupMenu_->height())/2);
-        QObject *pDisp = commandPopupMenu_->rootObject()->findChild<QObject*>("popuplist");
-        if (NULL != pDisp)
+        connect(commandPopupMenu_->engine(), SIGNAL(quit()), this, SLOT(closeCommandPopupMenu()));
+        QObject *pRoot = commandPopupMenu_->rootObject();
+        if (NULL != pRoot)
         {
-            connect(pDisp, SIGNAL(itemClicked(QString)), this, SLOT(closeCommandPopupMenu(QString)));
-            commandPopupMenu_->show();
-        } else {
-            qDebug() << "cannot get popuplist object";
+            pRoot->setProperty("height", height());
+            pRoot->setProperty("width", width());
+            QObject *pDisp = pRoot->findChild<QObject*>("popuplist");
+            if (NULL != pDisp)
+            {
+                connect(pDisp, SIGNAL(itemClicked(QString)), this, SLOT(closeCommandPopupMenu(QString)));
+                commandPopupMenu_->show();
+            } else {
+                qDebug() << "cannot get popuplist object";
+                delete commandPopupMenu_;
+                commandPopupMenu_ = NULL;
+            }
+        } else
+        {
+            qDebug() << "cannot get root object";
             delete commandPopupMenu_;
             commandPopupMenu_ = NULL;
         }
@@ -444,7 +455,7 @@ void Window::closeCommandPopupMenu(const QString &cmd)
             showZoomPage();
         } else if (QString("Exit") == cmd)
         {
-            close();//TODO: close is not done
+            close();
         } else if (QString("Normal Screen") == cmd)
         {
             normalScreen();
@@ -473,8 +484,8 @@ void Window::openFile(const QString &filePath)
 void Window::fullScreen()
 {
     qDebug() << "Window::fullScreen";
-    showFullScreen();
     toolBar_->hide();
+    showFullScreen();    
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
 }
 

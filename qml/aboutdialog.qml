@@ -1,5 +1,5 @@
 import QtQuick 1.0
-import "ModalDialog" as Comp
+import "ModalDialog" as Modal
 
 Rectangle {
     id: container
@@ -10,12 +10,12 @@ Rectangle {
 
     // Visual is an item that defines some constants for the application
     // look and feel, e.g. the font sizes & colors etc.
-    Comp.Visual {
+    Modal.Visual {
         id: visual
     }
 
     // Example on using ModalDialog component.
-    Comp.ModalDialog {
+    Modal.ModalDialog {
         id: dialog
         objectName: "aboutDialog"
 

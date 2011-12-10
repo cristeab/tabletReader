@@ -17,7 +17,7 @@ SOURCES       = documentwidget.cpp \
 QT           +=     declarative
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
-#DEFINES      += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+DEFINES      += QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 #install
 target.path = /usr/bin

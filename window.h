@@ -76,7 +76,7 @@ private slots:
     void showZoomPage();
     void closeZoomPage(int index = -1);
     void showCommandPopupMenu();
-    void closeCommandPopupMenu(const QString &cmd);
+    void closeCommandPopupMenu(const QString &cmd = "");
     void openFile(const QString &filePath);    
     void fullScreen();
     void normalScreen();
