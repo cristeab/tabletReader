@@ -41,7 +41,7 @@
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
 
-DocumentWidget::DocumentWidget(QWidget */*parent*/)
+DocumentWidget::DocumentWidget(QWidget*)
     : doc_(NULL),
       currentPage_(-1),
       currentIndex_(-1),
