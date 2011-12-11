@@ -56,30 +56,6 @@ Window::Window(QWidget *parent)
 	setWindowTitle(tr(APPLICATION));
 	setStyleSheet("background-color: black");
 
-	//Authorization code for Intel AppUp(TM) software
-	try {
-#ifdef _DEBUG
-		appupApp_ = new Application(ApplicationId(ADP_DEBUG_APPLICATIONID));
-#else
-		appupApp_ = new Application(ApplicationId(0xF95A11A9,0xF079468E,0xABAF2D5C,0x7C56C5F7));
-#endif
-	} catch (AdpException&) {
-		//Display an appropriate error message here
-		QDesktopWidget *pDesktop = QApplication::desktop();
-		if (NULL != pDesktop)
-		{
-			int width = pDesktop->width();
-			int height = pDesktop->height();
-			showNormal();
-			resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
-				(MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
-		}
-		showWarningMessage("Cannot get application GUID", "you cannot use tabletReader");
-		if (appupApp_ != NULL) delete appupApp_;
-		//call application exit code here
-		return;
-	}
-
 	//main toolbar
 	toolBar_ = new QDeclarativeView(this);
 	toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
@@ -184,6 +160,21 @@ Window::Window(QWidget *parent)
 	animationFinished_ = true;
 
 	normalScreen();
+
+	//Authorization code for Intel AppUp(TM) software
+	try {
+#ifdef _DEBUG
+		appupApp_ = new Application(ApplicationId(ADP_DEBUG_APPLICATIONID));
+#else
+		appupApp_ = new Application(ApplicationId(0xF95A11A9,0xF079468E,0xABAF2D5C,0x7C56C5F7));
+#endif
+	} catch (AdpException&) {
+		//Display an appropriate error message here
+		showWarningMessage("Cannot get application GUID", "you cannot use tabletReader");
+		if (appupApp_ != NULL) delete appupApp_;
+		//call application exit code here
+		connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
+	}
 }
 
 Window::~Window()
@@ -527,7 +518,10 @@ void Window::normalScreen()
 		}
 	}
 
-	toolBar_->show();    
+	if (NULL != toolBar_)
+	{
+		toolBar_->show();
+	}
 }
 
 void Window::increaseScale()
