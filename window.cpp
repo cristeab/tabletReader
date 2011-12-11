@@ -160,7 +160,7 @@ Window::Window(QWidget *parent)
 	animationFinished_ = true;
 
 	normalScreen();
-
+#ifndef NO_APPUP_AUTH_CODE
 	//Authorization code for Intel AppUp(TM) software
 	try {
 #ifdef _DEBUG
@@ -171,11 +171,12 @@ Window::Window(QWidget *parent)
 	} catch (AdpException&) {
 		//Display an appropriate error message here
 		showWarningMessage("Cannot get authorization code for Intel AppUp(TM) software", 
-			"You are not authorized to use tabletReader");
+			"You cannot use tabletReader");
 		if (appupApp_ != NULL) delete appupApp_;
 		//call application exit code here
-		//connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
+		connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 	}
+#endif
 }
 
 Window::~Window()
@@ -183,7 +184,9 @@ Window::~Window()
 	delete fileBrowserModel_;
 
 	//Cleanup code for Intel AppUp(TM) software
+#ifndef NO_APPUP_AUTH_CODE
 	if (appupApp_ != NULL) delete appupApp_;
+#endif
 }
 
 void Window::onSendCommand(const QString &cmd)

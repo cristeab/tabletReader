@@ -27,7 +27,9 @@
 #include "worker.h"
 
 //Header for Intel AppUp(TM) software
+#ifndef NO_APPUP_AUTH_CODE
 #include "adpcppf.h"
+#endif
 
 class QScrollArea;
 class QSpinBox;
@@ -111,7 +113,9 @@ private:
     bool showPageNumber_;
     Flickable *flickable_;
     FileBrowserModel* fileBrowserModel_;
+#ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
+#endif
 };
 
 #endif
