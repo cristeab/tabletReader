@@ -35,7 +35,7 @@ Rectangle
 
     Item {
         id: container
-        width: 210
+        width: 250
         height: 325
         anchors.centerIn: parent
         Comp.PopupList {
