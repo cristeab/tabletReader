@@ -455,7 +455,7 @@ void Window::closeCommandPopupMenu(const QString &cmd)
 		} else if (QString("Go To Page") == cmd)
 		{
 			showGotoPage();
-		} else if (QString("Show Page Number") == cmd)
+		} else if (QString("Show/Hide Page Number") == cmd)
 		{
 			togglePageDisplay();
 		} else if (QString("Zoom") == cmd)
