@@ -46,8 +46,7 @@ Window::Window(QWidget *parent)
 	worker_(NULL),
 	showPageNumber_(false),      
 	flickable_(NULL),
-	fileBrowserModel_(new FileBrowserModel(this)),
-	appupApp_(NULL)
+        fileBrowserModel_(new FileBrowserModel(this))
 {
 	//main window    
 	QWidget *centralWidget = new QWidget(this);
