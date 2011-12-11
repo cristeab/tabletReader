@@ -161,6 +161,7 @@ Window::Window(QWidget *parent)
 	normalScreen();
 #ifndef NO_APPUP_AUTH_CODE
 	//Authorization code for Intel AppUp(TM) software
+	appupApp_ = NULL;
 	try {
 #ifdef _DEBUG
 		appupApp_ = new Application(ApplicationId(ADP_DEBUG_APPLICATIONID));
