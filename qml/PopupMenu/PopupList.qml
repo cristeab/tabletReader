@@ -63,11 +63,6 @@ Item {
                 text: itemTitle
                 onClicked: {
                     itemClicked(itemTitle)
-                    if ("Show Page Number" == itemTitle) {
-                        text: "Hide Page Number"
-                    } else if ("Hide Page Number" == itemTitle) {
-                        text: "Show Page Number"
-                    }
                 }
 
                 bgImage: container.bgImage

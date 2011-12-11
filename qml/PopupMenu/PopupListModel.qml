@@ -16,7 +16,7 @@ ListModel {
         itemTitle: "Zoom"
     }
     ListElement {
-        itemTitle: "Show Page Number"
+        itemTitle: "Show/Hide Page Number"
     }
     ListElement {
         itemTitle: "Exit"
