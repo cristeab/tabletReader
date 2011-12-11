@@ -170,7 +170,8 @@ Window::Window(QWidget *parent)
 #endif
 	} catch (AdpException&) {
 		//Display an appropriate error message here
-		showWarningMessage("Cannot get application GUID", "you cannot use tabletReader");
+		showWarningMessage("Cannot get authorization code for Intel AppUp(TM) software", 
+			"You are not authorized to use tabletReader");
 		if (appupApp_ != NULL) delete appupApp_;
 		//call application exit code here
 		connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
