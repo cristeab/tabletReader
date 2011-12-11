@@ -64,9 +64,9 @@ Item {
                 onClicked: {
                     itemClicked(itemTitle)
                     if ("Show Page Number" == itemTitle) {
-                        itemTitle = "Hide Page Number"
+                        text: "Hide Page Number"
                     } else if ("Hide Page Number" == itemTitle) {
-                        itemTitle = "Show Page Number"
+                        text: "Show Page Number"
                     }
                 }
 
