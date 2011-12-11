@@ -74,7 +74,7 @@ private slots:
     void showWarningMessage(const QString &title, const QString &explanation = "");
 
 private:
-    enum {TOOLTIP_VISIBLE_TIME_MS = 1000,
+    enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
          HORIZONTAL_SLIDE_SPEED_MS = 500,
          SWIPE_THRESHOLD = 5,
          LONG_PRESS_TIMEOUT_MS = 1000,
