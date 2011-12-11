@@ -174,7 +174,7 @@ Window::Window(QWidget *parent)
 			"You are not authorized to use tabletReader");
 		if (appupApp_ != NULL) delete appupApp_;
 		//call application exit code here
-		connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
+		//connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 	}
 }
 
