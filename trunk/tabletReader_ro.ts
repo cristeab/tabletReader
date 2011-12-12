@@ -80,32 +80,32 @@
 <context>
     <name>PopupListModel</name>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="7"/>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="28"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="10"/>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="29"/>
         <source>Normal Screen</source>
         <translation>Ecran Normal</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="13"/>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="30"/>
         <source>Go To Page</source>
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="16"/>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="31"/>
         <source>Zoom</source>
         <translation>Marire</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="19"/>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="32"/>
         <source>Show/Hide Page Number</source>
         <translation>Afiseaza/Ascunde Numarul de Pagina</translation>
     </message>
     <message>
-        <location filename="qml/PopupMenu/PopupListModel.qml" line="22"/>
+        <location filename="qml/PopupMenu/PopupListModel.qml" line="33"/>
         <source>Exit</source>
         <translation>Iesire</translation>
     </message>
