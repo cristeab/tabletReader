@@ -59,4 +59,8 @@
     <qresource prefix="/help">
         <file>help/tabletReader.pdf</file>
     </qresource>
+    <qresource prefix="/translations">
+        <file>tabletReader_fr.qm</file>
+        <file>tabletReader_ro.qm</file>
+    </qresource>
 </RCC>

@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 #endif
     //translation object
     QTranslator translator;
-    if (false == translator.load("tabletReader_" + QLocale::system().name()))
+    if (false == translator.load(":/translations/tabletReader_" + QLocale::system().name()))
     {
         qDebug() << "cannot load translation file" << QLocale::system().name();
     }
