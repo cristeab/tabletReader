@@ -18,7 +18,7 @@ QT           +=     declarative
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 DEFINES      +=     NO_APPUP_AUTH_CODE
-#DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 TRANSLATIONS += tabletReader_fr.ts \
                 tabletReader_ro.ts
