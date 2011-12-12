@@ -60,9 +60,9 @@ Item {
                 x: 0; y: 0
                 width: parent.width
                 height: parent.itemHeight
-                text: itemTitle
+                text: listView.model.title(index)
                 onClicked: {
-                    itemClicked(itemTitle)
+                    itemClicked(headerItemRect.text)
                 }
 
                 bgImage: container.bgImage

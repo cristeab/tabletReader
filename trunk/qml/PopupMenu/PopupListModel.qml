@@ -4,22 +4,37 @@ ListModel {
     id: model
 
     ListElement {
-        itemTitle: qsTr("Open")
+        itemTitle: "NOT SET"
     }
     ListElement {
-        itemTitle: qsTr("Normal Screen")
+        itemTitle: "NOT SET"
     }
     ListElement {
-        itemTitle: qsTr("Go To Page")
+        itemTitle: "NOT SET"
     }
     ListElement {
-        itemTitle: qsTr("Zoom")
+        itemTitle: "NOT SET"
     }
     ListElement {
-        itemTitle: qsTr("Show/Hide Page Number")
+        itemTitle: "NOT SET"
     }
     ListElement {
-        itemTitle: qsTr("Exit")
+        itemTitle: "NOT SET"
     }
+
+    function title(index) {
+        if (title["text"] === undefined) {
+            title.text = [
+                qsTr("Open"),
+                qsTr("Normal Screen"),
+                qsTr("Go To Page"),
+                qsTr("Zoom"),
+                qsTr("Show/Hide Page Number"),
+                qsTr("Exit")
+            ]
+        }
+        return title.text[index]
+    }
+
 }
 
