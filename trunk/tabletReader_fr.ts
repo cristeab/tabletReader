@@ -38,6 +38,16 @@
         <translation>Ctrl+-</translation>
     </message>
     <message>
+        <location filename="window.cpp" line="173"/>
+        <source>Cannot get authorization code for Intel AppUp(TM) software</source>
+        <translation>Impossible à lire le code d&apos;autorisation pour le logiciel Intel AppUp (TM)</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="174"/>
+        <source>You cannot use tabletReader</source>
+        <translation>Vous ne pouvez pas utiliser tabletReader</translation>
+    </message>
+    <message>
         <location filename="window.cpp" line="198"/>
         <source>Full Screen</source>
         <translation>Plein Ecran</translation>
@@ -86,6 +96,7 @@
         <translation>l&apos;objet fileBrowserObject est NULL</translation>
     </message>
     <message>
+        <location filename="window.cpp" line="195"/>
         <location filename="window.cpp" line="452"/>
         <source>Open</source>
         <translation>Ouvrir</translation>
@@ -113,7 +124,7 @@
     <message>
         <location filename="window.cpp" line="802"/>
         <source>Cannot open help file</source>
-        <translation>Impossible à ouvrir le fichier d&apos;aide</translation>
+        <translation>Impossible d&apos;ouvrir le fichier d&apos;aide</translation>
     </message>
     <message>
         <location filename="window.cpp" line="826"/>

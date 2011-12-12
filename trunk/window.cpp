@@ -170,8 +170,8 @@ Window::Window(QWidget *parent)
 #endif
 	} catch (AdpException&) {
 		//Display an appropriate error message here
-		showWarningMessage("Cannot get authorization code for Intel AppUp(TM) software", 
-			"You cannot use tabletReader");
+                showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
+                        tr("You cannot use tabletReader"));
 		if (appupApp_ != NULL) delete appupApp_;
 		//call application exit code here
 		connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
@@ -192,7 +192,7 @@ Window::~Window()
 void Window::onSendCommand(const QString &cmd)
 {
 	qDebug() << "Window::onSendCommand" << cmd;
-	if ("Open" == cmd)
+        if (tr("Open") == cmd)
 	{
 		showFileBrowser();
         } else if (tr("Full Screen") == cmd)
@@ -272,7 +272,7 @@ void Window::closeFileBrowser(const QString &doc)
 	{
 		qDebug() << "widget closed";
 		fileBrowser_ = NULL;
-		if (QString(CLOSE_FILE_BROWSER_TEXT) != doc)
+                if (tr(CLOSE_FILE_BROWSER_TEXT) != doc)
 		{
 			openFile(doc);
 		} else

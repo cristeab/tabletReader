@@ -38,6 +38,16 @@
         <translation>Ctrl+-</translation>
     </message>
     <message>
+        <location filename="window.cpp" line="173"/>
+        <source>Cannot get authorization code for Intel AppUp(TM) software</source>
+        <translation>Nu se poate citi codul de autorizare pentru programul Intel AppUp (TM)</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="174"/>
+        <source>You cannot use tabletReader</source>
+        <translation>Nu puteti folosi tabletReader</translation>
+    </message>
+    <message>
         <location filename="window.cpp" line="198"/>
         <source>Full Screen</source>
         <translation>Tot Ecranul</translation>
@@ -86,6 +96,7 @@
         <translation>obiectul fileBrowserObject este NULL</translation>
     </message>
     <message>
+        <location filename="window.cpp" line="195"/>
         <location filename="window.cpp" line="452"/>
         <source>Open</source>
         <translation>Deschide</translation>

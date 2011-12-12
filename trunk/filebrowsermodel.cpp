@@ -66,7 +66,7 @@ void FileBrowserModel::searchPdfFiles()
     foreach (QString file, directory.entryList()) {
         _pdfFiles.append(directory.absoluteFilePath(file));
     }
-    _pdfFiles.append(CLOSE_FILE_BROWSER_TEXT);
+    _pdfFiles.append(tr(CLOSE_FILE_BROWSER_TEXT));
 
     //fill folder list
     directory.setFilter(QDir::AllDirs);
@@ -112,7 +112,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
             return QDir(_pdfFiles[fileRow]).dirName();
         case IMAGE:
             if (((fileRow+1) == _pdfFiles.count()) &&
-                    (QString(CLOSE_FILE_BROWSER_TEXT) == _pdfFiles[fileRow]))
+                    (tr(CLOSE_FILE_BROWSER_TEXT) == _pdfFiles[fileRow]))
             {
                 return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
             } else

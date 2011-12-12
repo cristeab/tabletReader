@@ -22,7 +22,7 @@
 #include <QAbstractListModel>
 #include <QVector>
 
-#define CLOSE_FILE_BROWSER_TEXT tr("Close File Browser")
+#define CLOSE_FILE_BROWSER_TEXT "Close File Browser"
 
 class FileBrowserModel : public QAbstractListModel
 {
