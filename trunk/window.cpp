@@ -195,22 +195,22 @@ void Window::onSendCommand(const QString &cmd)
 	if ("Open" == cmd)
 	{
 		showFileBrowser();
-	} else if ("Full Screen" == cmd)
+        } else if (tr("Full Screen") == cmd)
 	{
 		fullScreen();
-	} else if ("Go To Page" == cmd)
+        } else if (tr("Go To Page") == cmd)
 	{
 		showGotoPage();
-	} else if ("Zoom" == cmd)
+        } else if (tr("Zoom") == cmd)
 	{
 		showZoomPage();
-	} else if ("Help" == cmd)
+        } else if (tr("Help") == cmd)
 	{
 		showHelp();
-	} else if ("About" == cmd)
+        } else if (tr("About") == cmd)
 	{
 		showAboutDialog();
-	} else if ("Exit" == cmd)
+        } else if (tr("Exit") == cmd)
 	{
 		close();
 	} else
@@ -226,12 +226,13 @@ void Window::showFileBrowser()
 	{
 		if (NULL == (fileBrowser_ = new QDeclarativeView(this)))
 		{
-			showWarningMessage("Cannot create fileBrowser object", "not enough memory");
+                        showWarningMessage(tr("Cannot create fileBrowser object"),
+                                           tr("not enough memory"));
 			return;
 		}
 		if (NULL == fileBrowserModel_)
 		{
-			showWarningMessage("fileBrowserObject is NULL");
+                        showWarningMessage(tr("fileBrowserObject is NULL"));
 			return;
 		}
 		fileBrowserModel_->searchPdfFiles();
@@ -292,7 +293,6 @@ void Window::showGotoPage()
 		gotoPage_->setAttribute(Qt::WA_TranslucentBackground);
 		gotoPage_->setAttribute(Qt::WA_DeleteOnClose);
 		gotoPage_->setWindowFlags(Qt::FramelessWindowHint);
-		//gotoPage_->move((width()-gotoPage_->width())/2, (height()-gotoPage_->height())/2);
 		QObject *pRoot = gotoPage_->rootObject();
 		if (NULL != pRoot)
 		{
@@ -449,22 +449,22 @@ void Window::closeCommandPopupMenu(const QString &cmd)
 	{
 		qDebug() << "widget closed";
 		commandPopupMenu_ = NULL;
-		if (QString("Open") == cmd)
+                if (tr("Open") == cmd)
 		{
 			showFileBrowser();
-		} else if (QString("Go To Page") == cmd)
+                } else if (tr("Go To Page") == cmd)
 		{
 			showGotoPage();
-		} else if (QString("Show/Hide Page Number") == cmd)
+                } else if (tr("Show/Hide Page Number") == cmd)
 		{
 			togglePageDisplay();
-		} else if (QString("Zoom") == cmd)
+                } else if (tr("Zoom") == cmd)
 		{
 			showZoomPage();
-		} else if (QString("Exit") == cmd)
+                } else if (tr("Exit") == cmd)
 		{
 			close();
-		} else if (QString("Normal Screen") == cmd)
+                } else if (tr("Normal Screen") == cmd)
 		{
 			normalScreen();
 		} else
@@ -799,7 +799,7 @@ void Window::showHelp(bool slideNext)
 	} else
 	{
 		qDebug() << "cannot open help file";
-		//TODO: display error message
+                showWarningMessage(tr("Cannot open help file"));
 	}
 }
 
@@ -823,13 +823,13 @@ void Window::showAboutDialog()
 			QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
 			if (NULL != pAboutDlg)
 			{
-				pAboutDlg->setProperty("text", "<H2>tabletReader v1.0</H2><br>"
+                                pAboutDlg->setProperty("text", tr("<H2>tabletReader v1.0</H2><br>"
 					"<H3>PDF viewer for touch-enabled devices</H3><br>"
 					"Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
 					"This program is distributed in the hope that it will be useful, "
 					"but WITHOUT ANY WARRANTY; without even the implied warranty of "
 					"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
-					"GNU General Public License for more details.<br><br>");
+                                        "GNU General Public License for more details.<br><br>"));
 			} else
 			{
 				qDebug() << "cannot get aboutDialog object";

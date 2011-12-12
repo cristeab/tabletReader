@@ -4,22 +4,22 @@ ListModel {
     id: model
 
     ListElement {
-        itemTitle: "Open"
+        itemTitle: qsTr("Open")
     }
     ListElement {
-        itemTitle: "Normal Screen"
+        itemTitle: qsTr("Normal Screen")
     }
     ListElement {
-        itemTitle: "Go To Page"
+        itemTitle: qsTr("Go To Page")
     }
     ListElement {
-        itemTitle: "Zoom"
+        itemTitle: qsTr("Zoom")
     }
     ListElement {
-        itemTitle: "Show/Hide Page Number"
+        itemTitle: qsTr("Show/Hide Page Number")
     }
     ListElement {
-        itemTitle: "Exit"
+        itemTitle: qsTr("Exit")
     }
 }
 

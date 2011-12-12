@@ -95,7 +95,7 @@ Item {
 
                 Button {
                     id: okButton
-                    text: "OK"
+                    text: qsTr("OK")
                     fontColor: modalDialog.fontColorButton
                     fontName: modalDialog.fontName
                     fontSize: modalDialog.buttonFontSize
@@ -111,7 +111,7 @@ Item {
 
                 Button {
                     id: cancelButton
-                    text: "Cancel"
+                    text: qsTr("Cancel")
                     fontColor: modalDialog.fontColorButton
                     fontName: modalDialog.fontName
                     fontSize: modalDialog.buttonFontSize

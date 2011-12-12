@@ -67,7 +67,7 @@ Rectangle
                         width: box.width
                         height: 16
                         color:  "darkblue"
-                        text: "GoTo Page"
+                        text: qsTr("GoTo Page")
                         horizontalAlignment: Text.AlignHCenter
                         font.bold: true
                         font.pixelSize: 16

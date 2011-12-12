@@ -29,43 +29,43 @@ Rectangle {
         objectName: "toolbar"
 
         ToolbarView {
-            toolbarItemTitle: "Open"
+            toolbarItemTitle: qsTr("Open")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Folder-Blue-Documents-icon.png"
             clip: true
         }
 
         ToolbarView {
-            toolbarItemTitle: "Full Screen"
+            toolbarItemTitle: qsTr("Full Screen")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/window-full-screen-icon.png"
             clip: true
         }
 
         ToolbarView {
-            toolbarItemTitle: "Go To Page"
+            toolbarItemTitle: qsTr("Go To Page")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/goto-page-icon.png"
             clip: true
         }
 
         ToolbarView {
-            toolbarItemTitle: "Zoom"
+            toolbarItemTitle: qsTr("Zoom")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/zoom-icon.png"
             clip: true
         }
 
         ToolbarView {
-            toolbarItemTitle: "Help"
+            toolbarItemTitle: qsTr("Help")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/help-icon.png"
             clip: true
         }
 
         ToolbarView {
-            toolbarItemTitle: "About"
+            toolbarItemTitle: qsTr("About")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/About-icon.png"
             clip: true
         }
 
         ToolbarView {
-            toolbarItemTitle: "Exit"
+            toolbarItemTitle: qsTr("Exit")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/Button-Close-icon.png"
             clip: true
         }

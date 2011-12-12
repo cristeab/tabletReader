@@ -52,7 +52,6 @@ public:
         SlidingStackedWidget(QWidget *parent);
         ~SlidingStackedWidget(void);
 
-
 public slots:
         //! Some basic settings API
         void setSpeed(int speed);   //animation duration in milliseconds
@@ -64,7 +63,6 @@ public slots:
         void slideInNext();
         void slideInPrev();
         void slideInIdx(int idx, enum t_direction direction=AUTOMATIC);
-
 
 signals:
         //! this is used for internal purposes in the class engine
@@ -91,18 +89,5 @@ protected:
 
         QList<QWidget*> blockedPageList;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif // SLIDINGSTACKEDWIDGET_H

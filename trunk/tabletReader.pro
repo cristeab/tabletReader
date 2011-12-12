@@ -1,24 +1,27 @@
 HEADERS       = documentwidget.h \
                 window.h \
-    SlidingStackedWidget.h \
-    flickable.h \
-    worker.h \
-    logger.h \
-    filebrowsermodel.h
+                SlidingStackedWidget.h \
+                flickable.h \
+                worker.h \
+                logger.h \
+                filebrowsermodel.h
 SOURCES       = documentwidget.cpp \
                 main.cpp \
                 window.cpp \
-    SlidingStackedWidget.cpp \
-    flickable.cpp \
-    worker.cpp \
-    logger.cpp \
-    filebrowsermodel.cpp
+                SlidingStackedWidget.cpp \
+                flickable.cpp \
+                worker.cpp \
+                logger.cpp \
+                filebrowsermodel.cpp
 
 QT           +=     declarative
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 DEFINES      +=     NO_APPUP_AUTH_CODE
 DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+
+TRANSLATIONS += tabletReader_fr.ts \
+                tabletReader_ro.ts
 
 #install
 target.path = /usr/bin
@@ -29,8 +32,7 @@ desktop.path = $$[install_prefix]/share/applications
 
 INSTALLS += target icon desktop
 
-RESOURCES += \
-    images.qrc
+RESOURCES += images.qrc
 
 OTHER_FILES += \
     qml/gotopage.qml \

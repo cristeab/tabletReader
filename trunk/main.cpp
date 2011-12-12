@@ -17,16 +17,23 @@
 ****************************************************************************/
 
 #include <QApplication>
+#include <QTranslator>
 #include "window.h"
 #include "logger.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QApplication app(argc, argv);    
 #ifndef QT_NO_DEBUG_OUTPUT
     //in release mode the log file is not created
     Logger log("tabletReader.log");
 #endif
+    //translation object
+    QTranslator translator;
+    translator.load("tabletReader_" + QLocale::system().name());
+    qDebug() << "loading translation file" << "tabletReader_" + QLocale::system().name();
+    app.installTranslator(&translator);
+    //main window
     Window wnd;
     wnd.show();
     return app.exec();

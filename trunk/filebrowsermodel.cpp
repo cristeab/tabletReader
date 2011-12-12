@@ -41,7 +41,7 @@ void FileBrowserModel::changeCurrentDir(int index)
     if (index >= _dirs.count()) {
         return;
     }
-    if (index == 0 && _dirs[index].startsWith("Go")) {
+    if (index == 0 && _dirs[index].startsWith(tr("Go"))) {
         _currentDir += "/..";
         QDir dir = QDir(_currentDir);
         _currentDir = dir.absolutePath();
@@ -79,9 +79,9 @@ void FileBrowserModel::searchPdfFiles()
             QDir dir = QDir(absPath);
             if (!dir.isRoot()) {
                 dirToAdd =
-                        "Go Back To '" + QDir(dir.canonicalPath()).dirName() + "'";
+                        tr("Go Back To '") + QDir(dir.canonicalPath()).dirName() + "'";
             } else {
-                dirToAdd = "Go Back To /";
+                dirToAdd = tr("Go Back To /");
             }
         } else {
             dirToAdd = QDir(absPath).dirName();
@@ -129,7 +129,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         case TITLE:
             return _dirs[dirRow];
         case IMAGE:
-            if (dirRow == 0 && _dirs[dirRow].startsWith("Go")) {
+            if (dirRow == 0 && _dirs[dirRow].startsWith(tr("Go"))) {
                 return QString(":/filebrowser/icons/Button-Upload-icon.png");
             } else {
                 return QString(":/filebrowser/icons/My-Ebooks-icon.png");
@@ -149,6 +149,6 @@ void FileBrowserModel::setMainWindowTitle(const QString &title)
     QMainWindow *pWin = dynamic_cast<QMainWindow*>(_parent);
     if (NULL != pWin)
     {
-        pWin->setWindowTitle("Current folder: " + title);
+        pWin->setWindowTitle(tr("Current folder: ") + title);
     }
 }

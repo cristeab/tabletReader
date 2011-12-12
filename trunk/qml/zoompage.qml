@@ -57,7 +57,7 @@ Rectangle
                 width: container.width
                 height: 16
                 color:  "darkblue"
-                text: "Zoom Factor"
+                text: qsTr("Zoom Factor")
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
                 font.pixelSize: 16
