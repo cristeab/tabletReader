@@ -486,7 +486,7 @@ void Window::openFile(const QString &filePath)
 		slidingStacked_->slideInNext();
 	} else
 	{
-		showWarningMessage(tr(APPLICATION " - Failed to open file"),
+                showWarningMessage(QString(APPLICATION " - ")+tr("Failed to open file"),
 			tr("The specified file cannot be opened"));
 	}
 }

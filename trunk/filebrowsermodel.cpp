@@ -48,6 +48,7 @@ void FileBrowserModel::changeCurrentDir(int index)
     } else {
         _currentDir += "/" +  _dirs[index];
     }
+    qDebug() << _currentDir;
     searchPdfFiles();
     reset();
     setMainWindowTitle(_currentDir);

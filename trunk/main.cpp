@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     {
         qDebug() << "loaded translation file" << QLocale::system().name().left(2);
     }*/
-    translator.load(":/translations/tabletReader_fr");
+    translator.load(":/translations/tabletReader_ro");
     app.installTranslator(&translator);
     //main window
     Window wnd;
