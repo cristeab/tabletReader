@@ -125,7 +125,7 @@
     <message>
         <location filename="window.cpp" line="175"/>
         <source>Cannot get authorization code for Intel AppUp(TM) software</source>
-        <translation>Impossible à lire le code d&apos;autorisation pour le logiciel Intel AppUp (TM)</translation>
+        <translation>Impossible de lire le code d&apos;autorisation pour le logiciel Intel AppUp (TM)</translation>
     </message>
     <message>
         <location filename="window.cpp" line="176"/>
