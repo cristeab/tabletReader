@@ -56,22 +56,24 @@ Window::Window(QWidget *parent)
 	setStyleSheet("background-color: black");
 
 	//main toolbar
-	toolBar_ = new QDeclarativeView(this);
-	toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
-	QObject *pDisp = toolBar_->rootObject();
-	if (NULL != pDisp)
-	{
+        if (NULL != (toolBar_ = new QDeclarativeView(this)))
+        {
+            toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
+            QObject *pDisp = toolBar_->rootObject();
+            if (NULL != pDisp)
+            {
 		pDisp->setProperty("width", width());
 		QObject *pToolbar = pDisp->findChild<QObject*>("toolbar");
 		if (NULL != pToolbar)
 		{
-			connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
+                    connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
 		} else
 		{
-			qDebug() << "cannot find toolbar object";
+                    qDebug() << "cannot find toolbar object";
 		}
-	}
-	gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
+            }
+            gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
+        }
 
 	//actions for zoom in/out
 	QAction *increaseScaleAction = new QAction(this);
@@ -215,7 +217,7 @@ void Window::onSendCommand(const QString &cmd)
 		close();
 	} else
 	{
-		qDebug() << "unknown command";
+                qDebug() << "unknown command" << cmd;
 	}
 }
 
@@ -469,7 +471,7 @@ void Window::closeCommandPopupMenu(const QString &cmd)
 			normalScreen();
 		} else
 		{
-			qDebug() << "unknown command";
+                        qDebug() << "unknown command" << cmd;
 		}
 	}
 }
