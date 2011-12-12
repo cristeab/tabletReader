@@ -30,8 +30,10 @@ int main(int argc, char *argv[])
 #endif
     //translation object
     QTranslator translator;
-    translator.load("tabletReader_" + QLocale::system().name());
-    qDebug() << "loading translation file" << "tabletReader_" + QLocale::system().name();
+    if (false == translator.load("tabletReader_" + QLocale::system().name()))
+    {
+        qDebug() << "cannot load translation file" << QLocale::system().name();
+    }
     app.installTranslator(&translator);
     //main window
     Window wnd;
