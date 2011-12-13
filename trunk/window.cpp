@@ -48,13 +48,6 @@ Window::Window(QWidget *parent)
       flickable_(NULL),
       fileBrowserModel_(new FileBrowserModel(this))
 {
-    //set orientation
-#if (QT_VERSION < 0x040702)
-    setAttribute(static_cast<Qt::WidgetAttribute>(130), true);
-#else
-    setAttribute(Qt::WA_AutoOrientation, true);
-#endif
-
     //main window
     QWidget *centralWidget = new QWidget(this);
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
