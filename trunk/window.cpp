@@ -50,9 +50,9 @@ Window::Window(QWidget *parent)
 {
     //set orientation
 #if (QT_VERSION < 0x040702)
-    setAttribute(static_cast<Qt::WidgetAttribute>(130));
+    setAttribute(static_cast<Qt::WidgetAttribute>(130), true);
 #else
-    setAttribute(Qt::WA_AutoOrientation);
+    setAttribute(Qt::WA_AutoOrientation, true);
 #endif
 
     //main window
