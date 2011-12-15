@@ -55,6 +55,9 @@
         <file>qml/ModalDialog/gfx/button.png</file>
         <file>qml/ModalDialog/gfx/button_active.png</file>
         <file>qml/ModalDialog/gfx/button_pressed.png</file>
+        <file>qml/WaitDialog/WaitIndicator.qml</file>
+        <file>qml/WaitDialog/gfx/rotation_icon.png</file>
+        <file>qml/waitdialog.qml</file>
     </qresource>
     <qresource prefix="/help">
         <file>help/tabletReader.pdf</file>

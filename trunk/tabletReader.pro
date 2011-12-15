@@ -18,7 +18,7 @@ QT           +=     declarative
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 DEFINES      +=     NO_APPUP_AUTH_CODE
-DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+#DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 TRANSLATIONS += tabletReader_fr.ts \
                 tabletReader_ro.ts
@@ -65,4 +65,8 @@ OTHER_FILES += \
     qml/ModalDialog/Button.qml \
     qml/ModalDialog/gfx/button_pressed.png \
     qml/ModalDialog/gfx/button_active.png \
-    qml/ModalDialog/gfx/button.png
+    qml/ModalDialog/gfx/button.png \
+    qml/wait.qml \
+    qml/WaitDialog/WaitIndicator.qml \
+    qml/WaitDialog/gfx/rotation_icon.png \
+    qml/waitdialog.qml

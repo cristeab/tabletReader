@@ -38,6 +38,7 @@ class SlidingStackedWidget;
 class FileBrowserModel;
 class QDeclarativeView;
 class Flickable;
+class QTimer;
 
 class Window : public QMainWindow
 {
@@ -74,6 +75,8 @@ private slots:
     void showAboutDialog();
     void closeAboutDialog();
     void showWarningMessage(const QString &title, const QString &explanation = "");
+    void showWaitDialog();
+    void closeWaitDialog();
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
@@ -83,7 +86,8 @@ private:
          FULL_SCREEN_WIDTH = 1024,
          FULL_SCREEN_HEIGHT = 768,
          MIN_SCREEN_WIDTH = 800,
-         MIN_SCREEN_HEIGHT = 600};
+         MIN_SCREEN_HEIGHT = 600,
+         WAIT_TIMER_INTERVAL_MS = 1500};
 
     bool eventFilter(QObject *, QEvent *);
     bool showNextPage();
@@ -113,6 +117,8 @@ private:
     bool showPageNumber_;
     Flickable *flickable_;
     FileBrowserModel* fileBrowserModel_;
+    QTimer *waitTimer_;
+    QDeclarativeView *waitDialog_;
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif

@@ -46,7 +46,9 @@ Window::Window(QWidget *parent)
       worker_(NULL),
       showPageNumber_(false),
       flickable_(NULL),
-      fileBrowserModel_(new FileBrowserModel(this))
+      fileBrowserModel_(new FileBrowserModel(this)),
+      waitTimer_(NULL),
+      waitDialog_(NULL)
 {
     //main window
     QWidget *centralWidget = new QWidget(this);
@@ -159,6 +161,11 @@ Window::Window(QWidget *parent)
         showHelp(false);
     }
     animationFinished_ = true;
+
+    //wait timer initialisation (used to handle too long actions: document openings, page changes)
+    waitTimer_ = new QTimer(this);
+    waitTimer_->setInterval(WAIT_TIMER_INTERVAL_MS);
+    connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
     normalScreen();
 #ifndef NO_APPUP_AUTH_CODE
@@ -482,6 +489,9 @@ void Window::openFile(const QString &filePath)
     //open document
     if (document_->setDocument(filePath))
     {
+        //start timer
+        waitTimer_->start();
+        //load document
         setupDocDisplay(1, filePath);
         slidingStacked_->slideInNext();
     } else
@@ -628,7 +638,9 @@ bool Window::showNextPage()
     int nbPages = document_->numPages();
     if (currentPage <= nbPages)
     {
-        //load a new page if any
+        //start timer
+        waitTimer_->start();
+        //load a new page
         document_->setPage(currentPage);
         document_->showCurrentPageUpper();
         showPageNumber(currentPage, nbPages);
@@ -657,6 +669,9 @@ bool Window::showPrevPage()
     int nbPages = document_->numPages();
     if (0 < currentPage)
     {
+        //start timer
+        waitTimer_->start();
+        //load a new page
         document_->setPage(currentPage);
         document_->showCurrentPageLower();
         showPageNumber(currentPage, nbPages);
@@ -707,7 +722,8 @@ void Window::closeEvent(QCloseEvent *evt)
 void Window::setAnimationFlag()
 {
     qDebug() << "Window::setAnimationFlag";
-    animationFinished_ = true;
+    animationFinished_ = true;    
+    closeWaitDialog();
 }
 
 void Window::togglePageDisplay()
@@ -888,5 +904,46 @@ void Window::showWarningMessage(const QString &title, const QString &explanation
             delete aboutDialog_;
             aboutDialog_ = NULL;
         }
+    }
+}
+
+void Window::showWaitDialog()
+{
+    qDebug() << "Window::showWaitDialog";
+    waitTimer_->stop();
+    if (NULL == waitDialog_)
+    {
+        waitDialog_ = new QDeclarativeView(this);
+        waitDialog_->setSource(QUrl("qrc:/qml/qml/waitdialog.qml"));
+        waitDialog_->setStyleSheet("background:transparent");
+        waitDialog_->setAttribute(Qt::WA_TranslucentBackground);
+        waitDialog_->setAttribute(Qt::WA_DeleteOnClose);
+        waitDialog_->setWindowFlags(Qt::FramelessWindowHint);
+        QObject *pRoot = waitDialog_->rootObject();
+        if (NULL != pRoot)
+        {
+            pRoot->setProperty("height", height());
+            pRoot->setProperty("width", width());
+            waitDialog_->show();
+        } else
+        {
+            qDebug() << "cannot get waitDialog object";
+            delete waitDialog_;
+            waitDialog_ = NULL;
+        }
+    }
+}
+
+void Window::closeWaitDialog()
+{
+    qDebug() << "Window::closeWaitDialog";
+    waitTimer_->stop();
+    if ((NULL != waitDialog_) && (true == waitDialog_->close()))
+    {
+        qDebug() << "widget closed";
+        waitDialog_ = NULL;
+    } else
+    {
+        qDebug() << "nothing to do";
     }
 }
