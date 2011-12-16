@@ -351,6 +351,9 @@ void Window::closeGotoPage(const QString &pageNb)
             int numPages = document_->numPages();
             if ((newPageNb != currentPage) && (0 != newPageNb) && (newPageNb <= numPages))
             {
+                //start timer
+                waitTimer_->start();
+                //change page
                 gotoPage(newPageNb, numPages);
                 if (currentPage < newPageNb)
                 {
