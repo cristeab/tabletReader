@@ -730,7 +730,11 @@ void Window::onAnimationFinished()
     closeWaitDialog();
     //emit signal to update the cache after the page has been displayed
     if (true == document_->invalidatePageCache(currentPage_)) {
+        qDebug() << "update cache signal";
         emit updateCache(currentPage_);//preload next page (page no starts from 0)
+    } else
+    {
+        qDebug() << "no update cache signal";
     }
 }
 
