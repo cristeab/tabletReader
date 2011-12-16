@@ -87,7 +87,7 @@ private:
          FULL_SCREEN_HEIGHT = 768,
          MIN_SCREEN_WIDTH = 800,
          MIN_SCREEN_HEIGHT = 600,
-         WAIT_TIMER_INTERVAL_MS = 1000};
+         WAIT_TIMER_INTERVAL_MS = 1500};
 
     bool eventFilter(QObject *, QEvent *);
     bool showNextPage();

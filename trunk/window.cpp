@@ -144,6 +144,14 @@ Window::Window(QWidget *parent)
 
     //start worker thread
     worker_->start();
+    if (true == worker_->isRunning())
+    {
+        qDebug() << "worker thread is running";
+        worker_->setPriority(QThread::IdlePriority);
+    } else
+    {
+        qDebug() << "worker thread is NOT running";
+    }
 
     //set document if one has been previously open
     QSettings settings(ORGANIZATION, APPLICATION);

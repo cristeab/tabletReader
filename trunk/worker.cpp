@@ -25,8 +25,7 @@ Worker::Worker(QWidget *parent, DocumentWidget *doc) :
     QThread(parent),
     doc_(doc)
 {
-    setTerminationEnabled(true);
-    setPriority(IdlePriority);
+    setTerminationEnabled(true);    
 }
 
 void Worker::updateCache(int page)
