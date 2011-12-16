@@ -129,7 +129,7 @@ Window::Window(QWidget *parent)
     gridLayout->addWidget(slidingStacked_, 1, 0, 1, 1);
 
     connect(slidingStacked_, SIGNAL(animationFinished()),
-            this, SLOT(setAnimationFlag()));
+            this, SLOT(onAnimationFinished()));
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
     connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
     connect(this, SIGNAL(updateCache(int)), worker_, SLOT(updateCache(int)));
@@ -645,23 +645,19 @@ bool Window::showNextPage()
         return false;
     }
 
-    int currentPage = document_->currentPage()+2;
+    currentPage_ = document_->currentPage()+2;
     int nbPages = document_->numPages();
-    if (currentPage <= nbPages)
+    if (currentPage_ <= nbPages)
     {
         //start timer
         waitTimer_->start();
         //load a new page
-        document_->setPage(currentPage);
+        document_->setPage(currentPage_);
         document_->showCurrentPageUpper();
-        showPageNumber(currentPage, nbPages);
+        showPageNumber(currentPage_, nbPages);
         //make sure that the next page is ready
         animationFinished_ = false;
         slidingStacked_->slideInNext();
-        //emit signal to update the cache
-        if (true == document_->invalidatePageCache(currentPage)) {
-            emit updateCache(currentPage);//preload next page (page no starts from 0)
-        }
         return true;
     }
 
@@ -676,22 +672,19 @@ bool Window::showPrevPage()
         return false;
     }
 
-    int currentPage = document_->currentPage();
+    currentPage_ = document_->currentPage();
     int nbPages = document_->numPages();
-    if (0 < currentPage)
+    if (0 < currentPage_)
     {
         //start timer
         waitTimer_->start();
         //load a new page
-        document_->setPage(currentPage);
+        document_->setPage(currentPage_);
         document_->showCurrentPageLower();
-        showPageNumber(currentPage, nbPages);
+        showPageNumber(currentPage_, nbPages);
         animationFinished_ = false;
+        currentPage_ -= 2;
         slidingStacked_->slideInPrev();
-        //emit signal to update the cache
-        if (true == document_->invalidatePageCache(currentPage-2)) {
-            emit updateCache(currentPage-2);//preload previous page (page no starts from 0)
-        }
         return true;
     }
 
@@ -730,11 +723,15 @@ void Window::closeEvent(QCloseEvent *evt)
     QWidget::closeEvent(evt);
 }
 
-void Window::setAnimationFlag()
+void Window::onAnimationFinished()
 {
-    qDebug() << "Window::setAnimationFlag";
+    qDebug() << "Window::onAnimationFinished";
     animationFinished_ = true;    
     closeWaitDialog();
+    //emit signal to update the cache after the page has been displayed
+    if (true == document_->invalidatePageCache(currentPage_)) {
+        emit updateCache(currentPage_);//preload next page (page no starts from 0)
+    }
 }
 
 void Window::togglePageDisplay()

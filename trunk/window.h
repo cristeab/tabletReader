@@ -68,7 +68,7 @@ private slots:
     void normalScreen();
     void increaseScale();
     void decreaseScale();
-    void setAnimationFlag();
+    void onAnimationFinished();
     void togglePageDisplay();
     void onSendCommand(const QString &cmd);
     void showHelp(bool slideNext = true);
@@ -119,6 +119,7 @@ private:
     FileBrowserModel* fileBrowserModel_;
     QTimer *waitTimer_;
     QDeclarativeView *waitDialog_;
+    int currentPage_;
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif
