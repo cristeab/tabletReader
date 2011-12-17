@@ -31,6 +31,9 @@ class Worker : public QObject
 public:
     Worker(DocumentWidget *doc = NULL, Window *win = NULL);
 
+signals:
+    void showMessage(const QString &title, const QString &explanation);
+
 public slots:
     void onUpdateCache(int page);
     void onCheckAppUpAuthCode();

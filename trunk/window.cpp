@@ -180,11 +180,13 @@ Window::Window(QWidget *parent)
 
     normalScreen();
 
-    showWaitDialog();//prepare to check appup code
 #ifndef NO_APPUP_AUTH_CODE
+    showWaitDialog();//prepare to check appup code
     appupApp_ = NULL;
-#endif
+    connect(worker_, SIGNAL(showMessage(const QString&, const QString&)), this,
+            SLOT(showWarningMessage(const QString&, const QString&)));
     QTimer::singleShot(0, worker_, SLOT(onCheckAppUpAuthCode()));
+#endif
 }
 
 Window::~Window()

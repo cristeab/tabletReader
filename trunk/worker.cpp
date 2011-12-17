@@ -45,9 +45,9 @@ void Worker::onUpdateCache(int page)
 void Worker::onCheckAppUpAuthCode()
 {
     qDebug() << "Window::checkAppUpAuthCode";
+#ifndef NO_APPUP_AUTH_CODE
     if (NULL != win_)
     {
-#ifndef NO_APPUP_AUTH_CODE
         //Authorization code for Intel AppUp(TM) software
         try {
 #ifdef _DEBUG
@@ -57,7 +57,7 @@ void Worker::onCheckAppUpAuthCode()
 #endif
         } catch (AdpException&) {
             //Display an appropriate error message here
-            win_->showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
+            emit showMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
                                tr("You cannot use tabletReader"));
             if (win_->appupApp_ != NULL)
             {
@@ -67,7 +67,7 @@ void Worker::onCheckAppUpAuthCode()
             //call application exit code here
             connect(win_->aboutDialog_->engine(), SIGNAL(quit()), win_, SLOT(close()));
         }
-#endif
         win_->closeWaitDialog();
     }
+#endif
 }
