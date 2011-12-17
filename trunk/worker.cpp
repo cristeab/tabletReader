@@ -57,6 +57,7 @@ void Worker::onCheckAppUpAuthCode()
 #endif
         } catch (AdpException&) {
             //Display an appropriate error message here
+            win_->closeWaitDialog();
             emit showMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
                                tr("You cannot use tabletReader"));
             if (win_->appupApp_ != NULL)
@@ -66,6 +67,7 @@ void Worker::onCheckAppUpAuthCode()
             }
             //call application exit code here
             connect(win_->aboutDialog_->engine(), SIGNAL(quit()), win_, SLOT(close()));
+            return;
         }
         win_->closeWaitDialog();
     }
