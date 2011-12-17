@@ -21,21 +21,30 @@
 #include <QThread>
 #include <stdlib.h>
 #include <QDebug>
+#include <QMutex>
 #include "logger.h"
 
 QTextStream Logger::ts_;
 QFile *Logger::pOutFile_ = NULL;
+QMutex *Logger::loggerMutex_ = NULL;
+Logger *Logger::instance_ = NULL;
+
+Logger* Logger::instance(const QString &fileLogName)
+{
+    if (NULL == instance_)
+    {
+        instance_ = new Logger(fileLogName);
+    }
+    return instance_;
+}
 
 Logger::Logger(const QString &fileLogName)
 {
-    if (NULL != pOutFile_)
-    {
-        delete pOutFile_;
-    }
     pOutFile_ = new QFile(QDir::homePath()+QDir::separator()+
                           QDir::toNativeSeparators(fileLogName));
     pOutFile_->open(QIODevice::WriteOnly | QIODevice::Append);
     ts_.setDevice(pOutFile_);
+    loggerMutex_ = new QMutex;
     qInstallMsgHandler(debugMessageHandler);
     qDebug() << "\n\nSTART" << QDateTime::currentDateTime().toString(Qt::ISODate)
              << "START\n";
@@ -45,10 +54,15 @@ Logger::~Logger()
 {
     delete pOutFile_;
     pOutFile_ = NULL;
+    delete loggerMutex_;
+    loggerMutex_ = NULL;
+    delete instance_;
+    instance_ = NULL;
 }
 
 void Logger::debugMessageHandler(QtMsgType type, const char *msg)
 {
+    loggerMutex_->lock();
     QString txt;
     switch (type) {
     case QtDebugMsg:
@@ -67,4 +81,5 @@ void Logger::debugMessageHandler(QtMsgType type, const char *msg)
     ts_ << QDateTime::currentDateTime().toMSecsSinceEpoch()
         << "\tTID:" << QThread::currentThreadId()
        << " " << txt << endl;
+    loggerMutex_->unlock();
 }

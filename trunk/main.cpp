@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);    
 #ifndef QT_NO_DEBUG_OUTPUT
     //in release mode the log file is not created
-    Logger log("tabletReader.log");
+    Logger::instance("tabletReader.log");
 #endif
     //translation object
     QTranslator translator;
