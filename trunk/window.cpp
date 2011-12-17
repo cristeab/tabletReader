@@ -183,8 +183,8 @@ Window::Window(QWidget *parent)
 #ifndef NO_APPUP_AUTH_CODE
     showWaitDialog();//prepare to check appup code
     appupApp_ = NULL;
-    connect(worker_, SIGNAL(showMessage(const QString&, const QString&)), this,
-            SLOT(showWarningMessage(const QString&, const QString&)));
+    connect(worker_, SIGNAL(appUpAuthCheckError()), this,
+            SLOT(onAppUpAuthCheckError()));
     QTimer::singleShot(0, worker_, SLOT(onCheckAppUpAuthCode()));
 #endif
 }
@@ -959,4 +959,12 @@ void Window::closeWaitDialog()
     {
         qDebug() << "nothing to do";
     }
+}
+
+void Window::onAppUpAuthCheckError()
+{
+    showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
+                                   tr("You cannot use tabletReader"));
+    //aplication will exit
+    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 }
