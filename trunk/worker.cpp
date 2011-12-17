@@ -22,6 +22,7 @@
 #include "documentwidget.h"
 #include "window.h"
 #include <QDeclarativeView>
+#include <QDeclarativeEngine>
 
 Worker::Worker(DocumentWidget *doc, Window *win) :
     doc_(doc), win_(win)
