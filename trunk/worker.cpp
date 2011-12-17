@@ -58,7 +58,7 @@ void Worker::onCheckAppUpAuthCode()
         } catch (AdpException&) {
             //Display an appropriate error message here
             win_->closeWaitDialog();
-            emit appUpCheckError();
+            emit appUpAuthCheckError();
             if (win_->appupApp_ != NULL)
             {
                 delete win_->appupApp_;
