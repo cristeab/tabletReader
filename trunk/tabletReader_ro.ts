@@ -113,113 +113,117 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="window.cpp" line="80"/>
+        <location filename="window.cpp" line="83"/>
         <source>Ctrl++</source>
         <translation>Ctrl++</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="82"/>
+        <location filename="window.cpp" line="85"/>
         <source>Ctrl+-</source>
         <translation>Ctrl+-</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="175"/>
+        <location filename="window.cpp" line="857"/>
+        <source>&lt;H2&gt;tabletReader v1.1&lt;/H2&gt;&lt;br&gt;&lt;H3&gt;PDF viewer for touch-enabled devices&lt;/H3&gt;&lt;br&gt;Copyright (C) 2011, Bogdan Cristea. All rights reserved.&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
+        <translation>&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; {2&gt;?} {1.1&lt;?} {2&gt;?} {3&gt;?} {3&gt;?} {2011,?}</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="966"/>
         <source>Cannot get authorization code for Intel AppUp(TM) software</source>
         <translation>Nu se poate citi codul de autorizare pentru programul Intel AppUp (TM)</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="176"/>
+        <location filename="window.cpp" line="967"/>
         <source>You cannot use tabletReader</source>
         <translation>Nu puteti folosi tabletReader</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="200"/>
+        <location filename="window.cpp" line="209"/>
         <source>Full Screen</source>
         <translation>Tot Ecranul</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="203"/>
-        <location filename="window.cpp" line="457"/>
+        <location filename="window.cpp" line="212"/>
+        <location filename="window.cpp" line="469"/>
         <source>Go To Page</source>
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="206"/>
-        <location filename="window.cpp" line="463"/>
+        <location filename="window.cpp" line="215"/>
+        <location filename="window.cpp" line="475"/>
         <source>Zoom</source>
         <translation>Marire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="209"/>
+        <location filename="window.cpp" line="218"/>
         <source>Help</source>
         <translation>Ajutor</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="212"/>
+        <location filename="window.cpp" line="221"/>
         <source>About</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="215"/>
-        <location filename="window.cpp" line="466"/>
+        <location filename="window.cpp" line="224"/>
+        <location filename="window.cpp" line="478"/>
         <source>Exit</source>
         <translation>Iesire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="231"/>
+        <location filename="window.cpp" line="240"/>
         <source>Cannot create fileBrowser object</source>
         <translation>Nu se poate crea obiectul fileBrowser</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="232"/>
+        <location filename="window.cpp" line="241"/>
         <source>not enough memory</source>
         <translation>memorie insuficienta</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="237"/>
+        <location filename="window.cpp" line="246"/>
         <source>fileBrowserObject is NULL</source>
         <translation>obiectul fileBrowserObject este NULL</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="197"/>
-        <location filename="window.cpp" line="454"/>
+        <location filename="window.cpp" line="206"/>
+        <location filename="window.cpp" line="466"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="460"/>
+        <location filename="window.cpp" line="472"/>
         <source>Show/Hide Page Number</source>
         <translation>Afiseaza/Ascunde Numarul de Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="469"/>
+        <location filename="window.cpp" line="481"/>
         <source>Normal Screen</source>
         <translation>Ecran Normal</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="489"/>
+        <location filename="window.cpp" line="504"/>
         <source>Failed to open file</source>
         <translation>Fisierul nu poate fi deschis</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="490"/>
+        <location filename="window.cpp" line="505"/>
         <source>The specified file cannot be opened</source>
         <translation>Fisierul specificat nu poate fi deschis</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="681"/>
+        <location filename="window.cpp" line="709"/>
         <source>page %1 of %2</source>
         <translation>pagina %1 din %2</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="804"/>
+        <location filename="window.cpp" line="833"/>
         <source>Cannot open help file</source>
         <translation>Nu se poate deschide fichierul de ajutor</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="828"/>
         <source>&lt;H2&gt;tabletReader v1.0&lt;/H2&gt;&lt;br&gt;&lt;H3&gt;PDF viewer for touch-enabled devices&lt;/H3&gt;&lt;br&gt;Copyright (C) 2011, Bogdan Cristea. All rights reserved.&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
-        <translation>&lt;H2&gt; TabletReader v1.0 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
+        <translation type="obsolete">&lt;H2&gt; TabletReader v1.0 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
     </message>
 </context>
 <context>
