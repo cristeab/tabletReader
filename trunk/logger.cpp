@@ -18,6 +18,7 @@
 
 #include <QDir>
 #include <QDateTime>
+#include <QThread>
 #include <stdlib.h>
 #include <QDebug>
 #include "logger.h"
@@ -64,5 +65,6 @@ void Logger::debugMessageHandler(QtMsgType type, const char *msg)
         abort();
     }
     ts_ << QDateTime::currentDateTime().toMSecsSinceEpoch()
+        << "\tTID:" << QThread::currentThreadId()
        << " " << txt << endl;
 }

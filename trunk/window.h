@@ -114,6 +114,7 @@ private:
     QDeclarativeView *aboutDialog_;
     QElapsedTimer pressTimer_;
     Worker *worker_;
+    QThread *thread_;
     bool showPageNumber_;
     Flickable *flickable_;
     FileBrowserModel* fileBrowserModel_;

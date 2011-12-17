@@ -24,14 +24,14 @@
 class QProgressDialog;
 class DocumentWidget;
 
-class Worker : public QThread
+class Worker : public QObject
 {
     Q_OBJECT
 public:
-    Worker(QWidget *parent = NULL, DocumentWidget *doc = NULL);
+    Worker(DocumentWidget *doc = NULL);
 
 public slots:
-    void updateCache(int page);
+    void onUpdateCache(int page);
 
 protected:
     void run();

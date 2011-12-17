@@ -44,6 +44,7 @@ Window::Window(QWidget *parent)
       commandPopupMenu_(NULL),
       aboutDialog_(NULL),
       worker_(NULL),
+      thread_(NULL),
       showPageNumber_(false),
       flickable_(NULL),
       fileBrowserModel_(new FileBrowserModel(this)),
@@ -94,7 +95,7 @@ Window::Window(QWidget *parent)
     document_ = new DocumentWidget(this);
 
     //worker thread
-    worker_ = new Worker(centralWidget, document_);
+    worker_ = new Worker(document_);
 
     //create sliding animation
     slidingStacked_ = new SlidingStackedWidget(this);
@@ -132,7 +133,7 @@ Window::Window(QWidget *parent)
             this, SLOT(onAnimationFinished()));
     connect(increaseScaleAction, SIGNAL(triggered()), this, SLOT(increaseScale()));
     connect(decreaseScaleAction, SIGNAL(triggered()), this, SLOT(decreaseScale()));
-    connect(this, SIGNAL(updateCache(int)), worker_, SLOT(updateCache(int)));
+    connect(this, SIGNAL(updateCache(int)), worker_, SLOT(onUpdateCache(int)));
 
     statusBar()->hide();
 
@@ -143,11 +144,13 @@ Window::Window(QWidget *parent)
     pagePopupMenu_->setEnabled(false);
 
     //start worker thread
-    worker_->start();
-    if (true == worker_->isRunning())
+    thread_ = new QThread(this);
+    worker_->moveToThread(thread_);
+    thread_->start();
+    if (true == thread_->isRunning())
     {
         qDebug() << "worker thread is running";
-        worker_->setPriority(QThread::IdlePriority);
+        thread_->setPriority(QThread::IdlePriority);
     } else
     {
         qDebug() << "worker thread is NOT running";
@@ -202,6 +205,7 @@ Window::Window(QWidget *parent)
 Window::~Window()
 {
     delete fileBrowserModel_;
+    delete worker_;//this object has no parent
 
     //Cleanup code for Intel AppUp(TM) software
 #ifndef NO_APPUP_AUTH_CODE
@@ -661,6 +665,14 @@ bool Window::showNextPage()
         //make sure that the next page is ready
         animationFinished_ = false;
         slidingStacked_->slideInNext();
+        //emit signal to update the cache after the page has been displayed
+        if (true == document_->invalidatePageCache(currentPage_)) {
+            qDebug() << "update cache signal";
+            emit updateCache(currentPage_);//preload next page (page no starts from 0)
+        } else
+        {
+            qDebug() << "no update cache signal";
+        }
         return true;
     }
 
@@ -686,8 +698,15 @@ bool Window::showPrevPage()
         document_->showCurrentPageLower();
         showPageNumber(currentPage_, nbPages);
         animationFinished_ = false;
-        currentPage_ -= 2;
         slidingStacked_->slideInPrev();
+        //emit signal to update the cache after the page has been displayed
+        if (true == document_->invalidatePageCache(currentPage_-2)) {
+            qDebug() << "update cache signal";
+            emit updateCache(currentPage_-2);//preload next page (page no starts from 0)
+        } else
+        {
+            qDebug() << "no update cache signal";
+        }
         return true;
     }
 
@@ -718,9 +737,9 @@ void Window::closeEvent(QCloseEvent *evt)
         settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
     }
 
-    if (NULL != worker_)
+    if (NULL != thread_)
     {
-        worker_->quit();//terminate worker thread
+        thread_->quit();//terminate worker thread
     }
 
     QWidget::closeEvent(evt);
@@ -731,14 +750,6 @@ void Window::onAnimationFinished()
     qDebug() << "Window::onAnimationFinished";
     animationFinished_ = true;    
     closeWaitDialog();
-    //emit signal to update the cache after the page has been displayed
-    if (true == document_->invalidatePageCache(currentPage_)) {
-        qDebug() << "update cache signal";
-        emit updateCache(currentPage_);//preload next page (page no starts from 0)
-    } else
-    {
-        qDebug() << "no update cache signal";
-    }
 }
 
 void Window::togglePageDisplay()
