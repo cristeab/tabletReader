@@ -964,7 +964,7 @@ void Window::closeWaitDialog()
 void Window::onAppUpAuthCheckError()
 {
     showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
-                                   tr("You cannot use tabletReader"));
+    tr("You can use tabletReader, but it is highly recommended to connect to Intel AppUp center"));
     //aplication will exit
-    connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
+    //connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
 }

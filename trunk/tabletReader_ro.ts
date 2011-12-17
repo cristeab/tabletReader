@@ -133,9 +133,8 @@
         <translation>Nu se poate citi codul de autorizare pentru programul Intel AppUp (TM)</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="967"/>
         <source>You cannot use tabletReader</source>
-        <translation>Nu puteti folosi tabletReader</translation>
+        <translation type="obsolete">Nu puteti folosi tabletReader</translation>
     </message>
     <message>
         <location filename="window.cpp" line="209"/>
@@ -184,6 +183,11 @@
         <location filename="window.cpp" line="246"/>
         <source>fileBrowserObject is NULL</source>
         <translation>obiectul fileBrowserObject este NULL</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="967"/>
+        <source>You can use tabletReader, but it is highly recommended to connect to Intel AppUp center</source>
+        <translation>Puteti folosi tabletReader, dar este recomandat sa fiti conectat la centrul AppUp al Intel</translation>
     </message>
     <message>
         <location filename="window.cpp" line="206"/>

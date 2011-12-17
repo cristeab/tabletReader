@@ -133,9 +133,8 @@
         <translation>Impossible de lire le code d&apos;autorisation pour le logiciel Intel AppUp (TM)</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="967"/>
         <source>You cannot use tabletReader</source>
-        <translation>Vous ne pouvez pas utiliser tabletReader</translation>
+        <translation type="obsolete">Vous ne pouvez pas utiliser tabletReader</translation>
     </message>
     <message>
         <location filename="window.cpp" line="209"/>
@@ -184,6 +183,11 @@
         <location filename="window.cpp" line="246"/>
         <source>fileBrowserObject is NULL</source>
         <translation>l&apos;objet fileBrowserObject est NULL</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="967"/>
+        <source>You can use tabletReader, but it is highly recommended to connect to Intel AppUp center</source>
+        <translation>Vous pouvez utiliser tabletReader, mais il est fortement recommandé d&apos;être connecté au centre AppUp d&apos;Intel</translation>
     </message>
     <message>
         <location filename="window.cpp" line="206"/>
