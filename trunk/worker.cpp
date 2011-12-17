@@ -20,9 +20,10 @@
 #include <QDebug>
 #include "worker.h"
 #include "documentwidget.h"
+#include "window.h"
 
-Worker::Worker(DocumentWidget *doc) :
-    doc_(doc)
+Worker::Worker(DocumentWidget *doc, Window *win) :
+    doc_(doc), win_(win)
 {      
 }
 
@@ -37,4 +38,31 @@ void Worker::onUpdateCache(int page)
     }
     doc_->cacheMutex_.unlock();
     qDebug() << "Worker::onUpdateCache end";
+}
+
+void Worker::onCheckAppUpAuthCode()
+{
+    qDebug() << "Window::checkAppUpAuthCode";
+#ifndef NO_APPUP_AUTH_CODE
+    //Authorization code for Intel AppUp(TM) software
+    appupApp_ = NULL;
+    try {
+#ifdef _DEBUG
+        appupApp_ = new Application(ApplicationId(ADP_DEBUG_APPLICATIONID));
+#else
+        appupApp_ = new Application(ApplicationId(0xF95A11A9,0xF079468E,0xABAF2D5C,0x7C56C5F7));
+#endif
+    } catch (AdpException&) {
+        //Display an appropriate error message here
+        showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
+                           tr("You cannot use tabletReader"));
+        if (appupApp_ != NULL) delete appupApp_;
+        //call application exit code here
+        connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
+    }
+#endif
+    if (NULL != win_)
+    {
+        win_->closeWaitDialog();
+    }
 }

@@ -42,7 +42,7 @@ class QTimer;
 
 class Window : public QMainWindow
 {
-    Q_OBJECT    
+    Q_OBJECT
 
 public:
     Window(QWidget *parent = NULL);
@@ -76,8 +76,8 @@ private slots:
     void closeAboutDialog();
     void showWarningMessage(const QString &title, const QString &explanation = "");
     void showWaitDialog();
-    void closeWaitDialog();
-    void checkAppUpAuthCode();
+public slots:
+    void closeWaitDialog();    
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,

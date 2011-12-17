@@ -23,21 +23,21 @@
 
 class QProgressDialog;
 class DocumentWidget;
+class Window;
 
 class Worker : public QObject
 {
     Q_OBJECT
 public:
-    Worker(DocumentWidget *doc = NULL);
+    Worker(DocumentWidget *doc = NULL, Window *win = NULL);
 
 public slots:
     void onUpdateCache(int page);
-
-protected:
-    void run();
+    void onCheckAppUpAuthCode();
 
 private:
     DocumentWidget *doc_;
+    Window *win_;
 };
 
 #endif // WORKER_H

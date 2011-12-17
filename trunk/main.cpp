@@ -40,7 +40,6 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
     //main window
     Window wnd;
-    wnd.show();
-    QTimer::singleShot(0, &wnd, SLOT(checkAppUpAuthCode()));
+    wnd.show();    
     return app.exec();
 }

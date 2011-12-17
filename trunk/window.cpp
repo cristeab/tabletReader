@@ -95,7 +95,7 @@ Window::Window(QWidget *parent)
     document_ = new DocumentWidget(this);
 
     //worker thread
-    worker_ = new Worker(document_);
+    worker_ = new Worker(document_, this);
 
     //create sliding animation
     slidingStacked_ = new SlidingStackedWidget(this);
@@ -181,6 +181,7 @@ Window::Window(QWidget *parent)
     normalScreen();
 
     showWaitDialog();//prepare to check appup code
+    QTimer::singleShot(0, worker_, SLOT(onCheckAppUpAuthCode()));
 }
 
 Window::~Window()
@@ -953,28 +954,4 @@ void Window::closeWaitDialog()
     {
         qDebug() << "nothing to do";
     }
-}
-
-void Window::checkAppUpAuthCode()
-{
-    qDebug() << "Window::checkAppUpAuthCode";
-#ifndef NO_APPUP_AUTH_CODE
-    //Authorization code for Intel AppUp(TM) software
-    appupApp_ = NULL;
-    try {
-#ifdef _DEBUG
-        appupApp_ = new Application(ApplicationId(ADP_DEBUG_APPLICATIONID));
-#else
-        appupApp_ = new Application(ApplicationId(0xF95A11A9,0xF079468E,0xABAF2D5C,0x7C56C5F7));
-#endif
-    } catch (AdpException&) {
-        //Display an appropriate error message here
-        showWarningMessage(tr("Cannot get authorization code for Intel AppUp(TM) software"),
-                           tr("You cannot use tabletReader"));
-        if (appupApp_ != NULL) delete appupApp_;
-        //call application exit code here
-        connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
-    }
-#endif
-    closeWaitDialog();
 }
