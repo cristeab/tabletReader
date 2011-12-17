@@ -125,7 +125,7 @@
     <message>
         <location filename="window.cpp" line="857"/>
         <source>&lt;H2&gt;tabletReader v1.1&lt;/H2&gt;&lt;br&gt;&lt;H3&gt;PDF viewer for touch-enabled devices&lt;/H3&gt;&lt;br&gt;Copyright (C) 2011, Bogdan Cristea. All rights reserved.&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
-        <translation>&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; {2&gt;?} {1.1&lt;?} {2&gt;?} {3&gt;?} {3&gt;?} {2011,?}</translation>
+        <translation>&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; &lt;br&gt;</translation>
     </message>
     <message>
         <location filename="window.cpp" line="966"/>
