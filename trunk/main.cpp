@@ -41,5 +41,6 @@ int main(int argc, char *argv[])
     //main window
     Window wnd;
     wnd.show();
+    QTimer::singleShot(0, &wnd, SLOT(checkAppUpAuthCode()));
     return app.exec();
 }

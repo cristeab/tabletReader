@@ -77,6 +77,7 @@ private slots:
     void showWarningMessage(const QString &title, const QString &explanation = "");
     void showWaitDialog();
     void closeWaitDialog();
+    void checkAppUpAuthCode();
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
