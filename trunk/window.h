@@ -44,6 +44,8 @@ class Window : public QMainWindow
 {
     Q_OBJECT
 
+    friend class Worker;
+
 public:
     Window(QWidget *parent = NULL);
     ~Window();
@@ -76,7 +78,6 @@ private slots:
     void closeAboutDialog();
     void showWarningMessage(const QString &title, const QString &explanation = "");
     void showWaitDialog();
-public slots:
     void closeWaitDialog();    
 
 private:
