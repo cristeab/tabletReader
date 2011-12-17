@@ -179,6 +179,8 @@ Window::Window(QWidget *parent)
     connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
     normalScreen();
+
+    showWaitDialog();//prepare to check appup code
 }
 
 Window::~Window()
@@ -957,7 +959,6 @@ void Window::checkAppUpAuthCode()
 {
     qDebug() << "Window::checkAppUpAuthCode";
 #ifndef NO_APPUP_AUTH_CODE
-    showWaitDialog();
     //Authorization code for Intel AppUp(TM) software
     appupApp_ = NULL;
     try {
@@ -974,6 +975,6 @@ void Window::checkAppUpAuthCode()
         //call application exit code here
         connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
     }
-    closeWaitDialog();
 #endif
+    closeWaitDialog();
 }
