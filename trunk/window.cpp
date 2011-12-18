@@ -494,8 +494,8 @@ void Window::openFile(const QString &filePath)
     //open document
     if (document_->setDocument(filePath))
     {
-        //start timer
-        waitTimer_->start();
+        //show wait dialog
+        showWaitDialog();
         //load document
         setupDocDisplay(1, filePath);
         slidingStacked_->slideInNext();
