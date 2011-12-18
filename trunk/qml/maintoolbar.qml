@@ -21,12 +21,13 @@ import Qt 4.7
 import "Toolbar"
 
 Rectangle {
-    width: 360
+    width: 800
     height: 64
 
     Toolbar {
         id: toolbar
         objectName: "toolbar"
+        anchors.centerIn: parent
 
         ToolbarView {
             toolbarItemTitle: qsTr("Open")

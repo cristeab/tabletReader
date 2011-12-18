@@ -56,26 +56,6 @@ Window::Window(QWidget *parent)
     setWindowTitle(tr(APPLICATION));
     setStyleSheet("background-color: black");
 
-    //main toolbar
-    if (NULL != (toolBar_ = new QDeclarativeView(this)))
-    {
-        toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
-        QObject *pDisp = toolBar_->rootObject();
-        if (NULL != pDisp)
-        {
-            pDisp->setProperty("width", width());
-            QObject *pToolbar = pDisp->findChild<QObject*>("toolbar");
-            if (NULL != pToolbar)
-            {
-                connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
-            } else
-            {
-                qDebug() << "cannot find toolbar object";
-            }
-        }
-        gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
-    }
-
     //actions for zoom in/out
     QAction *increaseScaleAction = new QAction(this);
     increaseScaleAction->setShortcut(tr("Ctrl++"));
@@ -171,6 +151,26 @@ Window::Window(QWidget *parent)
     connect(waitTimer_, SIGNAL(timeout()), this, SLOT(showWaitDialog()));
 
     normalScreen();
+
+    //main toolbar
+    if (NULL != (toolBar_ = new QDeclarativeView(this)))
+    {
+        toolBar_->setSource(QUrl("qrc:/qml/qml/maintoolbar.qml"));
+        QObject *pDisp = toolBar_->rootObject();
+        if (NULL != pDisp)
+        {
+            pDisp->setProperty("width", width());
+            QObject *pToolbar = pDisp->findChild<QObject*>("toolbar");
+            if (NULL != pToolbar)
+            {
+                connect(pToolbar, SIGNAL(sendCommand(QString)), this, SLOT(onSendCommand(QString)));
+            } else
+            {
+                qDebug() << "cannot find toolbar object";
+            }
+        }
+        gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
+    }
 
 #ifndef NO_APPUP_AUTH_CODE
     showWaitDialog();//prepare to check appup code
