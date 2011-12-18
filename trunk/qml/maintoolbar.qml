@@ -53,6 +53,12 @@ Rectangle {
         }
 
         ToolbarView {
+            toolbarItemTitle: qsTr("Properties")
+            toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/properties-icon.png"
+            clip: true
+        }
+
+        ToolbarView {
             toolbarItemTitle: qsTr("Help")
             toolbarItemIcon: ":/toolbar/qml/Toolbar/pics/help-icon.png"
             clip: true

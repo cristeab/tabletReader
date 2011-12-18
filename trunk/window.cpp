@@ -37,7 +37,6 @@ Window::Window(QWidget *parent)
       slidingStacked_(NULL),
       document_(NULL),
       toolBar_(NULL),
-      pagePopupMenu_(NULL),
       fileBrowser_(NULL),
       gotoPage_(NULL),
       zoomPage_(NULL),
@@ -45,7 +44,6 @@ Window::Window(QWidget *parent)
       aboutDialog_(NULL),
       worker_(NULL),
       thread_(NULL),
-      showPageNumber_(false),
       flickable_(NULL),
       fileBrowserModel_(new FileBrowserModel(this)),
       waitTimer_(NULL),
@@ -137,12 +135,6 @@ Window::Window(QWidget *parent)
 
     statusBar()->hide();
 
-    //page number popup menu
-    pagePopupMenu_ = new QMenu(this);
-    pagePopupMenu_->setBackgroundRole(QPalette::ToolTipText);
-    pagePopupMenu_->addAction("");
-    pagePopupMenu_->setEnabled(false);
-
     //start worker thread
     thread_ = new QThread(this);
     worker_->moveToThread(thread_);
@@ -215,6 +207,9 @@ void Window::onSendCommand(const QString &cmd)
     } else if (tr("Zoom") == cmd)
     {
         showZoomPage();
+    } else if (tr("Properties") == cmd)
+    {
+        showPropertiesDialog();
     } else if (tr("Help") == cmd)
     {
         showHelp();
@@ -469,9 +464,9 @@ void Window::closeCommandPopupMenu(const QString &cmd)
         } else if (tr("Go To Page") == cmd)
         {
             showGotoPage();
-        } else if (tr("Show/Hide Page Number") == cmd)
+        } else if (tr("Properties") == cmd)
         {
-            togglePageDisplay();
+            showPropertiesDialog();
         } else if (tr("Zoom") == cmd)
         {
             showZoomPage();
@@ -648,7 +643,6 @@ bool Window::showNextPage()
         //load a new page
         document_->setPage(currentPage_);
         document_->showCurrentPageUpper();
-        showPageNumber(currentPage_, nbPages);
         //make sure that the next page is ready
         animationFinished_ = false;
         slidingStacked_->slideInNext();
@@ -675,7 +669,6 @@ bool Window::showPrevPage()
     }
 
     currentPage_ = document_->currentPage();
-    int nbPages = document_->numPages();
     if (0 < currentPage_)
     {
         //start timer
@@ -683,7 +676,6 @@ bool Window::showPrevPage()
         //load a new page
         document_->setPage(currentPage_);
         document_->showCurrentPageLower();
-        showPageNumber(currentPage_, nbPages);
         animationFinished_ = false;
         slidingStacked_->slideInPrev();
         //emit signal to update the cache after the page has been displayed
@@ -698,18 +690,6 @@ bool Window::showPrevPage()
     }
 
     return false;
-}
-
-void Window::showPageNumber(int currentPage, int nbPages)
-{
-    if (false == showPageNumber_) {
-        return;//do nothing if show page number is not enabled
-    }
-    QAction *act = pagePopupMenu_->actions()[0];
-    act->setText(tr("page %1 of %2").arg(currentPage).arg(nbPages));
-    pagePopupMenu_->popup(mapToGlobal(QPoint(width(),
-                                             height()))+QPoint(10-width(), -40));
-    QTimer::singleShot(TOOLTIP_VISIBLE_TIME_MS, pagePopupMenu_, SLOT(hide()));
 }
 
 void Window::closeEvent(QCloseEvent *evt)
@@ -739,22 +719,14 @@ void Window::onAnimationFinished()
     closeWaitDialog();
 }
 
-void Window::togglePageDisplay()
-{
-    qDebug() << "Window::togglePageDisplay";
-    showPageNumber_ ^= true;
-}
-
 void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
 {
     qDebug() << "Window::setupDocDisplay" << pageNumber;
-    lastFilePath_ = filePath;
-    int numPages = document_->numPages();
-    setWindowTitle(QString("%1 : ").arg(APPLICATION)+filePath);
+    lastFilePath_ = filePath;    
     //set document zoom factor
     document_->setScale(scaleFactors_[currentZoomIndex_]);
     //set current page
-    gotoPage(pageNumber, numPages);
+    gotoPage(pageNumber, document_->numPages());
 }
 
 void Window::gotoPage(int pageNb, int numPages)
@@ -967,4 +939,43 @@ void Window::onAppUpAuthCheckError()
     tr("You can use tabletReader, but it is highly recommended to connect to Intel AppUp center"));
     //aplication will exit
     //connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(close()));
+}
+
+void Window::showPropertiesDialog()
+{
+    qDebug() << "Window::showPropertiesDialog";
+    if (NULL == aboutDialog_)
+    {
+        aboutDialog_ = new QDeclarativeView(this);
+        aboutDialog_->setSource(QUrl("qrc:/qml/qml/aboutdialog.qml"));
+        aboutDialog_->setStyleSheet("background:transparent");
+        aboutDialog_->setAttribute(Qt::WA_TranslucentBackground);
+        aboutDialog_->setAttribute(Qt::WA_DeleteOnClose);
+        aboutDialog_->setWindowFlags(Qt::FramelessWindowHint);
+        connect(aboutDialog_->engine(), SIGNAL(quit()), this, SLOT(closeAboutDialog()));
+        QObject *pAbout = aboutDialog_->rootObject();
+        if (NULL != pAbout)
+        {
+            pAbout->setProperty("height", height());
+            pAbout->setProperty("width", width());
+            QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
+            if (NULL != pAboutDlg)
+            {
+                //document path
+                QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(lastFilePath_);
+                //current page / page number
+                msg += tr("<H3>Current page / Page number:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
+                //set message
+                pAboutDlg->setProperty("text", msg);
+            } else
+            {
+                qDebug() << "cannot get aboutDialog object";
+            }
+            aboutDialog_->show();
+        } else {
+            qDebug() << "cannot get aboutDialog object";
+            delete aboutDialog_;
+            aboutDialog_ = NULL;
+        }
+    }
 }

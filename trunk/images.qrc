@@ -10,6 +10,7 @@
         <file>qml/Toolbar/pics/help-icon.png</file>
         <file>qml/Toolbar/pics/About-icon.png</file>
         <file>qml/Toolbar/pics/Button-Close-icon.png</file>
+        <file>qml/Toolbar/pics/properties-icon.png</file>
     </qresource>
     <qresource prefix="/filebrowser">
         <file>icons/Adobe-PDF-Document-icon.png</file>

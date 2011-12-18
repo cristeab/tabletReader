@@ -33,7 +33,6 @@ FileBrowserModel::FileBrowserModel(QObject *parent) :
     setRoleNames(roles);
 
     _currentDir = QDir::homePath();
-    setMainWindowTitle(_currentDir);
 }
 
 void FileBrowserModel::changeCurrentDir(int index)
@@ -51,7 +50,6 @@ void FileBrowserModel::changeCurrentDir(int index)
     qDebug() << _currentDir;
     searchPdfFiles();
     reset();
-    setMainWindowTitle(_currentDir);
 }
 
 void FileBrowserModel::searchPdfFiles()
@@ -143,13 +141,4 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
-}
-
-void FileBrowserModel::setMainWindowTitle(const QString &title)
-{
-    QMainWindow *pWin = dynamic_cast<QMainWindow*>(_parent);
-    if (NULL != pWin)
-    {
-        pWin->setWindowTitle(tr("Current folder: ") + title);
-    }
 }

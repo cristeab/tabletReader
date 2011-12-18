@@ -29,7 +29,7 @@ ListModel {
                 qsTr("Normal Screen"),
                 qsTr("Go To Page"),
                 qsTr("Zoom"),
-                qsTr("Show/Hide Page Number"),
+                qsTr("Properties"),
                 qsTr("Exit")
             ]
         }

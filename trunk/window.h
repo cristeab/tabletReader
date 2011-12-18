@@ -71,7 +71,6 @@ private slots:
     void increaseScale();
     void decreaseScale();
     void onAnimationFinished();
-    void togglePageDisplay();
     void onSendCommand(const QString &cmd);
     void showHelp(bool slideNext = true);
     void showAboutDialog();
@@ -80,6 +79,7 @@ private slots:
     void showWaitDialog();
     void closeWaitDialog();
     void onAppUpAuthCheckError();
+    void showPropertiesDialog();
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
@@ -108,7 +108,6 @@ private:
     int currentZoomIndex_;
     QPoint startPoint_;
     QPoint endPoint_;
-    QMenu *pagePopupMenu_;    
     bool animationFinished_;
     QDeclarativeView *fileBrowser_;
     QDeclarativeView *gotoPage_;
@@ -118,7 +117,6 @@ private:
     QElapsedTimer pressTimer_;
     Worker *worker_;
     QThread *thread_;
-    bool showPageNumber_;
     Flickable *flickable_;
     FileBrowserModel* fileBrowserModel_;
     QTimer *waitTimer_;

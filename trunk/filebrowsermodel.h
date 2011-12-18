@@ -39,7 +39,6 @@ public slots:
     void changeCurrentDir(int index);
 
 private:
-    void setMainWindowTitle(const QString &title);
     Q_DISABLE_COPY(FileBrowserModel);
     enum PdfPreviewRoles { TITLE, PAGES, IMAGE, IS_FILE, PATH };
     QString _currentDir;
