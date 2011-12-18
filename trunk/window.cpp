@@ -964,7 +964,7 @@ void Window::showPropertiesDialog()
                 //document path
                 QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(lastFilePath_);
                 //current page / page number
-                msg += tr("<H3>Current page / Page number:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
+                msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
                 //set message
                 pAboutDlg->setProperty("text", msg);
             } else

@@ -205,7 +205,8 @@
     </message>
     <message>
         <location filename="window.cpp" line="967"/>
-        <source>&lt;H3&gt;Current page / Page number:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</source>
+        <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</source>
+        <oldsource>&lt;H3&gt;Current page / Page number:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</oldsource>
         <translation>&lt;H3&gt;Pagina curenta / Numarul de pagini:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
