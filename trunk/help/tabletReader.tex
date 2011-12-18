@@ -12,7 +12,7 @@
 
 \IEEEPARstart{T}{}abletReader has been designed to be a simple PDF reader for touch-enabled devices (e.g. tablets, hybrid notebooks with touch screen). It can be used also on devices without a touch screen, but in this case a mouse with a scroll wheel is needed. TabletReader needs a screen large enough (at least 800x600 pixels). Devices with screens of smaller size (e.g. smartphones) may not be suitable for reading PDF documents using A4 or larger page sizes with tabletReader since the displayed text does not adapt to the screen size (as Acrobat Reader does).
 
-Through its simple interface, tabletReader enables to open PDF files found on the local filesystem, to switch between full screen (no toolbar) and normal screen (with toolbar) modes, to go to a specific page, to zoom the displayed document, to show this help, to display information about this software and to exit from the application. At exit, the current PDF file path and name, the current page and the zoom factor are saved so that the next time you launch tabletReader the document is opened at the same page you previously were.
+Through its simple interface, tabletReader enables to open PDF files found on the local filesystem, to switch between full screen (no toolbar) and normal screen (with toolbar) modes, to go to a specific page, to zoom the displayed document, to display document properties, to show this help, to display information about this software and to exit from the application. At exit, the current PDF file path and name, the current page and the zoom factor are saved so that the next time you launch tabletReader the document is opened at the same page you previously were.
 
 This software has been intended to be used on Linux-based operating systems with a graphical user interface, since there seems to be a lack of PDF readers for touch-enabled devices runnning Linux. However Windows is also supported and since this software has been written using Qt application framework, it can be ported to other platforms too (provided that poppler library is available).
 
@@ -38,8 +38,9 @@ This software has been intended to be used on Linux-based operating systems with
  \item \textit{Full Screen}: the application will occupy the entire screen and the toolbar is no longer displayed. In this mode you need to use the command popup menu available by pressing more than one second the touch screen (see below).
  \item \textit{Go To Page}: displays a numerical keypad allowing to type the desired page number. Note that by pressing OK without typing some page number or if the page number is invalid the numerical key will dissapear and the page will not be changed.
  \item \textit{Zoom}: displays a dialog allowing to select the desired zoom factor.
- \item \textit{Help}: displays this help manual
- \item \textit{About}: displays a dialog with information about this software
+ \item \textit{Properties}: displays document properties (document path, current page and the number of pages).
+ \item \textit{Help}: displays this help manual.
+ \item \textit{About}: displays a dialog with information about this software.
  \item \textit{Exit}: exits from the application and saves into a local file the current document path and name, current page and the  zoom factor so that the next time when the application is started the saved settings will be used. Thus you could continue to read the document from the page you closed the application the last time.
 \end{itemize}
 
@@ -54,7 +55,6 @@ The popup menu is available only in full screen mode and it can be displayed by 
 \begin{itemize}
  \item Windows users may need to press roughly 3 seconds before the command popup menu appears. This is due to Windows touch screen management software.
  \item while in full screen mode the mouse pointer is made invisible, so you need a touch screen in order to use the command popup menu
- \item it is possible to restore normal mode from the full screen mode by pressing the escape key (if available).
 \end{itemize}
 
 The following commands are available:
@@ -63,7 +63,7 @@ The following commands are available:
 \item \textit{Normal Screen}: allows to return to normal screen mode. Alternatively, in order to return to the normal screen mode, one could use the escape key (if a keyboard is available).
  \item \textit{Go To Page}: same as the \textit{Go To Page} button of the toolbar
  \item \textit{Zoom}: same as the \textit{Zoom} button of the toolbar
- \item \textit{Show/Hide Page Number}: displays a small window in the lower left corner of the screen with the current page number and the total number of pages. Selecting again this command will hide the current page number window.
+ \item \textit{Properties}: same as the \textit{Properties} button of the toolbar
  \item \textit{Exit}: same as the \textit{Exit} button of the toolbar
 \end{itemize}
 Thus, the command popup menu allows to handle a PDF document in a so called ``advanced user mode" by providing only the essential commands.
