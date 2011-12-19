@@ -184,7 +184,7 @@ Window::Window(QWidget *parent)
 Window::~Window()
 {
     delete fileBrowserModel_;
-    delete worker_;//this object has no parent
+    fileBrowserModel_ = NULL;
 
     //Cleanup code for Intel AppUp(TM) software
 #ifndef NO_APPUP_AUTH_CODE
@@ -707,6 +707,10 @@ void Window::closeEvent(QCloseEvent *evt)
     if (NULL != thread_)
     {
         thread_->quit();//terminate worker thread
+        while (false == thread_->isFinished());//wait for the thread to finish
+        qDebug() << "worker finished";
+        delete worker_;//delete worker object
+        worker_ = NULL;
     }
 
     QWidget::closeEvent(evt);
