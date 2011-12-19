@@ -142,3 +142,9 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
 
     return QVariant();
 }
+
+void FileBrowserModel::setCurrentDir(const QString &filePath)
+{
+    _currentDir = QFileInfo(filePath).dir().absolutePath();
+    qDebug() << "setting current dir to" << _currentDir;
+}

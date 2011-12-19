@@ -34,6 +34,7 @@ public:
     void addDirToSearch(QString& dir);
     void removeDirToSearch(QString& dir);
     void searchPdfFiles();
+    void setCurrentDir(const QString &filePath);
 
 public slots:
     void changeCurrentDir(int index);

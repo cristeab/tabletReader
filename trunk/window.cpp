@@ -137,7 +137,8 @@ Window::Window(QWidget *parent)
         {
             currentZoomIndex_ = settings.value(KEY_ZOOM_LEVEL, 3).toInt();
             setupDocDisplay(settings.value(KEY_PAGE, 0).toInt()+1, filePath);
-        }
+            fileBrowserModel_->setCurrentDir(filePath);
+        }        
     } else
     {
         qDebug() << "no document found";
@@ -188,7 +189,8 @@ Window::~Window()
 
     //Cleanup code for Intel AppUp(TM) software
 #ifndef NO_APPUP_AUTH_CODE
-    if (appupApp_ != NULL) delete appupApp_;
+    delete appupApp_;
+    appupApp_ = NULL;
 #endif
 }
 
