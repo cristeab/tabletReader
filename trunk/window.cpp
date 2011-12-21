@@ -844,9 +844,10 @@ void Window::showAboutDialog()
             QObject *pAboutDlg = pAbout->findChild<QObject*>("aboutDialog");
             if (NULL != pAboutDlg)
             {
-                pAboutDlg->setProperty("text", tr("<H2>tabletReader v1.1</H2><br>"
+                pAboutDlg->setProperty("text", tr("<H2>tabletReader v1.2</H2><br>"
                                                   "<H3>PDF viewer for touch-enabled devices</H3><br>"
                                                   "Copyright (C) 2011, Bogdan Cristea. All rights reserved.<br>"
+                                                  "<i>e-mail: cristeab@gmail.com</i><br><br>"
                                                   "This program is distributed in the hope that it will be useful, "
                                                   "but WITHOUT ANY WARRANTY; without even the implied warranty of "
                                                   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
