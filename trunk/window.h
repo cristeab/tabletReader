@@ -49,6 +49,7 @@ class Window : public QMainWindow
 public:
     Window(QWidget *parent = NULL);
     ~Window();
+    bool hasTouchScreen();
 
 protected:
     void closeEvent(QCloseEvent *);

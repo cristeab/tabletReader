@@ -19,6 +19,7 @@
 #include <QtGui>
 #include <QScrollArea>
 #include <QtDeclarative>
+#include <QtSystemInfo/QSystemDeviceInfo>
 #include "window.h"
 #include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
@@ -31,6 +32,8 @@
 #define KEY_FILE_PATH "current_file_path"
 #define KEY_ZOOM_LEVEL "current_zoom_level"
 #define HELP_FILE ":/help/help/tabletReader.pdf"
+
+QTM_USE_NAMESPACE
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent),
@@ -508,7 +511,10 @@ void Window::fullScreen()
     qDebug() << "Window::fullScreen";
     toolBar_->hide();
     showFullScreen();
-    QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+    if (true == hasTouchScreen())
+    {
+        QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+    }
 }
 
 void Window::normalScreen()
@@ -525,14 +531,20 @@ void Window::normalScreen()
             qDebug() << "using full screen mode with toolbar";
             setFixedSize(width, height);
             showFullScreen();
-            QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+            if (true == hasTouchScreen())
+            {
+                QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+            }
         } else
         {
             qDebug() << "using normal mode";
             showNormal();
             resize((MIN_SCREEN_WIDTH<width)?MIN_SCREEN_WIDTH:width,
                    (MIN_SCREEN_HEIGHT<height)?MIN_SCREEN_HEIGHT:height);
-            QApplication::restoreOverrideCursor();
+            if (true == hasTouchScreen())
+            {
+                QApplication::restoreOverrideCursor();
+            }
         }
     }
 
@@ -985,3 +997,12 @@ void Window::showPropertiesDialog()
         }
     }
 }
+
+bool Window::hasTouchScreen()
+{
+    QSystemDeviceInfo systemInfo;
+    QSystemDeviceInfo::InputMethodFlags flags = systemInfo.inputMethodType();
+    return ((flags & (QSystemDeviceInfo::SingleTouch |
+                      QSystemDeviceInfo::MultiTouch)) != 0)?true:false;
+}
+
