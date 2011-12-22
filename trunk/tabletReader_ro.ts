@@ -116,22 +116,21 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="window.cpp" line="81"/>
+        <location filename="window.cpp" line="64"/>
         <source>Ctrl++</source>
         <translation>Ctrl++</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="83"/>
+        <location filename="window.cpp" line="66"/>
         <source>Ctrl+-</source>
         <translation>Ctrl+-</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="829"/>
         <source>&lt;H2&gt;tabletReader v1.1&lt;/H2&gt;&lt;br&gt;&lt;H3&gt;PDF viewer for touch-enabled devices&lt;/H3&gt;&lt;br&gt;Copyright (C) 2011, Bogdan Cristea. All rights reserved.&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
-        <translation>&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; &lt;br&gt;</translation>
+        <translation type="obsolete">&lt;H2&gt; TabletReader v1.1 &lt;/ H2&gt; &lt;br&gt; &lt;h3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt; Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt; &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="938"/>
+        <location filename="window.cpp" line="968"/>
         <source>Cannot get authorization code for Intel AppUp(TM) software</source>
         <translation>Nu se poate citi codul de autorizare pentru programul Intel AppUp (TM)</translation>
     </message>
@@ -140,78 +139,83 @@
         <translation type="obsolete">Nu puteti folosi tabletReader</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="201"/>
+        <location filename="window.cpp" line="206"/>
         <source>Full Screen</source>
         <translation>Tot Ecranul</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="204"/>
-        <location filename="window.cpp" line="464"/>
+        <location filename="window.cpp" line="209"/>
+        <location filename="window.cpp" line="469"/>
         <source>Go To Page</source>
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="207"/>
-        <location filename="window.cpp" line="470"/>
+        <location filename="window.cpp" line="212"/>
+        <location filename="window.cpp" line="475"/>
         <source>Zoom</source>
         <translation>Marire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="210"/>
-        <location filename="window.cpp" line="467"/>
+        <location filename="window.cpp" line="215"/>
+        <location filename="window.cpp" line="472"/>
         <source>Properties</source>
         <translation>Proprietati</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="213"/>
+        <location filename="window.cpp" line="218"/>
         <source>Help</source>
         <translation>Ajutor</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="216"/>
+        <location filename="window.cpp" line="221"/>
         <source>About</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="219"/>
-        <location filename="window.cpp" line="473"/>
+        <location filename="window.cpp" line="224"/>
+        <location filename="window.cpp" line="478"/>
         <source>Exit</source>
         <translation>Iesire</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="235"/>
+        <location filename="window.cpp" line="240"/>
         <source>Cannot create fileBrowser object</source>
         <translation>Nu se poate crea obiectul fileBrowser</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="236"/>
+        <location filename="window.cpp" line="241"/>
         <source>not enough memory</source>
         <translation>memorie insuficienta</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="241"/>
+        <location filename="window.cpp" line="246"/>
         <source>fileBrowserObject is NULL</source>
         <translation>obiectul fileBrowserObject este NULL</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="939"/>
+        <location filename="window.cpp" line="858"/>
+        <source>&lt;H2&gt;tabletReader v1.2&lt;/H2&gt;&lt;H3&gt;PDF viewer for touch-enabled devices&lt;/H3&gt;&lt;br&gt;Copyright (C) 2011, Bogdan Cristea. All rights reserved.&lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
+        <translation>&lt;H2&gt; TabletReader v1.0 &lt;/H2&gt;&lt;H3&gt; cititor PDF pentru dispozitivele cu ecran tactil &lt;/H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Toate drepturile rezervate. &lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Acest program este distribuit în speranţa că va fi util, fără nici o GARANŢIE, nici chiar fără garanţia implicită de vandabilitate sau POTRIVIRE PENTRU UN ANUMIT SCOP. A se vedea GNU General Public License pentru mai multe detalii. &lt;br&gt;</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="969"/>
         <source>You can use tabletReader, but it is highly recommended to connect to Intel AppUp center</source>
         <translation>Puteti folosi tabletReader, dar este recomandat sa fiti conectat la centrul AppUp al Intel</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="965"/>
+        <location filename="window.cpp" line="995"/>
         <source>&lt;H3&gt;Document path:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Calea documentului:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="967"/>
+        <location filename="window.cpp" line="997"/>
         <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</source>
         <oldsource>&lt;H3&gt;Current page / Page number:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</oldsource>
         <translation>&lt;H3&gt;Pagina curenta / Numarul de pagini:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="198"/>
-        <location filename="window.cpp" line="461"/>
+        <location filename="window.cpp" line="203"/>
+        <location filename="window.cpp" line="466"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
@@ -220,17 +224,17 @@
         <translation type="obsolete">Afiseaza/Ascunde Numarul de Pagina</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="476"/>
+        <location filename="window.cpp" line="481"/>
         <source>Normal Screen</source>
         <translation>Ecran Normal</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="499"/>
+        <location filename="window.cpp" line="504"/>
         <source>Failed to open file</source>
         <translation>Fisierul nu poate fi deschis</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="500"/>
+        <location filename="window.cpp" line="505"/>
         <source>The specified file cannot be opened</source>
         <translation>Fisierul specificat nu poate fi deschis</translation>
     </message>
@@ -239,7 +243,7 @@
         <translation type="obsolete">pagina %1 din %2</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="805"/>
+        <location filename="window.cpp" line="834"/>
         <source>Cannot open help file</source>
         <translation>Nu se poate deschide fichierul de ajutor</translation>
     </message>
@@ -259,42 +263,42 @@
 <context>
     <name>maintoolbar</name>
     <message>
-        <location filename="qml/maintoolbar.qml" line="32"/>
+        <location filename="qml/maintoolbar.qml" line="33"/>
         <source>Open</source>
         <translation>Deschide</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="38"/>
+        <location filename="qml/maintoolbar.qml" line="39"/>
         <source>Full Screen</source>
         <translation>Ecran Complet</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="44"/>
+        <location filename="qml/maintoolbar.qml" line="45"/>
         <source>Go To Page</source>
         <translation>Mergi la Pagina</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="50"/>
+        <location filename="qml/maintoolbar.qml" line="51"/>
         <source>Zoom</source>
         <translation>Marire</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="56"/>
+        <location filename="qml/maintoolbar.qml" line="57"/>
         <source>Properties</source>
         <translation>Proprietati</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="62"/>
+        <location filename="qml/maintoolbar.qml" line="63"/>
         <source>Help</source>
         <translation>Ajutor</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="68"/>
+        <location filename="qml/maintoolbar.qml" line="69"/>
         <source>About</source>
         <translation>Despre</translation>
     </message>
     <message>
-        <location filename="qml/maintoolbar.qml" line="74"/>
+        <location filename="qml/maintoolbar.qml" line="75"/>
         <source>Exit</source>
         <translation>Iesire</translation>
     </message>
