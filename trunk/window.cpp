@@ -619,21 +619,32 @@ bool Window::eventFilter(QObject *, QEvent *event)
         {
             normalScreen();
         }
-        if (Qt::Key_PageDown == keyEvent->key())
+        if (Qt::Key_Right == keyEvent->key())
         {
             showNextPage();
         }
-        if (Qt::Key_PageUp == keyEvent->key())
+        if (Qt::Key_Left == keyEvent->key())
         {
             showPrevPage();
         }
         if (Qt::Key_Home == keyEvent->key())
         {
-            document_->setPage(1);
+            if (0 != document_->currentPage())
+            {
+                //not at the beginning of the document
+                gotoPage(1, document_->numPages());
+                slidingStacked_->slideInPrev();
+            }
         }
         if (Qt::Key_End == keyEvent->key())
         {
-            document_->setPage(document_->numPages());
+            int numPages = document_->numPages();
+            if ((numPages-1) != document_->currentPage())
+            {
+                //not at the end of the document
+                gotoPage(numPages, numPages);
+                slidingStacked_->slideInNext();
+            }
         }
     }
 
