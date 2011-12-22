@@ -283,7 +283,7 @@ void Window::closeFileBrowser(const QString &doc)
     {
         qDebug() << "widget closed";
         fileBrowser_ = NULL;
-        if (tr(CLOSE_FILE_BROWSER_TEXT) != doc)
+        if (FileBrowserModel::closeFileBrowserText() != doc)
         {
             openFile(doc);
         } else

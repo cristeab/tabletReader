@@ -22,8 +22,6 @@
 #include <QAbstractListModel>
 #include <QVector>
 
-#define CLOSE_FILE_BROWSER_TEXT "Close File Browser"
-
 class FileBrowserModel : public QAbstractListModel
 {
 Q_OBJECT
@@ -35,6 +33,10 @@ public:
     void removeDirToSearch(QString& dir);
     void searchPdfFiles();
     void setCurrentDir(const QString &filePath);
+    static QString closeFileBrowserText()
+    {
+        return tr("Close File Browser");
+    }
 
 public slots:
     void changeCurrentDir(int index);

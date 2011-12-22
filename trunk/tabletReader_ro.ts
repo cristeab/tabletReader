@@ -23,6 +23,11 @@
         <source>Current folder: </source>
         <translation type="obsolete">Director curent: </translation>
     </message>
+    <message>
+        <location filename="filebrowsermodel.h" line="38"/>
+        <source>Close File Browser</source>
+        <translation>Inchide Navigatorul de Fisiere</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

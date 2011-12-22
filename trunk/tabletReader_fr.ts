@@ -23,6 +23,11 @@
         <source>Current folder: </source>
         <translation type="obsolete">Répertoire courant: </translation>
     </message>
+    <message>
+        <location filename="filebrowsermodel.h" line="38"/>
+        <source>Close File Browser</source>
+        <translation>Fermer le Navigateur de Fichiers</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
