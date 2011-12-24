@@ -21,7 +21,6 @@
 
 #include <QMainWindow>
 #include <QPoint>
-#include <QTimer>
 #include <QElapsedTimer>
 #include "documentwidget.h"
 #include "worker.h"
@@ -100,6 +99,7 @@ private:
     void setupDocDisplay(unsigned int pageNumber, const QString &filePath);
     void gotoPage(int pageNb, int numPages);
     void setZoomFactor(int index);
+    QString elapsedTime();
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;
@@ -123,6 +123,7 @@ private:
     QTimer *waitTimer_;
     QDeclarativeView *waitDialog_;
     int currentPage_;
+    QElapsedTimer eTime_;
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif

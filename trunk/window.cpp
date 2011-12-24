@@ -52,6 +52,7 @@ Window::Window(QWidget *parent)
       waitTimer_(NULL),
       waitDialog_(NULL)
 {
+    eTime_.start();//used to measure the elapsed time since the app is started
     //main window
     QWidget *centralWidget = new QWidget(this);
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
@@ -995,6 +996,8 @@ void Window::showPropertiesDialog()
                 QString msg = tr("<H3>Document path:<br><i>%1</i></H3>").arg(lastFilePath_);
                 //current page / page number
                 msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
+                //time since the application was started
+                msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
                 //set message
                 pAboutDlg->setProperty("text", msg);
             } else
@@ -1018,3 +1021,50 @@ bool Window::hasTouchScreen()
                       QSystemDeviceInfo::MultiTouch)) != 0)?true:false;
 }
 
+QString Window::elapsedTime()
+{
+    QString msg = "";
+    qint64 eTimeMs = eTime_.elapsed();
+    qint64 eTimeHrs = eTimeMs/(1000*3600);
+    if (0 != eTimeHrs)
+    {
+        if (1 == eTimeHrs)
+        {
+            msg += tr("1 hour");
+        } else
+        {
+            msg += tr("%1 hours").arg(eTimeHrs);
+        }
+    }
+    qint64 eTimeMin = (eTimeMs-eTimeHrs*1000*3600)/(1000*60);
+    if (0 != eTimeMin)
+    {
+        if (0 != eTimeHrs)
+        {
+            msg += ", ";
+        }
+        if (1 == eTimeMin)
+        {
+            msg += tr("1 minute");
+        } else
+        {
+            msg += tr("%1 minutes").arg(eTimeMin);
+        }
+    }
+    qint64 eTimeSec = (eTimeMs-eTimeHrs*1000*3600-eTimeMin*1000*60)/1000;
+    if (0 != eTimeSec)
+    {
+        if ((0 != eTimeMin) || (0 != eTimeHrs))
+        {
+            msg += ", ";
+        }
+        if (1 == eTimeSec)
+        {
+            msg += tr("1 second");
+        } else
+        {
+            msg += tr("%1 seconds").arg(eTimeSec);
+        }
+    }
+    return msg;
+}
