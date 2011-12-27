@@ -51,9 +51,11 @@ Window::Window(QWidget *parent)
       flickable_(NULL),
       fileBrowserModel_(new FileBrowserModel(this)),
       waitTimer_(NULL),
-      waitDialog_(NULL)
+      waitDialog_(NULL),
+      batteryInfo_(NULL)
 {
     eTime_.start();//used to measure the elapsed time since the app is started
+
     //main window
     QWidget *centralWidget = new QWidget(this);
     QGridLayout *gridLayout = new QGridLayout(centralWidget);
@@ -177,6 +179,11 @@ Window::Window(QWidget *parent)
         }
         gridLayout->addWidget(toolBar_, 0, 0, 1, 1);
     }
+
+    //battery status
+    batteryInfo_ = new QSystemBatteryInfo(this);
+    connect(batteryInfo_, SIGNAL(batteryStatusChanged(QSystemBatteryInfo::BatteryStatus)),
+            this, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
 
 #ifndef NO_APPUP_AUTH_CODE
     showWaitDialog();//prepare to check appup code
@@ -722,18 +729,12 @@ bool Window::showPrevPage()
 void Window::closeEvent(QCloseEvent *evt)
 {    
     qDebug() << "Window::closeEvent" << lastFilePath_ << document_->currentPage();
-    if ((NULL != document_) && (QString(HELP_FILE) != lastFilePath_))
-    {
-        //the current settings are not saved if the last file is the help file
-        QSettings settings(ORGANIZATION, APPLICATION);
-        settings.setValue(KEY_PAGE, document_->currentPage());
-        settings.setValue(KEY_FILE_PATH, lastFilePath_);
-        settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
-    }
 
+    saveSettings();
+    //terminate worker thread
     if (NULL != thread_)
     {
-        thread_->quit();//terminate worker thread
+        thread_->quit();
         while (false == thread_->isFinished());//wait for the thread to finish
         qDebug() << "worker finished";
         delete worker_;//delete worker object
@@ -1026,9 +1027,8 @@ bool Window::hasTouchScreen()
 
 QString Window::batteryStatus()
 {
-    QSystemBatteryInfo battery;
     QString msg;
-    switch(battery.chargerType())
+    switch(batteryInfo_->chargerType())
     {
     case QSystemBatteryInfo::NoCharger:
         msg = tr("no charger");
@@ -1046,7 +1046,7 @@ QString Window::batteryStatus()
     default:
         msg = tr("unknown");
     }
-    int remCap = battery.remainingCapacityPercent();
+    int remCap = batteryInfo_->remainingCapacityPercent();
     if (-1 != remCap)
     {
         msg += tr(", %1% remaining capacity").arg(remCap);
@@ -1100,4 +1100,27 @@ QString Window::elapsedTime()
         }
     }
     return msg;
+}
+
+void Window::saveSettings()
+{
+    if ((NULL != document_) && (QString(HELP_FILE) != lastFilePath_))
+    {
+        //the current settings are not saved if the last file is the help file
+        QSettings settings(ORGANIZATION, APPLICATION);
+        settings.setValue(KEY_PAGE, document_->currentPage());
+        settings.setValue(KEY_FILE_PATH, lastFilePath_);
+        settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
+    }
+}
+
+void Window::onBatteryStatusChanged(int status)
+{
+    switch (status)
+    {
+        case QSystemBatteryInfo::BatteryEmpty:
+        case QSystemBatteryInfo::BatteryCritical:
+            saveSettings();
+            qDebug() << "battery empty or critical, settings saved";
+    }
 }

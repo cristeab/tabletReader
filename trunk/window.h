@@ -22,6 +22,7 @@
 #include <QMainWindow>
 #include <QPoint>
 #include <QElapsedTimer>
+#include <qmobilityglobal.h>
 #include "documentwidget.h"
 #include "worker.h"
 
@@ -38,6 +39,9 @@ class FileBrowserModel;
 class QDeclarativeView;
 class Flickable;
 class QTimer;
+QTM_BEGIN_NAMESPACE
+class QSystemBatteryInfo;
+QTM_END_NAMESPACE
 
 class Window : public QMainWindow
 {
@@ -81,6 +85,7 @@ private slots:
     void closeWaitDialog();
     void onAppUpAuthCheckError();
     void showPropertiesDialog();
+    void onBatteryStatusChanged(int status);
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,
@@ -101,6 +106,7 @@ private:
     void gotoPage(int pageNb, int numPages);
     void setZoomFactor(int index);
     QString elapsedTime();
+    void saveSettings();
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;
@@ -123,8 +129,9 @@ private:
     FileBrowserModel* fileBrowserModel_;
     QTimer *waitTimer_;
     QDeclarativeView *waitDialog_;
+    QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
     int currentPage_;
-    QElapsedTimer eTime_;
+    QElapsedTimer eTime_;    
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif
