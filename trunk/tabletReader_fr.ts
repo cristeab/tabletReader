@@ -221,7 +221,7 @@
     <message>
         <location filename="window.cpp" line="1002"/>
         <source>&lt;H3&gt;Elapsed time:&lt;br&gt;%1&lt;/H3&gt;</source>
-        <translation>&lt;H3&gt;Le temps écoulé:&lt;br&gt;%1&lt;/H3&gt;</translation>
+        <translation>&lt;H3&gt;Temps écoulé:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
         <location filename="window.cpp" line="1004"/>
