@@ -226,7 +226,7 @@
     <message>
         <location filename="window.cpp" line="1004"/>
         <source>&lt;H3&gt;Battery status:&lt;br&gt;%1&lt;/H3&gt;</source>
-        <translation>&lt;H3&gt;Etat de la baterie:&lt;br&gt;%1&lt;/H3&gt;</translation>
+        <translation>&lt;H3&gt;Etat de la batterie:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
         <location filename="window.cpp" line="1034"/>
