@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(IADP_SDK_DIR)\Cpp\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtDeclarative;$(QTDIR)\include;poppler-kde\include;$(QTDIR)\include\ActiveQt;debug;c:\qt-4.7.4\mkspecs\default;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTMDIR)\include;$(IADP_SDK_DIR)\Cpp\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtDeclarative;$(QTDIR)\include;poppler-kde\include;$(QTDIR)\include\ActiveQt;debug;c:\qt-4.7.4\mkspecs\default;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -69,8 +69,8 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>qtmaind.lib;poppler-qt4.lib;QtDeclaratived4.lib;QtGuid4.lib;QtCored4.lib;adpcorevc10d.lib;adpcppfvc10d.lib;psapi.lib;shlwapi.lib;adpcorevc10d.lib;adpcppfvc10d.lib;psapi.lib;shlwapi.lib;adpcorevc10d.lib;adpcppfvc10d.lib;psapi.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(IADP_SDK_DIR)\Cpp\Lib;$(QTDIR)\lib;poppler-kde\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>qtmaind.lib;poppler-qt4.lib;QtDeclaratived4.lib;QtGuid4.lib;QtCored4.lib;adpcorevc10d.lib;adpcppfvc10d.lib;psapi.lib;shlwapi.lib;QtSystemInfo1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTMDIR)\lib;$(IADP_SDK_DIR)\Cpp\Lib;$(QTDIR)\lib;poppler-kde\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -173,7 +173,7 @@
   <ItemGroup>
     <CustomBuild Include="SlidingStackedWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "SlidingStackedWidget.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(QTMDIR)\include" "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "SlidingStackedWidget.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
@@ -183,7 +183,7 @@
     </CustomBuild>
     <CustomBuild Include="documentwidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "documentwidget.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(QTMDIR)\include" "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "documentwidget.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
@@ -193,7 +193,7 @@
     </CustomBuild>
     <CustomBuild Include="filebrowsermodel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "filebrowsermodel.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(QTMDIR)\include" "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "filebrowsermodel.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
@@ -203,7 +203,7 @@
     </CustomBuild>
     <CustomBuild Include="flickable.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "flickable.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(QTMDIR)\include" "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "flickable.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
@@ -214,7 +214,7 @@
     <ClInclude Include="logger.h" />
     <CustomBuild Include="window.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "window.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(QTMDIR)\include" "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "window.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
@@ -224,7 +224,7 @@
     </CustomBuild>
     <CustomBuild Include="worker.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "worker.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG_OUTPUT -DQT_NO_WARNING_OUTPUT -DQT_DLL -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT  "-I." "-I$(QTMDIR)\include" "-I$(IADP_SDK_DIR)\Cpp\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include" "-I.\poppler-kde\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-Ic:\qt-4.7.4\mkspecs\default" "-I." "-I." "-I." "worker.h" -o "$(ConfigurationName)\moc_%(Filename).cpp"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
