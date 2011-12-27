@@ -49,6 +49,7 @@ public:
     Window(QWidget *parent = NULL);
     ~Window();
     bool hasTouchScreen();
+    QString batteryStatus();
 
 protected:
     void closeEvent(QCloseEvent *);

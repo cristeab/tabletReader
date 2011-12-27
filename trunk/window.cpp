@@ -20,6 +20,7 @@
 #include <QScrollArea>
 #include <QtDeclarative>
 #include <QtSystemInfo/QSystemDeviceInfo>
+#include <QtSystemInfo/QSystemBatteryInfo>
 #include "window.h"
 #include "SlidingStackedWidget.h"
 #include "filebrowsermodel.h"
@@ -998,6 +999,8 @@ void Window::showPropertiesDialog()
                 msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
                 //time since the application was started
                 msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
+                //battery state
+                msg += tr("<H3>Battery status:<br>%1</H3>").arg(batteryStatus());
                 //set message
                 pAboutDlg->setProperty("text", msg);
             } else
@@ -1019,6 +1022,36 @@ bool Window::hasTouchScreen()
     QSystemDeviceInfo::InputMethodFlags flags = systemInfo.inputMethodType();
     return ((flags & (QSystemDeviceInfo::SingleTouch |
                       QSystemDeviceInfo::MultiTouch)) != 0)?true:false;
+}
+
+QString Window::batteryStatus()
+{
+    QSystemBatteryInfo battery;
+    QString msg;
+    switch(battery.chargerType())
+    {
+    case QSystemBatteryInfo::NoCharger:
+        msg = tr("no charger");
+        break;
+    case QSystemBatteryInfo::WallCharger:
+        msg = tr("wall charger");
+        break;
+    case QSystemBatteryInfo::USBCharger:
+    case QSystemBatteryInfo::USB_500mACharger:
+    case QSystemBatteryInfo::USB_100mACharger:
+    case QSystemBatteryInfo::VariableCurrentCharger:
+        msg = tr("charging");
+        break;
+    case QSystemBatteryInfo::UnknownCharger:
+    default:
+        msg = tr("unknown");
+    }
+    int remCap = battery.remainingCapacityPercent();
+    if (-1 != remCap)
+    {
+        msg += tr(", %1 remaining capacity").arg(remCap);
+    }
+    return msg;
 }
 
 QString Window::elapsedTime()
