@@ -1049,7 +1049,7 @@ QString Window::batteryStatus()
     int remCap = battery.remainingCapacityPercent();
     if (-1 != remCap)
     {
-        msg += tr(", %1 remaining capacity").arg(remCap);
+        msg += tr(", %1% remaining capacity").arg(remCap);
     }
     return msg;
 }
