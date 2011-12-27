@@ -236,7 +236,7 @@
     <message>
         <location filename="window.cpp" line="1037"/>
         <source>wall charger</source>
-        <translation>chargeur du secteur</translation>
+        <translation>chargeur connecté</translation>
     </message>
     <message>
         <location filename="window.cpp" line="1043"/>

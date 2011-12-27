@@ -236,7 +236,7 @@
     <message>
         <location filename="window.cpp" line="1037"/>
         <source>wall charger</source>
-        <translation>incarcator de perete</translation>
+        <translation>incarcator conectat</translation>
     </message>
     <message>
         <location filename="window.cpp" line="1043"/>
