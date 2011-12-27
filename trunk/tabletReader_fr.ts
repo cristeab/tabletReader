@@ -121,12 +121,12 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="window.cpp" line="65"/>
+        <location filename="window.cpp" line="68"/>
         <source>Ctrl++</source>
         <translation>Ctrl++</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="67"/>
+        <location filename="window.cpp" line="70"/>
         <source>Ctrl+-</source>
         <translation>Ctrl+-</translation>
     </message>
@@ -135,7 +135,7 @@
         <translation type="obsolete">&lt;H2&gt; TabletReader v1.1 &lt;/ h2&gt; &lt;br&gt; &lt;H3&gt; lecteur PDF pour écrans tactiles &lt;/ H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Tous droits réservés. &lt;br&gt; Ce programme est distribué dans l&apos;espoir qu&apos;il sera utile, mais SANS AUCUNE GARANTIE, sans même la garantie implicite de COMMERCIALISATION ou D&apos;ADAPTATION A UN OBJET PARTICULIER. Voir la Licence Publique Générale GNU pour plus de détails. &lt;br&gt; &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="969"/>
+        <location filename="window.cpp" line="971"/>
         <source>Cannot get authorization code for Intel AppUp(TM) software</source>
         <translation>Impossible de lire le code d&apos;autorisation pour le logiciel Intel AppUp (TM)</translation>
     </message>
@@ -144,118 +144,153 @@
         <translation type="obsolete">Vous ne pouvez pas utiliser tabletReader</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="207"/>
+        <location filename="window.cpp" line="215"/>
         <source>Full Screen</source>
         <translation>Plein Ecran</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="210"/>
-        <location filename="window.cpp" line="470"/>
+        <location filename="window.cpp" line="218"/>
+        <location filename="window.cpp" line="478"/>
         <source>Go To Page</source>
         <translation>Aller à la Page</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="213"/>
-        <location filename="window.cpp" line="476"/>
+        <location filename="window.cpp" line="221"/>
+        <location filename="window.cpp" line="484"/>
         <source>Zoom</source>
         <translation>Agrandir</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="216"/>
-        <location filename="window.cpp" line="473"/>
+        <location filename="window.cpp" line="224"/>
+        <location filename="window.cpp" line="481"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="219"/>
+        <location filename="window.cpp" line="227"/>
         <source>Help</source>
         <translation>Aide</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="222"/>
+        <location filename="window.cpp" line="230"/>
         <source>About</source>
         <translation>A Propos</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="225"/>
-        <location filename="window.cpp" line="479"/>
+        <location filename="window.cpp" line="233"/>
+        <location filename="window.cpp" line="487"/>
         <source>Exit</source>
         <translation>Sortie</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="241"/>
+        <location filename="window.cpp" line="249"/>
         <source>Cannot create fileBrowser object</source>
         <translation>Impossible de créer l&apos;objet fileBrowser</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="242"/>
+        <location filename="window.cpp" line="250"/>
         <source>not enough memory</source>
         <translation>mémoire insuffissante</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="247"/>
+        <location filename="window.cpp" line="255"/>
         <source>fileBrowserObject is NULL</source>
         <translation>l&apos;objet fileBrowserObject est NULL</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="859"/>
+        <location filename="window.cpp" line="861"/>
         <source>&lt;H2&gt;tabletReader v1.2&lt;/H2&gt;&lt;H3&gt;PDF viewer for touch-enabled devices&lt;/H3&gt;&lt;br&gt;Copyright (C) 2011, Bogdan Cristea. All rights reserved.&lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.&lt;br&gt;&lt;br&gt;</source>
         <translation>&lt;H2&gt; TabletReader v1.2 &lt;/H2&gt; &lt;H3&gt; lecteur PDF pour écrans tactiles &lt;/H3&gt; &lt;br&gt; Copyright (C) 2011, Bogdan Cristea. Tous droits réservés.&lt;br&gt;&lt;i&gt;e-mail: cristeab@gmail.com&lt;/i&gt;&lt;br&gt;&lt;br&gt;Ce programme est distribué dans l&apos;espoir qu&apos;il sera utile, mais SANS AUCUNE GARANTIE, sans même la garantie implicite de COMMERCIALISATION ou D&apos;ADAPTATION A UN OBJET PARTICULIER. Voir la Licence Publique Générale GNU pour plus de détails. &lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="970"/>
+        <location filename="window.cpp" line="972"/>
         <source>You can use tabletReader, but it is highly recommended to connect to Intel AppUp center</source>
         <translation>Vous pouvez utiliser tabletReader, mais il est fortement recommandé d&apos;être connecté au centre AppUp d&apos;Intel</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="996"/>
+        <location filename="window.cpp" line="998"/>
         <source>&lt;H3&gt;Document path:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Chemin du document:&lt;br&gt;&lt;i&gt;%1&lt;/i&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="998"/>
+        <location filename="window.cpp" line="1000"/>
         <source>&lt;H3&gt;Current page / Number of pages:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</source>
         <oldsource>&lt;H3&gt;Current page / Page number:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</oldsource>
         <translation>&lt;H3&gt;Page courante / Nombre de pages:&lt;br&gt;&lt;b&gt;%1 / %2&lt;/b&gt;&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1000"/>
+        <location filename="window.cpp" line="1002"/>
         <source>&lt;H3&gt;Elapsed time:&lt;br&gt;%1&lt;/H3&gt;</source>
         <translation>&lt;H3&gt;Le temps écoulé:&lt;br&gt;%1&lt;/H3&gt;</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1033"/>
+        <location filename="window.cpp" line="1004"/>
+        <source>&lt;H3&gt;Battery status:&lt;br&gt;%1&lt;/H3&gt;</source>
+        <translation>&lt;H3&gt;Etat de la baterie:&lt;br&gt;%1&lt;/H3&gt;</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1034"/>
+        <source>no charger</source>
+        <translation>pas de chargeur</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1037"/>
+        <source>wall charger</source>
+        <translation>chargeur du secteur</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1043"/>
+        <source>charging</source>
+        <translation>en train de charger</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1047"/>
+        <source>unknown</source>
+        <translation>inconnu</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1052"/>
+        <source>, %1% remaining capacity</source>
+        <translation>, %1% capacité restante</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1054"/>
+        <source>, unknown remaining capacity</source>
+        <translation>, capacité restante inconnue</translation>
+    </message>
+    <message>
+        <location filename="window.cpp" line="1068"/>
         <source>1 hour</source>
         <translation>1 heure</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1036"/>
+        <location filename="window.cpp" line="1071"/>
         <source>%1 hours</source>
         <translation>%1 heures</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1048"/>
+        <location filename="window.cpp" line="1083"/>
         <source>1 minute</source>
         <translation>1 minute</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1051"/>
+        <location filename="window.cpp" line="1086"/>
         <source>%1 minutes</source>
         <translation>%1 minutes</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1063"/>
+        <location filename="window.cpp" line="1098"/>
         <source>1 second</source>
         <translation>1 seconde</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="1066"/>
+        <location filename="window.cpp" line="1101"/>
         <source>%1 seconds</source>
         <translation>%1 secondes</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="204"/>
-        <location filename="window.cpp" line="467"/>
+        <location filename="window.cpp" line="212"/>
+        <location filename="window.cpp" line="475"/>
         <source>Open</source>
         <translation>Ouvrir</translation>
     </message>
@@ -264,17 +299,17 @@
         <translation type="obsolete">Afficher/Masquer le Nombre de la Page</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="482"/>
+        <location filename="window.cpp" line="490"/>
         <source>Normal Screen</source>
         <translation>Ecran Normal</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="505"/>
+        <location filename="window.cpp" line="513"/>
         <source>Failed to open file</source>
         <translation>Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="506"/>
+        <location filename="window.cpp" line="514"/>
         <source>The specified file cannot be opened</source>
         <translation>Le fichier spécifié ne peut pas être ouvert</translation>
     </message>
@@ -283,7 +318,7 @@
         <translation type="obsolete">page %1 sur %2</translation>
     </message>
     <message>
-        <location filename="window.cpp" line="835"/>
+        <location filename="window.cpp" line="837"/>
         <source>Cannot open help file</source>
         <translation>Impossible d&apos;ouvrir le fichier d&apos;aide</translation>
     </message>

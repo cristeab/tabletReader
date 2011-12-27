@@ -85,7 +85,6 @@ private slots:
     void closeWaitDialog();
     void onAppUpAuthCheckError();
     void showPropertiesDialog();
-    void onBatteryStatusChanged(int status);
 
 private:
     enum {TOOLTIP_VISIBLE_TIME_MS = 1500,

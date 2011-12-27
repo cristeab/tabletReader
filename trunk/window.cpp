@@ -183,7 +183,7 @@ Window::Window(QWidget *parent)
     //battery status
     batteryInfo_ = new QSystemBatteryInfo(this);
     connect(batteryInfo_, SIGNAL(batteryStatusChanged(QSystemBatteryInfo::BatteryStatus)),
-            this, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
+            worker_, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
 
 #ifndef NO_APPUP_AUTH_CODE
     showWaitDialog();//prepare to check appup code
@@ -1050,6 +1050,8 @@ QString Window::batteryStatus()
     if (-1 != remCap)
     {
         msg += tr(", %1% remaining capacity").arg(remCap);
+    } else{
+        msg += tr(", unknown remaining capacity");
     }
     return msg;
 }
@@ -1111,16 +1113,5 @@ void Window::saveSettings()
         settings.setValue(KEY_PAGE, document_->currentPage());
         settings.setValue(KEY_FILE_PATH, lastFilePath_);
         settings.setValue(KEY_ZOOM_LEVEL, currentZoomIndex_);
-    }
-}
-
-void Window::onBatteryStatusChanged(int status)
-{
-    switch (status)
-    {
-        case QSystemBatteryInfo::BatteryEmpty:
-        case QSystemBatteryInfo::BatteryCritical:
-            saveSettings();
-            qDebug() << "battery empty or critical, settings saved";
     }
 }

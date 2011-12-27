@@ -37,6 +37,7 @@ signals:
 public slots:
     void onUpdateCache(int page);
     void onCheckAppUpAuthCode();
+    void onBatteryStatusChanged(int status);
 
 private:
     DocumentWidget *doc_;

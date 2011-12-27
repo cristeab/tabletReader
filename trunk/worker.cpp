@@ -23,6 +23,7 @@
 #include "window.h"
 #include <QDeclarativeView>
 #include <QDeclarativeEngine>
+#include <QtSystemInfo/QSystemBatteryInfo>
 
 Worker::Worker(DocumentWidget *doc, Window *win) :
     doc_(doc), win_(win)
@@ -69,4 +70,15 @@ void Worker::onCheckAppUpAuthCode()
         win_->closeWaitDialog();
     }
 #endif
+}
+
+void Worker::onBatteryStatusChanged(int status)
+{
+    switch (status)
+    {
+        case QTM_NAMESPACE::QSystemBatteryInfo::BatteryEmpty:
+        case QTM_NAMESPACE::QSystemBatteryInfo::BatteryCritical:
+            win_->saveSettings();
+            qDebug() << "battery empty or critical, settings saved";
+    }
 }
