@@ -20,6 +20,8 @@
 #include <poppler-qt4.h>
 #include "documentwidget.h"
 #include "SlidingStackedWidget.h"
+#include "pdfdocument.h"
+#include "djvudocument.h"
 
 DocumentWidget::DocumentWidget(QWidget*)
     : doc_(NULL),
@@ -56,11 +58,10 @@ void DocumentWidget::loadImage(int page)
         return;
     }
 
-    pageCache_[page%CACHE_SIZE]->image = doc_->page(page)
-                      ->renderToImage(scaleFactor_ * physicalDpiX_,
-                                      scaleFactor_ * physicalDpiY_);
+    pageCache_[page%CACHE_SIZE]->image = doc_->
+                      renderToImage(page, scaleFactor_*physicalDpiX_,
+                                      scaleFactor_*physicalDpiY_);
     pageCache_[page%CACHE_SIZE]->valid = true;
-    qDebug() << "DocumentWidget::loadImage end";
 }
 
 void DocumentWidget::showPage(int page)
@@ -99,35 +100,52 @@ void DocumentWidget::showPage(int page)
     label->setPixmap(QPixmap::fromImage(pageCache_[currentPage_%CACHE_SIZE]->image));
     qDebug() << "DocumentWidget::showPage: end setPixmap";
     cacheMutex_.unlock();
-    //label->update();//TODO: use repaint
 
     emit pageLoaded(page);//change value in the spin box
 }
 
+//factory method
 bool DocumentWidget::setDocument(const QString &filePath)
 {
-    Poppler::Document *oldDocument = doc_;
+    QString ext = filePath.right(4);
+    if (".PDF" == ext.toUpper())
+    {
+        if ((NULL != doc_) && (Document::ID_PDF != doc_->id()))
+        {
+            delete doc_;
+        }
+        doc_ = PDFDocument::load(filePath);
+    } else if ("DJVU" == ext.toUpper())
+    {
+        if ((NULL != doc_) && (Document::ID_DJVU != doc_->id()))
+        {
+            delete doc_;
+        }
+        doc_ = DJVUDocument::load(filePath);
+    } else
+    {
+        qDebug() << "unknown file extension";
+        delete doc_;
+        doc_ = NULL;
+    }
 
-    doc_ = Poppler::Document::load(filePath);
-    if (doc_) {
-        delete oldDocument;
-        doc_->setRenderHint(Poppler::Document::Antialiasing);
-        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+    if (NULL != doc_)
+    {        
         maxNumPages_ = doc_->numPages();
         currentPage_ = -1;
     }
-    return doc_ != 0;
+    return doc_ != NULL;
 }
 
 bool DocumentWidget::loadFromData(const QByteArray &fileContents)
 {
-    Poppler::Document *oldDocument = doc_;
-
-    doc_ = Poppler::Document::loadFromData(fileContents);
-    if (doc_) {
-        delete oldDocument;
-        doc_->setRenderHint(Poppler::Document::Antialiasing);
-        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+    if ((NULL != doc_) && (Document::ID_PDF != doc_->id()))
+    {
+        delete doc_;
+    }
+    doc_ = PDFDocument::loadFromData(fileContents);
+    if (NULL != doc_)
+    {
         maxNumPages_ = doc_->numPages();
         currentPage_ = -1;
     }

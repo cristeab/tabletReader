@@ -25,7 +25,7 @@
 #include <QScrollBar>
 #include <QMutex>
 #include <QDebug>
-#include <poppler-qt4.h>
+#include "document.h"
 
 class SlidingStackedWidget;
 
@@ -125,7 +125,7 @@ signals:
 public:
     void showPage(int page = -1);    
 private:
-    Poppler::Document *doc_;
+    Document *doc_;
     int currentPage_;
     int currentIndex_;
     int maxNumPages_;

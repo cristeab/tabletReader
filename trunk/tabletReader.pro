@@ -4,7 +4,11 @@ HEADERS       = documentwidget.h \
                 flickable.h \
                 worker.h \
                 logger.h \
-                filebrowsermodel.h
+                filebrowsermodel.h \
+    pdfdocument.h \
+    document.h \
+    djvudocument.h \
+    kdjvu.h
 SOURCES       = documentwidget.cpp \
                 main.cpp \
                 window.cpp \
@@ -12,13 +16,18 @@ SOURCES       = documentwidget.cpp \
                 flickable.cpp \
                 worker.cpp \
                 logger.cpp \
-                filebrowsermodel.cpp
+                filebrowsermodel.cpp \
+    pdfdocument.cpp \
+    djvudocument.cpp \
+    kdjvu.cpp \
+    document.cpp
 
-QT           +=     declarative
+QT           +=     declarative xml
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
+LIBS         +=     -L/usr/local/lib -ldjvulibre
 DEFINES      +=     NO_APPUP_AUTH_CODE
-#DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 CONFIG       +=     mobility
 MOBILITY     +=     systeminfo
