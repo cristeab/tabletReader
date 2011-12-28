@@ -28,7 +28,6 @@
 #include <poppler-qt4.h>
 
 class SlidingStackedWidget;
-class ProgressDlg;
 
 class DocumentWidget : public QObject
 {
