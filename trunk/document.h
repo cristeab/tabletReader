@@ -35,7 +35,7 @@ public:
     {
     }
 protected:
-    Document() //ctor is private, this class is a singleton
+    Document() //ctor is protected, this class is a singleton
     {
     }
 private:
