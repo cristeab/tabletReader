@@ -14,9 +14,15 @@ public:
     }
     static Document *load(const QString &fileName);
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
+    virtual int numPages() const
+    {
+        return numPages_;
+    }
     virtual ~DJVUDocument();
 private:
     static KDjVu *doc_;
+    static int numPages_;
+    static DJVUDocument *instance_;
 };
 
 #endif // DJVUDOCUMENT_H

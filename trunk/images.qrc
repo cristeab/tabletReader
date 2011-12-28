@@ -17,6 +17,7 @@
         <file>icons/Button-Upload-icon.png</file>
         <file>icons/My-Ebooks-icon.png</file>
         <file>icons/Apps-session-quit-icon.png</file>
+        <file>icons/Djvu-document-icon.png</file>
     </qresource>
     <qresource prefix="/qml">
         <file>qml/gotopage.qml</file>

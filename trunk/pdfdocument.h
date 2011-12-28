@@ -35,9 +35,15 @@ public:
     static Document* load(const QString &fileName);
     static Document* loadFromData(const QByteArray &data);
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
+    virtual int numPages() const
+    {
+        return numPages_;
+    }
     virtual ~PDFDocument();
 private:
     static Poppler::Document *doc_;
+    static int numPages_;
+    static PDFDocument *instance_;
 };
 
 #endif // PDFDOCUMENT_H

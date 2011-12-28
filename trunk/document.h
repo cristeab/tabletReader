@@ -30,19 +30,14 @@ public:
     enum {ID_PDF = 0, ID_DJVU};//available concrete document IDs
     virtual int id() = 0;
     virtual QImage renderToImage(int page, qreal xres, qreal yres) = 0;
+    virtual int numPages() const = 0;
     virtual ~Document()
     {
-    }
-    int numPages() const
-    {
-        return numPages_;
     }
 protected:
     Document() //ctor is private, this class is a singleton
     {
     }
-    static Document* instance_;
-    static int numPages_;
 private:
     Document(const Document&);//copy ctor not allowed
     Document& operator=(const Document&);//copy assignment operator not allowed

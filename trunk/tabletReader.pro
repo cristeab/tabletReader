@@ -19,8 +19,7 @@ SOURCES       = documentwidget.cpp \
                 filebrowsermodel.cpp \
     pdfdocument.cpp \
     djvudocument.cpp \
-    kdjvu.cpp \
-    document.cpp
+    kdjvu.cpp
 
 QT           +=     declarative xml
 INCLUDEPATH  +=     /usr/include/poppler/qt4

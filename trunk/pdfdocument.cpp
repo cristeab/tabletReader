@@ -20,11 +20,14 @@
 #include "pdfdocument.h"
 
 Poppler::Document *PDFDocument::doc_= NULL;
+int PDFDocument::numPages_ = 0;
+PDFDocument *PDFDocument::instance_ = NULL;
 
 PDFDocument::~PDFDocument()
 {
     delete doc_;
     numPages_ = 0;
+    instance_ = NULL;
 }
 
 Document *PDFDocument::load(const QString &fileName)

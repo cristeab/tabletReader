@@ -57,7 +57,7 @@ void FileBrowserModel::searchPdfFiles()
     _files.clear();
     _dirs.clear();
 
-    QDir directory = QDir(_currentDir, "*.pdf *.PDF *.Pdf *.pDf *.pdF *.PDf *.PdF *.pDF",
+    QDir directory = QDir(_currentDir, "*.pdf *.djvu",
                           QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
     //fill file list
@@ -116,7 +116,16 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
             } else
             {
-                return QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
+                QString ext = _files[fileRow].right(4);
+                QString iconFileName;
+                if (".PDF" == ext.toUpper())
+                {
+                    iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
+                } else if ("DJVU" == ext.toUpper())
+                {
+                    iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
+                }
+                return iconFileName;
             }
         case IS_FILE:
             return 1;

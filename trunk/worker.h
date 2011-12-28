@@ -20,10 +20,13 @@
 #define WORKER_H
 
 #include <QThread>
+#include <QtSystemInfo/QSystemBatteryInfo>
 
 class QProgressDialog;
 class DocumentWidget;
 class Window;
+
+QTM_USE_NAMESPACE
 
 class Worker : public QObject
 {
@@ -37,7 +40,7 @@ signals:
 public slots:
     void onUpdateCache(int page);
     void onCheckAppUpAuthCode();
-    void onBatteryStatusChanged(int status);
+    void onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus status);
 
 private:
     DocumentWidget *doc_;
