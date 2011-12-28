@@ -54,7 +54,7 @@ void FileBrowserModel::changeCurrentDir(int index)
 
 void FileBrowserModel::searchPdfFiles()
 {
-    _pdfFiles.clear();
+    _files.clear();
     _dirs.clear();
 
     QDir directory = QDir(_currentDir, "*.pdf *.PDF *.Pdf *.pDf *.pdF *.PDf *.PdF *.pDF",
@@ -63,9 +63,9 @@ void FileBrowserModel::searchPdfFiles()
     //fill file list
     directory.setFilter(QDir::Files);
     foreach (QString file, directory.entryList()) {
-        _pdfFiles.append(directory.absoluteFilePath(file));
+        _files.append(directory.absoluteFilePath(file));
     }
-    _pdfFiles.append(closeFileBrowserText());
+    _files.append(closeFileBrowserText());
 
     //fill folder list
     directory.setFilter(QDir::AllDirs);
@@ -91,7 +91,7 @@ void FileBrowserModel::searchPdfFiles()
 
 int FileBrowserModel::rowCount(const QModelIndex&) const
 {
-    return (_dirs.count() + _pdfFiles.count());
+    return (_dirs.count() + _files.count());
 }
 
 QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
@@ -108,10 +108,10 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         int fileRow = index.row() - _dirs.count();
         switch (role) {
         case TITLE:
-            return QDir(_pdfFiles[fileRow]).dirName();
+            return QDir(_files[fileRow]).dirName();
         case IMAGE:
-            if (((fileRow+1) == _pdfFiles.count()) &&
-                    (closeFileBrowserText() == _pdfFiles[fileRow]))
+            if (((fileRow+1) == _files.count()) &&
+                    (closeFileBrowserText() == _files[fileRow]))
             {
                 return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
             } else
@@ -121,7 +121,7 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
         case IS_FILE:
             return 1;
         case PATH:
-            return _pdfFiles[fileRow];
+            return _files[fileRow];
         }
     } else {
         switch (role) {

@@ -45,7 +45,7 @@ private:
     Q_DISABLE_COPY(FileBrowserModel);
     enum PdfPreviewRoles { TITLE, PAGES, IMAGE, IS_FILE, PATH };
     QString _currentDir;
-    QVector<QString> _pdfFiles;
+    QVector<QString> _files;
     QVector<QString> _dirs;
     QObject *_parent;
 
