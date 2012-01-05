@@ -257,15 +257,7 @@ int CHMDocument::getTOC()
         if ( tagword == "object" && tag.indexOf ("text/sitemap", 0, Qt::CaseInsensitive ) != -1 )
         {
             in_object = true;
-            if (NULL != nameItem)
-            {
-                delete nameItem;
-            }
             nameItem = new QStandardItem();
-            if (NULL != urlItem)
-            {
-                delete urlItem;
-            }
             urlItem = new QStandardItem();
         }
         else if ( (tagword == "/object") && in_object )
@@ -347,9 +339,6 @@ int CHMDocument::getTOC()
     TOCResolved_ = true;
     out = EXIT_SUCCESS;
 exit_err:
-    delete currentItem;
-    delete nameItem;
-    delete urlItem;
     return out;
 }
 
