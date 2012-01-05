@@ -23,11 +23,11 @@
 #include <QByteArray>
 #include <QImage>
 
-//interface for handling documents (PDF, DJVU, etc)
+//interface for handling electronic documents (PDF, DJVU, CHM, etc)
 class Document
 {
 public:
-    enum {ID_PDF = 0, ID_DJVU};//available concrete document IDs
+    enum {ID_PDF = 0, ID_DJVU, ID_CHM};//available concrete document IDs
     virtual int id() = 0;
     virtual QImage renderToImage(int page, qreal xres, qreal yres) = 0;
     virtual int numPages() const = 0;

@@ -22,6 +22,7 @@
 #include "SlidingStackedWidget.h"
 #include "pdfdocument.h"
 #include "djvudocument.h"
+#include "chmdocument.h"
 
 DocumentWidget::DocumentWidget(QWidget*)
     : doc_(NULL),
@@ -122,6 +123,13 @@ bool DocumentWidget::setDocument(const QString &filePath)
             delete doc_;
         }
         doc_ = DJVUDocument::load(filePath);
+    } else if (".CHM" == ext.toUpper())
+    {
+        if ((NULL != doc_) && (Document::ID_CHM != doc_->id()))
+        {
+            delete doc_;
+        }
+        doc_ = CHMDocument::load(filePath);
     } else
     {
         qDebug() << "unknown file extension";

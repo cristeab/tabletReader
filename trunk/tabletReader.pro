@@ -8,7 +8,9 @@ HEADERS       = documentwidget.h \
     pdfdocument.h \
     document.h \
     djvudocument.h \
-    kdjvu.h
+    kdjvu.h \
+    chmdocument.h \
+    chmreply.h
 SOURCES       = documentwidget.cpp \
                 main.cpp \
                 window.cpp \
@@ -19,12 +21,15 @@ SOURCES       = documentwidget.cpp \
                 filebrowsermodel.cpp \
     pdfdocument.cpp \
     djvudocument.cpp \
-    kdjvu.cpp
+    kdjvu.cpp \
+    chmdocument.cpp \
+    chmreply.cpp
 
-QT           +=     declarative xml
+QT           +=     declarative xml webkit
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 LIBS         +=     -L/usr/local/lib -ldjvulibre
+LIBS         +=     -L/usr/local/lib -lchm
 DEFINES      +=     NO_APPUP_AUTH_CODE
 DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 

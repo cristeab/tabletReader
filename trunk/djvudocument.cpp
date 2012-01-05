@@ -47,7 +47,6 @@ Document *DJVUDocument::load(const QString &fileName)
 
 QImage DJVUDocument::renderToImage(int page, qreal xres, qreal yres)
 {
-    //TODO: some conversion of xres, yres to width, heigth is needed
     if (NULL == doc_)
     {
         return QImage();
