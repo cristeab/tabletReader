@@ -57,7 +57,7 @@ void FileBrowserModel::searchPdfFiles()
     _files.clear();
     _dirs.clear();
 
-    QDir directory = QDir(_currentDir, "*.pdf *.djvu",
+    QDir directory = QDir(_currentDir, "*.pdf *.djvu *.chm",
                           QDir::Name | QDir::IgnoreCase | QDir::LocaleAware);
 
     //fill file list
@@ -124,6 +124,9 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 } else if ("DJVU" == ext.toUpper())
                 {
                     iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
+                } else if (".CHM" == ext.toUpper())
+                {
+                    iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
                 }
                 return iconFileName;
             }
