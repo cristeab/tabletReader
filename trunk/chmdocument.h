@@ -20,37 +20,35 @@
 #define CHMDOCUMENT_H
 
 #include <QtNetwork/QNetworkAccessManager>
-#include <QEventLoop>
+#include <QStringList>
 #include "document.h"
 
 struct chmFile;
 class QStandardItemModel;
 class QWebView;
 
-class CHMDocument : public Document, public QNetworkAccessManager
+class CHMDocument : public QObject, public Document
 {
+    Q_OBJECT
 public:
     virtual int id()
     {
         return ID_CHM;
     }
     static Document *load(const QString &fileName);
+    //Must be thread safe
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual int numPages() const
     {
         return numPages_;
     }
     virtual ~CHMDocument();
-private slots:
-    void onLoadFinished(bool ok);
 private:
     CHMDocument();
     int init();
     int getTOC();
     int findStringInQuotes (const QString& tag, int offset,
                                          QString& value, bool firstquote);
-    QNetworkReply* createRequest(Operation op, const QNetworkRequest & req,
-                                 QIODevice * outgoingData = 0);
     static CHMDocument *instance_;
     chmFile *doc_;
     int numPages_;
@@ -59,9 +57,22 @@ private:
     QStandardItemModel *TOCModel_;
     QByteArray codecName_;
     QStringList Spine_;
-    QWebView *webView_;
-    QEventLoop eventloop_;
     enum {DATA_SIZE = 256};
+    //internal class used to handle requests
+    class RequestHandler : public QNetworkAccessManager
+    {
+    public:
+        void setChmFile(chmFile *doc)
+        {
+            doc_ = doc;
+        }
+    private:
+        QNetworkReply* createRequest(Operation op, const QNetworkRequest &req,
+                                     QIODevice *outgoingData = NULL);
+        chmFile *doc_;
+    };
+    QWebView *webView_;
+    RequestHandler *req_;
 };
 
 #endif // CHMDOCUMENT_H

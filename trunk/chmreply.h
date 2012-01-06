@@ -13,7 +13,7 @@ class CHMReply : public QNetworkReply
     Q_OBJECT
 public:
     CHMReply(QObject *parent, const QNetworkRequest &req,
-             const QNetworkAccessManager::Operation op, chmFile* file);
+             const QNetworkAccessManager::Operation &op, chmFile* file);
 
     virtual void abort();
     virtual qint64 readData(char *data, qint64 maxlen);

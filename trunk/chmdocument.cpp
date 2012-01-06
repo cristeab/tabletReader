@@ -21,6 +21,7 @@
 #include <QtWebKit/QWebView>
 #include <QtWebKit/QWebFrame>
 #include <QTextCodec>
+#include <QEventLoop>
 #include <QDebug>
 #include "chm_lib.h"
 #include "chmdocument.h"
@@ -36,20 +37,20 @@ CHMDocument::CHMDocument() :
     TOCName_(QString()),
     TOCModel_(new QStandardItemModel),
     codecName_(""),
-    webView_(new QWebView)
+    webView_(new QWebView()),
+    req_(new RequestHandler())
 {
+    qDebug() << "CHMDocument::CHMDocument";
     //init TOC model (this could be done in a base class)
     TOCModel_->setColumnCount(3);
     TOCModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
     TOCModel_->setHeaderData(1, Qt::Horizontal, tr("URL"));
-    TOCModel_->setHeaderData(2, Qt::Horizontal, tr("Page"));
-    //init the internal web browser
-    webView_->page()->setNetworkAccessManager(this);
-    connect(webView_, SIGNAL(loadFinished(bool)), this, SLOT(onLoadFinished(bool)));
+    TOCModel_->setHeaderData(2, Qt::Horizontal, tr("Page"));    
 }
 
 CHMDocument::~CHMDocument()
 {
+    qDebug() << "CHMDocument::~CHMDocument";
     instance_ = NULL;
     if (NULL !=  doc_)
     {
@@ -59,10 +60,12 @@ CHMDocument::~CHMDocument()
     numPages_ = 0;    
     delete TOCModel_;
     delete webView_;
+    delete req_;
 }
 
 Document *CHMDocument::load(const QString &fileName)
 {
+    qDebug() << "CHMDocument::load";
     if (NULL == instance_)
     {
         instance_ = new CHMDocument();
@@ -80,6 +83,7 @@ Document *CHMDocument::load(const QString &fileName)
         if ((EXIT_SUCCESS == instance_->init()) && (EXIT_SUCCESS == instance_->getTOC()))
         {
             instance_->numPages_ = instance_->Spine_.count();
+            instance_->req_->setChmFile(instance_->doc_);
             return instance_;
         }
     }
@@ -88,16 +92,20 @@ Document *CHMDocument::load(const QString &fileName)
 
 QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
 {
+    qDebug() << "CHMDocument::renderToImage: " << page;
     if ((NULL == doc_) || (0 > page) || (Spine_.count() <= page))
     {
         return QImage();
     }
+
+    QEventLoop eventLoop;    
+    webView_->page()->setNetworkAccessManager(req_);
+    connect(webView_, SIGNAL(loadFinished(bool)), &eventLoop, SLOT(quit()));
     webView_->load(QUrl::fromLocalFile("/"+Spine_.at(page)));
-    if (EXIT_FAILURE == eventloop_.exec()) //wait for load to complete
-    {
-        return QImage();//an error occured, nothing will be displayed
-    }
-    webView_->setZoomFactor(xres/webView_->physicalDpiX());
+    eventLoop.exec();//wait for load to complete
+    qreal zoomFactor = xres/webView_->physicalDpiX();
+    webView_->setZoomFactor(zoomFactor);
+    qDebug() << "zoom factor" << zoomFactor;
     QWebFrame *webFrame = webView_->page()->mainFrame();
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
@@ -107,6 +115,7 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
 
 int CHMDocument::init()
 {
+    qDebug() << "CHMDocument::init";
     if (NULL == doc_)
     {
         return EXIT_FAILURE;
@@ -120,9 +129,9 @@ int CHMDocument::init()
     }
     char data[DATA_SIZE] = "";
     QByteArray filename;
-    char* code;
-    char* length;
-    /*chm_retrieve_object(doc_, &cui, (unsigned char *)data, 0, DATA_SIZE);
+    char* code = NULL;
+    char* length = NULL;
+    chm_retrieve_object(doc_, &cui, (unsigned char *)data, 0, DATA_SIZE);
     //the following decodes topic file name from #system file.
     while (i < DATA_SIZE)
     {
@@ -137,8 +146,8 @@ int CHMDocument::init()
             i = i+4+(int)*length;
         }
     }
-    TopicName = QString(filename);
-    filename.clear();*/
+    QString TopicName = QString(filename);
+    filename.clear();
 
     //the following code doesn't work in all conditions.
     i = chm_resolve_object(doc_, "/#STRINGS", &cui);
@@ -178,6 +187,7 @@ int CHMDocument::init()
 
 int CHMDocument::getTOC()
 {
+    qDebug() << "CHMDocument::getTOC";
     if(true == TOCResolved_)
     {
         return EXIT_SUCCESS;
@@ -346,41 +356,40 @@ exit_err:
 int CHMDocument::findStringInQuotes (const QString& tag, int offset,
                                      QString& value, bool firstquote)
 {
-        int qbegin = tag.indexOf ('"', offset);
-        if (qbegin == -1)
-        {
-            qDebug() << "CHMDocument::findStringInQuotes: cannot find first quote "
-                      "in <param> tag:" << qPrintable( tag );
-            return 0;//fatal error
-        }
-        int qend = firstquote ? tag.indexOf ('"', qbegin + 1) : tag.lastIndexOf ('"');
-        if ((qend == -1) || (qend <= qbegin))
-        {
-            qDebug() << "CHMDocument::findStringInQuotes: cannot find last quote in "
-                      "<param> tag:" << qPrintable(tag);
-            return 0;//fatal error
-        }
-        // If we do not need to decode HTML entities, just return.
-        value = tag.mid (qbegin + 1, qend - qbegin - 1);
-        return qend + 1;
+    int qbegin = tag.indexOf ('"', offset);
+    if (qbegin == -1)
+    {
+        qDebug() << "CHMDocument::findStringInQuotes: cannot find first quote "
+                    "in <param> tag:" << qPrintable( tag );
+        return 0;//fatal error
+    }
+    int qend = firstquote ? tag.indexOf ('"', qbegin + 1) : tag.lastIndexOf ('"');
+    if ((qend == -1) || (qend <= qbegin))
+    {
+        qDebug() << "CHMDocument::findStringInQuotes: cannot find last quote in "
+                    "<param> tag:" << qPrintable(tag);
+        return 0;//fatal error
+    }
+    // If we do not need to decode HTML entities, just return.
+    value = tag.mid (qbegin + 1, qend - qbegin - 1);
+    return qend + 1;
 }
 
 //this method is used by QWebView to load an HTML page
-QNetworkReply* CHMDocument::createRequest(Operation op, const QNetworkRequest &req,
+QNetworkReply* CHMDocument::RequestHandler::createRequest(Operation op, const QNetworkRequest &req,
                              QIODevice *outgoingData)
 {
-    return (req.url().scheme()=="file")?(new CHMReply(this, req, op, doc_)):
-                                         QNetworkAccessManager::createRequest(op, req, outgoingData);
-}
-
-//used to signal when the page has been loaded
-void CHMDocument::onLoadFinished(bool ok)
-{
-    int out = EXIT_SUCCESS;
-    if (false == ok)
+    qDebug() << "CHMDocument::RequestHandler::createRequest";
+    if (req.url().scheme()=="file")
     {
-        qDebug() << "error on load";
-        out = EXIT_FAILURE;
+        CHMReply *pReply = new CHMReply(this, req, op, doc_);
+        if (NULL == pReply)
+        {
+            qDebug() << "reply is NULL";
+        }
+        return pReply;
+    } else
+    {
+        return QNetworkAccessManager::createRequest(op, req, outgoingData);
     }
-    eventloop_.exit(out);
 }
