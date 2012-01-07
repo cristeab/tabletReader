@@ -62,17 +62,17 @@ private:
     class RequestHandler : public QNetworkAccessManager
     {
     public:
-        void setChmFile(chmFile *doc)
-        {
-            doc_ = doc;
-        }
-    private:
+        explicit RequestHandler(CHMDocument *chmDoc) :
+            chmDoc_(chmDoc)
+        {}
+    private:        
         QNetworkReply* createRequest(Operation op, const QNetworkRequest &req,
                                      QIODevice *outgoingData = NULL);
-        chmFile *doc_;
+        CHMDocument *chmDoc_;
     };
     QWebView *webView_;
     RequestHandler *req_;
+    friend class RequestHandler;
 };
 
 #endif // CHMDOCUMENT_H

@@ -22,6 +22,7 @@
 #include <QtWebKit/QWebFrame>
 #include <QTextCodec>
 #include <QEventLoop>
+#include <QThread>
 #include <QDebug>
 #include "chm_lib.h"
 #include "chmdocument.h"
@@ -38,14 +39,14 @@ CHMDocument::CHMDocument() :
     TOCModel_(new QStandardItemModel),
     codecName_(""),
     webView_(new QWebView()),
-    req_(new RequestHandler())
+    req_(new RequestHandler(this))
 {
     qDebug() << "CHMDocument::CHMDocument";
     //init TOC model (this could be done in a base class)
     TOCModel_->setColumnCount(3);
     TOCModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
     TOCModel_->setHeaderData(1, Qt::Horizontal, tr("URL"));
-    TOCModel_->setHeaderData(2, Qt::Horizontal, tr("Page"));    
+    TOCModel_->setHeaderData(2, Qt::Horizontal, tr("Page"));
 }
 
 CHMDocument::~CHMDocument()
@@ -83,7 +84,6 @@ Document *CHMDocument::load(const QString &fileName)
         if ((EXIT_SUCCESS == instance_->init()) && (EXIT_SUCCESS == instance_->getTOC()))
         {
             instance_->numPages_ = instance_->Spine_.count();
-            instance_->req_->setChmFile(instance_->doc_);
             return instance_;
         }
     }
@@ -382,7 +382,7 @@ QNetworkReply* CHMDocument::RequestHandler::createRequest(Operation op, const QN
     qDebug() << "CHMDocument::RequestHandler::createRequest";
     if (req.url().scheme()=="file")
     {
-        CHMReply *pReply = new CHMReply(this, req, op, doc_);
+        CHMReply *pReply = new CHMReply(this, req, op, chmDoc_->doc_);
         if (NULL == pReply)
         {
             qDebug() << "reply is NULL";
