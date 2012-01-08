@@ -102,6 +102,7 @@ void DocumentWidget::showPage(int page)
     }
     qDebug() << "DocumentWidget::showPage: begin setPixmap";
     label->setPixmap(QPixmap::fromImage(pageCache_[currentPage_%CACHE_SIZE]->image));
+    label->adjustSize();
     qDebug() << "DocumentWidget::showPage: end setPixmap";
     cacheMutex_.unlock();
 

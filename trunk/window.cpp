@@ -101,6 +101,7 @@ Window::Window(QWidget *parent)
         scroll->setAlignment(Qt::AlignCenter);
         label = new QLabel();//QLabel is used to display a page
         label->setAlignment(Qt::AlignCenter);
+        label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         scroll->setWidget(label);
         scroll->installEventFilter(this);
         slidingStacked_->addWidget(scroll);//scroll areas are switched by the stacked widget
