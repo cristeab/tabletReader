@@ -32,17 +32,23 @@ public:
     {
         return ID_PDF;
     }
-    static Document* load(const QString &fileName);
-    static Document* loadFromData(const QByteArray &data);
-    virtual QImage renderToImage(int page, qreal xres, qreal yres);
-    virtual int numPages() const
+    static Document* instance()
     {
-        return numPages_;
+        if (NULL == instance_)
+        {
+            instance_ = new PDFDocument();
+        }
+        return instance_;
     }
+    virtual int load(const QString &fileName);
+    virtual int loadFromData(const QByteArray &data);
+    virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~PDFDocument();
 private:
-    static Poppler::Document *doc_;
-    static int numPages_;
+    PDFDocument() :
+        Document(), doc_(NULL)
+    {}
+    Poppler::Document *doc_;
     static PDFDocument *instance_;
 };
 

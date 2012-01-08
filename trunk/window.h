@@ -54,6 +54,10 @@ public:
     ~Window();
     bool hasTouchScreen();
     QString batteryStatus();
+    void setSingleThreaded(bool value = true)
+    {
+        isSingleThreaded_ = value;
+    }
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -106,6 +110,10 @@ private:
     void setZoomFactor(int index);
     QString elapsedTime();
     void saveSettings();
+    void preloadPage(int page)
+    {
+        (false == isSingleThreaded_)?(emit updateCache(page)):worker_->onUpdateCache(page);
+    }
 
     SlidingStackedWidget *slidingStacked_;
     DocumentWidget *document_;
@@ -131,6 +139,7 @@ private:
     QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
     int currentPage_;
     QElapsedTimer eTime_;    
+    bool isSingleThreaded_;
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif

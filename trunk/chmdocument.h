@@ -21,27 +21,30 @@
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QStringList>
+#include <QEventLoop>
 #include "document.h"
 
 struct chmFile;
 class QStandardItemModel;
 class QWebView;
 
-class CHMDocument : public QObject, public Document
+class CHMDocument : public Document
 {
-    Q_OBJECT
 public:
     virtual int id()
     {
         return ID_CHM;
     }
-    static Document *load(const QString &fileName);
-    //Must be thread safe
-    virtual QImage renderToImage(int page, qreal xres, qreal yres);
-    virtual int numPages() const
+    static Document* instance()
     {
-        return numPages_;
+        if (NULL == instance_)
+        {
+            instance_ = new CHMDocument();
+        }
+        return instance_;
     }
+    virtual int load(const QString &fileName);
+    virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~CHMDocument();
 private:
     CHMDocument();
@@ -51,7 +54,6 @@ private:
                                          QString& value, bool firstquote);
     static CHMDocument *instance_;
     chmFile *doc_;
-    int numPages_;
     bool TOCResolved_;
     QString TOCName_;
     QStandardItemModel *TOCModel_;
@@ -72,6 +74,7 @@ private:
     };
     QWebView *webView_;
     RequestHandler *req_;
+    QEventLoop eventLoop_;
     friend class RequestHandler;
 };
 

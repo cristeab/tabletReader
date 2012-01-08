@@ -19,53 +19,44 @@
 #include <poppler-qt4.h>
 #include "pdfdocument.h"
 
-Poppler::Document *PDFDocument::doc_= NULL;
-int PDFDocument::numPages_ = 0;
 PDFDocument *PDFDocument::instance_ = NULL;
 
 PDFDocument::~PDFDocument()
 {
     delete doc_;
-    numPages_ = 0;
     instance_ = NULL;
 }
 
-Document *PDFDocument::load(const QString &fileName)
+int PDFDocument::load(const QString &fileName)
 {
-    if (NULL == instance_)
+    if (NULL != instance_)
     {
-        instance_ = new PDFDocument();
+        delete doc_;
+        if (NULL != (doc_ = Poppler::Document::load(fileName)))
+        {
+            doc_->setRenderHint(Poppler::Document::Antialiasing);
+            doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+            numPages_ = doc_->numPages();
+            return EXIT_SUCCESS;
+        }
     }
-
-    delete doc_;
-    doc_ = Poppler::Document::load(fileName);
-    if (NULL != doc_)
-    {
-        doc_->setRenderHint(Poppler::Document::Antialiasing);
-        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
-        numPages_ = doc_->numPages();
-        return instance_;
-    }
-    return NULL;
+    return EXIT_FAILURE;
 }
 
-Document *PDFDocument::loadFromData(const QByteArray &data)
+int PDFDocument::loadFromData(const QByteArray &data)
 {
-    if (NULL == instance_)
+    if (NULL != instance_)
     {
-        instance_ = new PDFDocument();
+        delete doc_;
+        if (NULL != (doc_ = Poppler::Document::loadFromData(data)))
+        {
+            doc_->setRenderHint(Poppler::Document::Antialiasing);
+            doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+            numPages_ = doc_->numPages();
+            return EXIT_SUCCESS;
+        }
     }
-
-    delete doc_;
-    doc_ = Poppler::Document::loadFromData(data);
-    if (NULL != doc_)
-    {
-        doc_->setRenderHint(Poppler::Document::Antialiasing);
-        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
-        numPages_ = doc_->numPages();
-        return instance_;
-    }
-    return NULL;
+    return EXIT_FAILURE;
 }
 
 QImage PDFDocument::renderToImage(int page, qreal xres, qreal yres)

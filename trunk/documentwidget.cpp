@@ -23,9 +23,12 @@
 #include "pdfdocument.h"
 #include "djvudocument.h"
 #include "chmdocument.h"
+#include "window.h"
 
-DocumentWidget::DocumentWidget(QWidget*)
-    : doc_(NULL),
+DocumentWidget::DocumentWidget(Window *parent)
+    : QObject(parent),
+      parent_(parent),
+      doc_(NULL),
       currentPage_(-1),
       currentIndex_(-1),
       maxNumPages_(0),
@@ -115,21 +118,24 @@ bool DocumentWidget::setDocument(const QString &filePath)
         {
             delete doc_;
         }
-        doc_ = PDFDocument::load(filePath);
+        doc_ = PDFDocument::instance();
+        parent_->setSingleThreaded(false);
     } else if ("DJVU" == ext.toUpper())
     {
         if ((NULL != doc_) && (Document::ID_DJVU != doc_->id()))
         {
             delete doc_;
         }
-        doc_ = DJVUDocument::load(filePath);
+        doc_ = DJVUDocument::instance();
+        parent_->setSingleThreaded(false);
     } else if (".CHM" == ext.toUpper())
     {
         if ((NULL != doc_) && (Document::ID_CHM != doc_->id()))
         {
             delete doc_;
         }
-        doc_ = CHMDocument::load(filePath);
+        doc_ = CHMDocument::instance();
+        parent_->setSingleThreaded(true);
     } else
     {
         qDebug() << "unknown file extension";
@@ -138,9 +144,16 @@ bool DocumentWidget::setDocument(const QString &filePath)
     }
 
     if (NULL != doc_)
-    {        
-        maxNumPages_ = doc_->numPages();
-        currentPage_ = -1;
+    {
+        if (EXIT_SUCCESS != doc_->load(filePath))
+        {
+            delete doc_;
+            doc_ = NULL;
+        } else
+        {
+            maxNumPages_ = doc_->numPages();
+            currentPage_ = -1;
+        }
     }
     return doc_ != NULL;
 }
@@ -151,13 +164,20 @@ bool DocumentWidget::loadFromData(const QByteArray &fileContents)
     {
         delete doc_;
     }
-    doc_ = PDFDocument::loadFromData(fileContents);
+    doc_ = PDFDocument::instance();
     if (NULL != doc_)
     {
-        maxNumPages_ = doc_->numPages();
-        currentPage_ = -1;
+        if (EXIT_SUCCESS != doc_->loadFromData(fileContents))
+        {
+            delete doc_;
+            doc_ = NULL;
+        } else
+        {
+            maxNumPages_ = doc_->numPages();
+            currentPage_ = -1;
+        }
     }
-    return doc_ != 0;
+    return doc_ != NULL;
 }
 
 void DocumentWidget::setPage(int page)

@@ -28,6 +28,7 @@
 #include "document.h"
 
 class SlidingStackedWidget;
+class Window;
 
 class DocumentWidget : public QObject
 {
@@ -36,7 +37,7 @@ class DocumentWidget : public QObject
     friend class Worker;
 
 public:
-    DocumentWidget(QWidget *parent = 0);
+    DocumentWidget(Window *parent = 0);
     ~DocumentWidget();
     qreal scale() const
     {
@@ -125,6 +126,7 @@ signals:
 public:
     void showPage(int page = -1);    
 private:
+    Window *parent_;
     Document *doc_;
     int currentPage_;
     int currentIndex_;

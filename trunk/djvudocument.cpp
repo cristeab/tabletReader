@@ -19,30 +19,27 @@
 #include "kdjvu.h"
 #include "djvudocument.h"
 
-KDjVu *DJVUDocument::doc_= new KDjVu();
-int DJVUDocument::numPages_ = 0;
 DJVUDocument *DJVUDocument::instance_ = NULL;
+
+DJVUDocument::DJVUDocument() :
+    Document(), doc_(new KDjVu())
+{
+}
 
 DJVUDocument::~DJVUDocument()
 {
     delete doc_;
-    numPages_ = 0;
     instance_ = NULL;
 }
 
-Document *DJVUDocument::load(const QString &fileName)
+int DJVUDocument::load(const QString &fileName)
 {
-    if (NULL == instance_)
-    {
-        instance_ = new DJVUDocument();
-    }
-
     if ((NULL != doc_) && (true == doc_->openFile(fileName)))
     {
         numPages_ = doc_->pages().size();
-        return instance_;
+        return EXIT_SUCCESS;
     }
-    return NULL;
+    return EXIT_FAILURE;
 }
 
 QImage DJVUDocument::renderToImage(int page, qreal xres, qreal yres)

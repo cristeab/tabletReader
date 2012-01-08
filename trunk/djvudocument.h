@@ -30,16 +30,20 @@ public:
     {
         return ID_DJVU;
     }
-    static Document *load(const QString &fileName);
-    virtual QImage renderToImage(int page, qreal xres, qreal yres);
-    virtual int numPages() const
+    static Document* instance()
     {
-        return numPages_;
+        if (NULL == instance_)
+        {
+            instance_ = new DJVUDocument();
+        }
+        return instance_;
     }
+    virtual int load(const QString &fileName);
+    virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~DJVUDocument();
 private:
-    static KDjVu *doc_;
-    static int numPages_;
+    DJVUDocument();
+    KDjVu *doc_;
     static DJVUDocument *instance_;
 };
 

@@ -21,7 +21,6 @@
 #include <QtWebKit/QWebView>
 #include <QtWebKit/QWebFrame>
 #include <QTextCodec>
-#include <QEventLoop>
 #include <QThread>
 #include <QDebug>
 #include "chm_lib.h"
@@ -33,7 +32,6 @@ CHMDocument *CHMDocument::instance_ = NULL;
 CHMDocument::CHMDocument() :
     Document(),
     doc_(NULL),
-    numPages_(0),
     TOCResolved_(false),
     TOCName_(QString()),
     TOCModel_(new QStandardItemModel),
@@ -44,9 +42,10 @@ CHMDocument::CHMDocument() :
     qDebug() << "CHMDocument::CHMDocument";
     //init TOC model (this could be done in a base class)
     TOCModel_->setColumnCount(3);
-    TOCModel_->setHeaderData(0, Qt::Horizontal, tr("Name"));
-    TOCModel_->setHeaderData(1, Qt::Horizontal, tr("URL"));
-    TOCModel_->setHeaderData(2, Qt::Horizontal, tr("Page"));
+    TOCModel_->setHeaderData(0, Qt::Horizontal, QObject::tr("Name"));
+    TOCModel_->setHeaderData(1, Qt::Horizontal, QObject::tr("URL"));
+    TOCModel_->setHeaderData(2, Qt::Horizontal, QObject::tr("Page"));
+    QObject::connect(webView_, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
 }
 
 CHMDocument::~CHMDocument()
@@ -64,30 +63,26 @@ CHMDocument::~CHMDocument()
     delete req_;
 }
 
-Document *CHMDocument::load(const QString &fileName)
+int CHMDocument::load(const QString &fileName)
 {
     qDebug() << "CHMDocument::load";
-    if (NULL == instance_)
-    {
-        instance_ = new CHMDocument();
-    }
 
-    if (NULL != instance_->doc_)
+    if (NULL != doc_)
     {
-        chm_close(instance_->doc_);
+        chm_close(doc_);
     }
-    if (NULL != (instance_->doc_ = chm_open(fileName.toLocal8Bit().data())))
+    if (NULL != (doc_ = chm_open(fileName.toLocal8Bit().data())))
     {
-        instance_->TOCResolved_ = false;
-        instance_->codecName_ = "utf8";
-        instance_->Spine_.clear();
-        if ((EXIT_SUCCESS == instance_->init()) && (EXIT_SUCCESS == instance_->getTOC()))
+        TOCResolved_ = false;
+        codecName_ = "utf8";
+        Spine_.clear();
+        if ((EXIT_SUCCESS == init()) && (EXIT_SUCCESS == getTOC()))
         {
-            instance_->numPages_ = instance_->Spine_.count();
-            return instance_;
+            numPages_ = Spine_.count();
+            return EXIT_SUCCESS;
         }
     }
-    return NULL;
+    return EXIT_FAILURE;
 }
 
 QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
@@ -98,11 +93,9 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
         return QImage();
     }
 
-    QEventLoop eventLoop;    
-    webView_->page()->setNetworkAccessManager(req_);
-    connect(webView_, SIGNAL(loadFinished(bool)), &eventLoop, SLOT(quit()));
+    webView_->page()->setNetworkAccessManager(req_);    
     webView_->load(QUrl::fromLocalFile("/"+Spine_.at(page)));
-    eventLoop.exec();//wait for load to complete
+    eventLoop_.exec();//wait for load to complete
     qreal zoomFactor = xres/webView_->physicalDpiX();
     webView_->setZoomFactor(zoomFactor);
     qDebug() << "zoom factor" << zoomFactor;
@@ -202,7 +195,7 @@ int CHMDocument::getTOC()
     chm_retrieve_object(doc_, &cui, (unsigned char *)qdata.data(), 0, cui.length);
 
     //the root item
-    QStandardItem* currentItem = new QStandardItem(tr("Index"));
+    QStandardItem* currentItem = new QStandardItem(QObject::tr("Index"));
     QStandardItem *nameItem = NULL;
     QStandardItem *urlItem = NULL;
     TOCModel_->appendRow(currentItem);

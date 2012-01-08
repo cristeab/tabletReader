@@ -29,18 +29,30 @@ class Document
 public:
     enum {ID_PDF = 0, ID_DJVU, ID_CHM};//available concrete document IDs
     virtual int id() = 0;
+    virtual int load(const QString &fileName) = 0;
+    virtual int loadFromData(const QByteArray&)
+    {
+        return EXIT_FAILURE;
+    }
+    //this method needs to be thread safe
     virtual QImage renderToImage(int page, qreal xres, qreal yres) = 0;
-    virtual int numPages() const = 0;
+    int numPages() const
+    {
+        return numPages_;
+    }
     virtual ~Document()
     {
+        numPages_ = 0;
     }
 protected:
-    Document() //ctor is protected, this class is a singleton
+    Document() : //ctor is protected, this class is a singleton
+        numPages_(0)
     {
     }
+    int numPages_;
 private:
     Document(const Document&);//copy ctor not allowed
-    Document& operator=(const Document&);//copy assignment operator not allowed
+    Document& operator=(const Document&);//copy assignment operator not allowed    
 };
 
 #endif // DOCUMENT_H

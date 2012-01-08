@@ -52,7 +52,8 @@ Window::Window(QWidget *parent)
       fileBrowserModel_(new FileBrowserModel(this)),
       waitTimer_(NULL),
       waitDialog_(NULL),
-      batteryInfo_(NULL)
+      batteryInfo_(NULL),
+      isSingleThreaded_(false)
 {
     eTime_.start();//used to measure the elapsed time since the app is started
 
@@ -683,7 +684,7 @@ bool Window::showNextPage()
         //emit signal to update the cache after the page has been displayed
         if (true == document_->invalidatePageCache(currentPage_)) {
             qDebug() << "update cache signal";
-            emit updateCache(currentPage_);//preload next page (page no starts from 0)
+            preloadPage(currentPage_);//preload next page (page no starts from 0)
         } else
         {
             qDebug() << "no update cache signal";
@@ -715,7 +716,7 @@ bool Window::showPrevPage()
         //emit signal to update the cache after the page has been displayed
         if (true == document_->invalidatePageCache(currentPage_-2)) {
             qDebug() << "update cache signal";
-            emit updateCache(currentPage_-2);//preload next page (page no starts from 0)
+            preloadPage(currentPage_-2);//preload next page (page no starts from 0)
         } else
         {
             qDebug() << "no update cache signal";
@@ -771,13 +772,13 @@ void Window::gotoPage(int pageNb, int numPages)
     if ((numPages-pageNb) > 0)
     {
         qDebug() << "Window::gotoPage: preload next page";
-        emit updateCache(pageNb);//next page (index starts from 0)
+        preloadPage(pageNb);//next page (index starts from 0)
     }
     //preload previous page
     if (pageNb > 1)
     {
         qDebug() << "Window::gotoPage: preload previous page";
-        emit updateCache(pageNb-2);//previous page (index starts from 0)
+        preloadPage(pageNb-2);//previous page (index starts from 0)
     }
 }
 
@@ -801,13 +802,13 @@ void Window::setZoomFactor(int index)
     if ((numPages-pageNb) > 0)
     {
         qDebug() << "Window::gotoPage: preload next page";
-        emit updateCache(pageNb);//next page (index starts from 0)
+        preloadPage(pageNb);//next page (index starts from 0)
     }
     //preload previous page
     if (pageNb > 1)
     {
         qDebug() << "Window::gotoPage: preload previous page";
-        emit updateCache(pageNb-2);//previous page (index starts from 0)
+        preloadPage(pageNb-2);//previous page (index starts from 0)
     }
     //update view
     slidingStacked_->slideInNext();
