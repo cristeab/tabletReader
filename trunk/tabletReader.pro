@@ -31,7 +31,7 @@ LIBS         +=     -L/usr/lib -lpoppler-qt4
 LIBS         +=     -L/usr/local/lib -ldjvulibre
 LIBS         +=     -L/usr/local/lib -lchm
 DEFINES      +=     NO_APPUP_AUTH_CODE
-#DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 CONFIG       +=     mobility
 MOBILITY     +=     systeminfo

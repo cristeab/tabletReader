@@ -103,6 +103,8 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
     QSize size = webFrame->contentsSize();
     qDebug() << size;
     webView->setGeometry(QRect(QPoint(0, 0), size));
+    //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
+    //but is redundant since the QImage object is converted back to QPixmap before being shown
     return QPixmap::grabWidget(webView).toImage();
 }
 
