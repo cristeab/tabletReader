@@ -71,8 +71,7 @@ private:
         QNetworkReply* createRequest(Operation op, const QNetworkRequest &req,
                                      QIODevice *outgoingData = NULL);
         CHMDocument *chmDoc_;
-    };
-    QWebView *webView_;
+    };    
     RequestHandler *req_;
     QEventLoop eventLoop_;
     friend class RequestHandler;

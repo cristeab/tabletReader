@@ -36,7 +36,6 @@ CHMDocument::CHMDocument() :
     TOCName_(QString()),
     TOCModel_(new QStandardItemModel),
     codecName_(""),
-    webView_(new QWebView()),
     req_(new RequestHandler(this))
 {
     qDebug() << "CHMDocument::CHMDocument";
@@ -44,8 +43,7 @@ CHMDocument::CHMDocument() :
     TOCModel_->setColumnCount(3);
     TOCModel_->setHeaderData(0, Qt::Horizontal, QObject::tr("Name"));
     TOCModel_->setHeaderData(1, Qt::Horizontal, QObject::tr("URL"));
-    TOCModel_->setHeaderData(2, Qt::Horizontal, QObject::tr("Page"));
-    QObject::connect(webView_, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
+    TOCModel_->setHeaderData(2, Qt::Horizontal, QObject::tr("Page"));    
 }
 
 CHMDocument::~CHMDocument()
@@ -59,7 +57,6 @@ CHMDocument::~CHMDocument()
     }
     numPages_ = 0;    
     delete TOCModel_;
-    delete webView_;
     delete req_;
 }
 
@@ -93,17 +90,20 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
         return QImage();
     }
 
-    webView_->page()->setNetworkAccessManager(req_);    
-    webView_->load(QUrl::fromLocalFile("/"+Spine_.at(page)));
+    QWebView *webView = new QWebView();//we need to recreate the view at each page
+    QObject::connect(webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
+    webView->page()->setNetworkAccessManager(req_);
+    webView->load(QUrl::fromLocalFile("/"+Spine_.at(page)));
     eventLoop_.exec();//wait for load to complete
-    qreal zoomFactor = xres/webView_->physicalDpiX();
-    webView_->setZoomFactor(zoomFactor);
-    qDebug() << "zoom factor" << zoomFactor;
-    QWebFrame *webFrame = webView_->page()->mainFrame();
+    qreal zoomFactor = xres/webView->physicalDpiX();
+    webView->setZoomFactor(zoomFactor);
+    QWebFrame *webFrame = webView->page()->mainFrame();
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
-    webView_->setGeometry(QRect(QPoint(0, 0), webFrame->contentsSize()));
-    return QPixmap::grabWidget(webView_).toImage();
+    QSize size = webFrame->contentsSize();
+    qDebug() << size;
+    webView->setGeometry(QRect(QPoint(0, 0), size));
+    return QPixmap::grabWidget(webView).toImage();
 }
 
 int CHMDocument::init()
