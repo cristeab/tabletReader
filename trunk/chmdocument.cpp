@@ -29,6 +29,7 @@
 #include "chm_lib.h"
 #include "chmdocument.h"
 #include "chmreply.h"
+#include "window.h"
 
 CHMDocument *CHMDocument::instance_ = NULL;
 
@@ -104,7 +105,11 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     QSize size = webFrame->contentsSize();
-    qDebug() << size;
+    int preferredWidth = int(Window::MIN_SCREEN_WIDTH*0.9);
+    if (size.width() < preferredWidth)
+    {
+        size = QSize(preferredWidth, size.height());//adjust page width
+    }
     webView.setGeometry(QRect(QPoint(0, 0), size));
     //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
     //but is redundant since the QImage object is converted back to QPixmap before being shown
