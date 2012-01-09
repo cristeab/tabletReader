@@ -98,22 +98,22 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
         qDebug() << "qapp is NULL";
         return QImage();
     }
-    QWebView *webView = new QWebView(qApp->activeWindow());//we need to recreate the view at each page
-    QObject::connect(webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
-    webView->page()->setNetworkAccessManager(req_);
-    webView->load(QUrl::fromLocalFile("/"+Spine_.at(page)));
+    QWebView webView(qApp->activeWindow());//we need to recreate the view at each page
+    QObject::connect(&webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
+    webView.page()->setNetworkAccessManager(req_);
+    webView.load(QUrl::fromLocalFile("/"+Spine_.at(page)));
     eventLoop_.exec();//wait for load to complete
-    qreal zoomFactor = xres/webView->physicalDpiX();
-    webView->setZoomFactor(zoomFactor);
-    QWebFrame *webFrame = webView->page()->mainFrame();
+    qreal zoomFactor = xres/webView.physicalDpiX();
+    webView.setZoomFactor(zoomFactor);
+    QWebFrame *webFrame = webView.page()->mainFrame();
     webFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     webFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     QSize size = webFrame->contentsSize();
     qDebug() << size;
-    webView->setGeometry(QRect(QPoint(0, 0), size));
+    webView.setGeometry(QRect(QPoint(0, 0), size));
     //the conversion QPixmap to QImage is made in order to keep unchaged the upper layer,
     //but is redundant since the QImage object is converted back to QPixmap before being shown
-    return QPixmap::grabWidget(webView).toImage();
+    return QPixmap::grabWidget(&webView).toImage();
 }
 
 int CHMDocument::init()
