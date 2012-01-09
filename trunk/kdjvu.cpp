@@ -1024,8 +1024,11 @@ bool KDjVu::exportAsPostScript( QFile* file, const QList<int>& pageList ) const
 {
     if ( !d->m_djvu_document || !file || pageList.isEmpty() )
         return false;
-
-    FILE* f = fdopen( file->handle(), "w+" );
+#ifdef WIN32
+    FILE* f = _fdopen( file->handle(), "w+" );
+#else
+	FILE* f = fdopen( file->handle(), "w+" );
+#endif
     if ( !f )
     {
         //kDebug() << "error while getting the FILE*";
