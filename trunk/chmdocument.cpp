@@ -24,6 +24,7 @@
 #include <QtWebKit/QWebFrame>
 #include <QTextCodec>
 #include <QThread>
+#include <QApplication>
 #include <QDebug>
 #include "chm_lib.h"
 #include "chmdocument.h"
@@ -92,7 +93,12 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
         return QImage();
     }
 
-    QWebView *webView = new QWebView();//we need to recreate the view at each page
+    if (NULL == qApp)
+    {
+        qDebug() << "qapp is NULL";
+        return QImage();
+    }
+    QWebView *webView = new QWebView(qApp->activeWindow());//we need to recreate the view at each page
     QObject::connect(webView, SIGNAL(loadFinished(bool)), &eventLoop_, SLOT(quit()));
     webView->page()->setNetworkAccessManager(req_);
     webView->load(QUrl::fromLocalFile("/"+Spine_.at(page)));

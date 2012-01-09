@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <QDebug>
 #include <QMutex>
+#include <iostream>
 #include "logger.h"
 
 QTextStream Logger::ts_;
@@ -42,7 +43,10 @@ Logger::Logger(const QString &fileLogName)
 {
     pOutFile_ = new QFile(QDir::homePath()+QDir::separator()+
                           QDir::toNativeSeparators(fileLogName));
-    pOutFile_->open(QIODevice::WriteOnly | QIODevice::Append);
+    if (false == pOutFile_->open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        std::cerr << "Cannot open log file " << std::endl;
+    }
     ts_.setDevice(pOutFile_);
     loggerMutex_ = new QMutex;
     qInstallMsgHandler(debugMessageHandler);
