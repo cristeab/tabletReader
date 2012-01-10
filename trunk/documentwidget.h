@@ -37,6 +37,23 @@ class DocumentWidget : public QObject
     friend class Worker;
 
 public:
+    enum ID_FILE_TYPE {ID_UNKNOWN = -1, ID_PDF, ID_DJVU, ID_CHM};
+    static ID_FILE_TYPE fileType(const QString &filePath)
+    {
+        ID_FILE_TYPE ret = ID_UNKNOWN;
+        QString ext = filePath.right(4);
+        if (".PDF" == ext.toUpper())
+        {
+            ret = ID_PDF;
+        } else if ("DJVU" == ext.toUpper())
+        {
+            ret = ID_DJVU;
+        } else if (".CHM" == ext.toUpper())
+        {
+            ret = ID_CHM;
+        }
+        return ret;
+    }
     DocumentWidget(Window *parent = 0);
     ~DocumentWidget();
     qreal scale() const

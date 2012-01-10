@@ -515,7 +515,7 @@ void Window::openFile(const QString &filePath)
     } else
     {
         showWarningMessage(QString(APPLICATION " - ")+tr("Failed to open file"),
-                           tr("The specified file cannot be opened"));
+                           tr("%1 cannot be opened").arg(filePath));
     }
 }
 

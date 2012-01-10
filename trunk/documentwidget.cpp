@@ -112,73 +112,63 @@ void DocumentWidget::showPage(int page)
 //factory method
 bool DocumentWidget::setDocument(const QString &filePath)
 {
-    QString ext = filePath.right(4);
-    if (".PDF" == ext.toUpper())
+    Document *oldDoc = doc_;//keep old document
+
+    switch (fileType(filePath))
     {
-        if ((NULL != doc_) && (Document::ID_PDF != doc_->id()))
-        {
-            delete doc_;
-        }
-        doc_ = PDFDocument::instance();
+    case ID_PDF:
+        doc_ = new PDFDocument();
         parent_->setSingleThreaded(false);
-    } else if ("DJVU" == ext.toUpper())
-    {
-        if ((NULL != doc_) && (Document::ID_DJVU != doc_->id()))
-        {
-            delete doc_;
-        }
-        doc_ = DJVUDocument::instance();
+        break;
+    case ID_DJVU:
+        doc_ = new DJVUDocument();
         parent_->setSingleThreaded(false);
-    } else if (".CHM" == ext.toUpper())
-    {
-        if ((NULL != doc_) && (Document::ID_CHM != doc_->id()))
-        {
-            delete doc_;
-        }
-        doc_ = CHMDocument::instance();
+        break;
+    case ID_CHM:
+        doc_ = new CHMDocument();
         parent_->setSingleThreaded(true);
-    } else
-    {
+        break;
+    default:
         qDebug() << "unknown file extension";
-        delete doc_;
         doc_ = NULL;
     }
 
-    if (NULL != doc_)
+    if ((NULL != doc_) && (EXIT_SUCCESS == doc_->load(filePath)))
     {
-        if (EXIT_SUCCESS != doc_->load(filePath))
-        {
-            delete doc_;
-            doc_ = NULL;
-        } else
-        {
-            maxNumPages_ = doc_->numPages();
-            currentPage_ = -1;
-        }
+        maxNumPages_ = doc_->numPages();
+        currentPage_ = -1;
+        delete oldDoc;//previous Document must be deleted
+        return true;
+    } else
+    {
+        //an error occured
+        delete doc_;
+        //restore old document
+        doc_ = oldDoc;
     }
-    return doc_ != NULL;
+    return false;
 }
 
+//this method is used to load only PDF files
 bool DocumentWidget::loadFromData(const QByteArray &fileContents)
 {
-    if ((NULL != doc_) && (Document::ID_PDF != doc_->id()))
+    Document *oldDoc = doc_;//keep old document
+
+    doc_ = new PDFDocument();
+    if ((NULL != doc_) && (EXIT_SUCCESS == doc_->loadFromData(fileContents)))
     {
+        maxNumPages_ = doc_->numPages();
+        currentPage_ = -1;
+        delete oldDoc;//previous Document must be deleted
+        return true;
+    } else
+    {
+        //an error occured
         delete doc_;
+        //restore old document
+        doc_ = oldDoc;
     }
-    doc_ = PDFDocument::instance();
-    if (NULL != doc_)
-    {
-        if (EXIT_SUCCESS != doc_->loadFromData(fileContents))
-        {
-            delete doc_;
-            doc_ = NULL;
-        } else
-        {
-            maxNumPages_ = doc_->numPages();
-            currentPage_ = -1;
-        }
-    }
-    return doc_ != NULL;
+    return false;
 }
 
 void DocumentWidget::setPage(int page)

@@ -21,8 +21,6 @@
 #include "kdjvu.h"
 #include "djvudocument.h"
 
-DJVUDocument *DJVUDocument::instance_ = NULL;
-
 DJVUDocument::DJVUDocument() :
     Document(), doc_(new KDjVu())
 {
@@ -31,7 +29,6 @@ DJVUDocument::DJVUDocument() :
 DJVUDocument::~DJVUDocument()
 {
     delete doc_;
-    instance_ = NULL;
 }
 
 int DJVUDocument::load(const QString &fileName)

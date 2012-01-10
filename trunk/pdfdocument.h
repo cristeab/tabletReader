@@ -21,35 +21,23 @@
 
 #include "document.h"
 
-namespace Poppler {
+namespace Poppler
+{
 class Document;
 }
 
 class PDFDocument : public Document
 {
 public:
-    virtual int id()
-    {
-        return ID_PDF;
-    }
-    static Document* instance()
-    {
-        if (NULL == instance_)
-        {
-            instance_ = new PDFDocument();
-        }
-        return instance_;
-    }
+    PDFDocument() :
+        Document(), doc_(NULL)
+    {}
     virtual int load(const QString &fileName);
     virtual int loadFromData(const QByteArray &data);
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~PDFDocument();
 private:
-    PDFDocument() :
-        Document(), doc_(NULL)
-    {}
     Poppler::Document *doc_;
-    static PDFDocument *instance_;
 };
 
 #endif // PDFDOCUMENT_H

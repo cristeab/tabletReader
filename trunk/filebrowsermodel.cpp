@@ -18,8 +18,9 @@
 
 #include <QMainWindow>
 #include <QDir>
+#include <QDebug>
 #include "filebrowsermodel.h"
-#include <qdebug.h>
+#include "documentwidget.h"
 
 FileBrowserModel::FileBrowserModel(QObject *parent) :
     QAbstractListModel(parent),
@@ -116,17 +117,20 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
                 return QString(":/filebrowser/icons/Apps-session-quit-icon.png");
             } else
             {
-                QString ext = _files[fileRow].right(4);
                 QString iconFileName;
-                if (".PDF" == ext.toUpper())
+                switch (DocumentWidget::fileType(_files[fileRow]))
                 {
+                case DocumentWidget::ID_PDF:
                     iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
-                } else if ("DJVU" == ext.toUpper())
-                {
+                    break;
+                case DocumentWidget::ID_DJVU:
                     iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
-                } else if (".CHM" == ext.toUpper())
-                {
+                    break;
+                case DocumentWidget::ID_CHM:
                     iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
+                    break;
+                default:
+                    qDebug() << "unknown file type";
                 }
                 return iconFileName;
             }

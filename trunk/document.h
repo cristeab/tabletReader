@@ -23,12 +23,15 @@
 #include <QByteArray>
 #include <QImage>
 
-//interface for handling electronic documents (PDF, DJVU, CHM, etc)
+/* Interface for handling electronic documents (PDF, DJVU, CHM, etc)
+ */
 class Document
 {
 public:
-    enum {ID_PDF = 0, ID_DJVU, ID_CHM};//available concrete document IDs
-    virtual int id() = 0;
+    Document() :
+        numPages_(0)
+    {
+    }
     virtual int load(const QString &fileName) = 0;
     virtual int loadFromData(const QByteArray&)
     {
@@ -45,14 +48,7 @@ public:
         numPages_ = 0;
     }
 protected:
-    Document() : //ctor is protected, this class is a singleton
-        numPages_(0)
-    {
-    }
     int numPages_;
-private:
-    Document(const Document&);//copy ctor not allowed
-    Document& operator=(const Document&);//copy assignment operator not allowed    
 };
 
 #endif // DOCUMENT_H

@@ -31,8 +31,6 @@
 #include "chmreply.h"
 #include "window.h"
 
-CHMDocument *CHMDocument::instance_ = NULL;
-
 CHMDocument::CHMDocument() :
     Document(),
     doc_(NULL),
@@ -42,7 +40,6 @@ CHMDocument::CHMDocument() :
     codecName_(""),
     req_(new RequestHandler(this))
 {
-    qDebug() << "CHMDocument::CHMDocument";
     //init TOC model (this could be done in a base class)
     TOCModel_->setColumnCount(3);
     TOCModel_->setHeaderData(0, Qt::Horizontal, QObject::tr("Name"));
@@ -52,22 +49,16 @@ CHMDocument::CHMDocument() :
 
 CHMDocument::~CHMDocument()
 {
-    qDebug() << "CHMDocument::~CHMDocument";
-    instance_ = NULL;
-    if (NULL !=  doc_)
+    if (NULL != doc_)
     {
         chm_close(doc_);
-        doc_ = NULL;
     }
-    numPages_ = 0;    
     delete TOCModel_;
     delete req_;
 }
 
 int CHMDocument::load(const QString &fileName)
 {
-    qDebug() << "CHMDocument::load";
-
     if (NULL != doc_)
     {
         chm_close(doc_);
@@ -88,7 +79,6 @@ int CHMDocument::load(const QString &fileName)
 
 QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
 {
-    qDebug() << "CHMDocument::renderToImage: " << page;
     if ((NULL == doc_) || (0 > page) || (Spine_.count() <= page))
     {
         return QImage();
@@ -118,7 +108,6 @@ QImage CHMDocument::renderToImage(int page, qreal xres, qreal)
 
 int CHMDocument::init()
 {
-    qDebug() << "CHMDocument::init";
     if (NULL == doc_)
     {
         return EXIT_FAILURE;
@@ -190,7 +179,6 @@ int CHMDocument::init()
 
 int CHMDocument::getTOC()
 {
-    qDebug() << "CHMDocument::getTOC";
     if(true == TOCResolved_)
     {
         return EXIT_SUCCESS;
@@ -382,7 +370,6 @@ int CHMDocument::findStringInQuotes (const QString& tag, int offset,
 QNetworkReply* CHMDocument::RequestHandler::createRequest(Operation op, const QNetworkRequest &req,
                              QIODevice *outgoingData)
 {
-    qDebug() << "CHMDocument::RequestHandler::createRequest";
     if (req.url().scheme()=="file")
     {
         CHMReply *pReply = new CHMReply(this, req, op, chmDoc_->doc_);

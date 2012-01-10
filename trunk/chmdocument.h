@@ -33,28 +33,15 @@ class QWebView;
 class CHMDocument : public Document
 {
 public:
-    virtual int id()
-    {
-        return ID_CHM;
-    }
-    static Document* instance()
-    {
-        if (NULL == instance_)
-        {
-            instance_ = new CHMDocument();
-        }
-        return instance_;
-    }
+    CHMDocument();
     virtual int load(const QString &fileName);
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~CHMDocument();
-private:
-    CHMDocument();
+private:    
     int init();
     int getTOC();
     int findStringInQuotes (const QString& tag, int offset,
                                          QString& value, bool firstquote);
-    static CHMDocument *instance_;
     chmFile *doc_;
     bool TOCResolved_;
     QString TOCName_;

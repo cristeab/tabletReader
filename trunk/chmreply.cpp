@@ -25,7 +25,6 @@ CHMReply::CHMReply(QObject *parent, const QNetworkRequest &req,
                    const QNetworkAccessManager::Operation &op,
                    chmFile* file) : QNetworkReply(parent)
 {
-    qDebug() << "CHMReply::CHMReply";
     this->setRequest(req);
     this->setOperation(op);
     this->setUrl(req.url());
@@ -55,19 +54,16 @@ CHMReply::CHMReply(QObject *parent, const QNetworkRequest &req,
 
 qint64 CHMReply::bytesAvailable() const
 {
-    qDebug() << "CHMReply::bytesAvailable" << bytesavail;
     return bytesavail+QNetworkReply::bytesAvailable();
 }
 
 void CHMReply::abort()
 {
-    qDebug() << "CHMReply::abort";
     QNetworkReply::close();
 }
 
 qint64 CHMReply::readData(char* data, qint64 maxlen)
 {
-    qDebug() << "CHMReply::readData";
     int i = chm_retrieve_object(m_file, &cui, (unsigned char *)data, cui.length-bytesavail, maxlen);
     if(i>0)
     {

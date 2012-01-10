@@ -28,25 +28,12 @@ class KDjVu;
 class DJVUDocument : public Document
 {
 public:
-    virtual int id()
-    {
-        return ID_DJVU;
-    }
-    static Document* instance()
-    {
-        if (NULL == instance_)
-        {
-            instance_ = new DJVUDocument();
-        }
-        return instance_;
-    }
+    DJVUDocument();
     virtual int load(const QString &fileName);
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~DJVUDocument();
-private:
-    DJVUDocument();
+private:    
     KDjVu *doc_;
-    static DJVUDocument *instance_;
 };
 
 #endif // DJVUDOCUMENT_H

@@ -19,42 +19,33 @@
 #include <poppler-qt4.h>
 #include "pdfdocument.h"
 
-PDFDocument *PDFDocument::instance_ = NULL;
-
 PDFDocument::~PDFDocument()
 {
     delete doc_;
-    instance_ = NULL;
 }
 
 int PDFDocument::load(const QString &fileName)
 {
-    if (NULL != instance_)
+    delete doc_;
+    if (NULL != (doc_ = Poppler::Document::load(fileName)))
     {
-        delete doc_;
-        if (NULL != (doc_ = Poppler::Document::load(fileName)))
-        {
-            doc_->setRenderHint(Poppler::Document::Antialiasing);
-            doc_->setRenderHint(Poppler::Document::TextAntialiasing);
-            numPages_ = doc_->numPages();
-            return EXIT_SUCCESS;
-        }
+        doc_->setRenderHint(Poppler::Document::Antialiasing);
+        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+        numPages_ = doc_->numPages();
+        return EXIT_SUCCESS;
     }
     return EXIT_FAILURE;
 }
 
 int PDFDocument::loadFromData(const QByteArray &data)
 {
-    if (NULL != instance_)
+    delete doc_;
+    if (NULL != (doc_ = Poppler::Document::loadFromData(data)))
     {
-        delete doc_;
-        if (NULL != (doc_ = Poppler::Document::loadFromData(data)))
-        {
-            doc_->setRenderHint(Poppler::Document::Antialiasing);
-            doc_->setRenderHint(Poppler::Document::TextAntialiasing);
-            numPages_ = doc_->numPages();
-            return EXIT_SUCCESS;
-        }
+        doc_->setRenderHint(Poppler::Document::Antialiasing);
+        doc_->setRenderHint(Poppler::Document::TextAntialiasing);
+        numPages_ = doc_->numPages();
+        return EXIT_SUCCESS;
     }
     return EXIT_FAILURE;
 }
