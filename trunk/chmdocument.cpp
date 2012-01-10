@@ -113,16 +113,17 @@ int CHMDocument::init()
         return EXIT_FAILURE;
     }
     chmUnitInfo cui;
-    int i = chm_resolve_object(doc_, "/#SYSTEM", &cui);
-
-    if (i == CHM_RESOLVE_FAILURE)
-    {
-        return EXIT_FAILURE;
-    }
     char data[DATA_SIZE] = "";
     QByteArray filename;
     char* code = NULL;
     char* length = NULL;
+
+    /*int i = chm_resolve_object(doc_, "/#SYSTEM", &cui);
+    if (i == CHM_RESOLVE_FAILURE)
+    {
+        return EXIT_FAILURE;
+    }
+
     chm_retrieve_object(doc_, &cui, (unsigned char *)data, 0, DATA_SIZE);
     //the following decodes topic file name from #system file.
     while (i < DATA_SIZE)
@@ -139,11 +140,10 @@ int CHMDocument::init()
         }
     }
     QString TopicName = QString(filename);
-    filename.clear();
+    filename.clear();*/
 
     //the following code doesn't work in all conditions.
-    i = chm_resolve_object(doc_, "/#STRINGS", &cui);
-
+    int i = chm_resolve_object(doc_, "/#STRINGS", &cui);
     if(i == CHM_RESOLVE_FAILURE)
     {
         return EXIT_FAILURE;
@@ -156,8 +156,9 @@ int CHMDocument::init()
         code = length;
         length = strchr(code+1, 0);
         i++;
-    };
+    }
     filename.append(code+1, length-code);
+    qDebug() << "filename " << QString(filename);
     //workaround
     if (filename.contains("hhc"))
     {
@@ -171,6 +172,7 @@ int CHMDocument::init()
         } else
         {
             TOCName_ = "";
+            qDebug() << "TOC Name is empty";
         }
     }
 
