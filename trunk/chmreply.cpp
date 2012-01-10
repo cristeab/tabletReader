@@ -20,41 +20,33 @@
 
 #include <QDebug>
 #include "chmreply.h"
+#include "libchmfile.h"
+#include "libchmurlfactory.h"
 
-CHMReply::CHMReply(QObject *parent, const QNetworkRequest &req,
-                   const QNetworkAccessManager::Operation &op,
-                   chmFile* file) : QNetworkReply(parent)
+CHMReply::CHMReply(QObject *parent, const QNetworkRequest &req, const QUrl &url, LCHMFile *doc) :
+    QNetworkReply(parent),
+    doc_(doc)
 {
-    this->setRequest(req);
-    this->setOperation(op);
-    this->setUrl(req.url());
-    qRegisterMetaType<QNetworkReply::NetworkError>("QNetworkReply::NetworkError");
+    setRequest(req);
+    setOpenMode(QIODevice::ReadOnly);
 
-    m_file = file;
-    QString filename = req.url().toString(QUrl::RemoveScheme | QUrl::RemoveFragment).mid(2); //remove first two slash
-    qDebug() << "url: " << filename;
+    data_ = loadResource(url);
+    length_ = data_.length();
 
-    int i = chm_resolve_object(m_file,filename.toUtf8().data(),&cui);
-    if (i == CHM_RESOLVE_SUCCESS)
+    setHeader(QNetworkRequest::ContentLengthHeader, QByteArray::number(data_.length()));
+    QMetaObject::invokeMethod(this, "metaDataChanged", Qt::QueuedConnection);
+
+    if (length_)
     {
-        bytesavail = cui.length;
-        this->setHeader(QNetworkRequest::ContentLengthHeader, cui.length);
-        this->setHeader(QNetworkRequest::ContentTypeHeader, "text/html");
-        this->open(QIODevice::ReadOnly);
         QMetaObject::invokeMethod(this, "readyRead", Qt::QueuedConnection);
-        QMetaObject::invokeMethod(this, "finished", Qt::QueuedConnection);
-    } else
-    {
-        this->setError(QNetworkReply::ContentNotFoundError, tr("404 not found"));
-        QMetaObject::invokeMethod(this, "error", Qt::QueuedConnection,
-                                  Q_ARG(QNetworkReply::NetworkError, QNetworkReply::ContentNotFoundError));
-        QMetaObject::invokeMethod(this, "finished", Qt::QueuedConnection);
     }
+
+    QMetaObject::invokeMethod(this, "finished", Qt::QueuedConnection);
 }
 
 qint64 CHMReply::bytesAvailable() const
 {
-    return bytesavail+QNetworkReply::bytesAvailable();
+    return data_.length() + QNetworkReply::bytesAvailable();
 }
 
 void CHMReply::abort()
@@ -64,11 +56,111 @@ void CHMReply::abort()
 
 qint64 CHMReply::readData(char* data, qint64 maxlen)
 {
-    int i = chm_retrieve_object(m_file, &cui, (unsigned char *)data, cui.length-bytesavail, maxlen);
-    if(i>0)
+    qint64 len = qMin(qint64(data_.length()), maxlen);
+
+    if (len)
     {
-        bytesavail -= i;
-        return i;
+        qMemCopy(data, data_.constData(), len);
+        data_.remove(0, len);
     }
-    return -1;
+    return len;
+}
+
+QByteArray CHMReply::loadResource(const QUrl &url)
+{
+    QString data, path = url.toString( QUrl::StripTrailingSlash );
+
+    // Retreive the data from chm file
+    if (NULL == doc_)
+    {
+        return QByteArray();
+    }
+    // Does the file have a file name, or just a path with prefix?
+    if (!path.contains("::"))
+    {
+        // Just the prefix, so strip it
+        path.remove( 0, 7 );
+    }
+    int pos = path.indexOf('#');
+    if ( pos != -1 )
+    {
+        path = path.left (pos);
+    }
+
+    // To handle a single-image pages, we need to generate the HTML page to show
+    // this image. We did it in KCHMViewWindow::handleStartPageAsImage; now we need
+    // to generate the HTML page, and set it.
+    if (LCHMUrlFactory::handleFileType(path, data))
+    {
+        return qPrintable( data );
+    }
+
+    QByteArray buf;
+
+    if ( path.endsWith( ".html", Qt::CaseInsensitive )
+            || path.endsWith( ".htm", Qt::CaseInsensitive ) )
+    {
+        // encoding autodetection is disabled
+        if (!doc_->getFileContentAsBinary(&buf, path))
+        {
+            qWarning( "Could not resolve file %s\n", qPrintable(path));
+        }
+
+        setHeader( QNetworkRequest::ContentTypeHeader, "text/html" );
+    }
+    else
+    {
+        QString fpath = decodeUrl(path);
+
+        if ( !doc_->getFileContentAsBinary( &buf, fpath ) )
+            qWarning( "Could not resolve file %s\n", qPrintable( path ) );
+
+        setHeader( QNetworkRequest::ContentTypeHeader, "binary/octet" );
+    }
+
+    return buf;
+}
+
+// Shamelessly stolen from Qt
+QString CHMReply::decodeUrl(const QString &input)
+{
+        QString temp;
+
+        int i = 0;
+        int len = input.length();
+        int a, b;
+        QChar c;
+        while (i < len)
+        {
+                c = input[i];
+                if (c == '%' && i + 2 < len)
+                {
+                        a = input[++i].unicode();
+                        b = input[++i].unicode();
+
+                        if (a >= '0' && a <= '9')
+                                a -= '0';
+                        else if (a >= 'a' && a <= 'f')
+                                a = a - 'a' + 10;
+                        else if (a >= 'A' && a <= 'F')
+                                a = a - 'A' + 10;
+
+                        if (b >= '0' && b <= '9')
+                                b -= '0';
+                        else if (b >= 'a' && b <= 'f')
+                                b  = b - 'a' + 10;
+                        else if (b >= 'A' && b <= 'F')
+                                b  = b - 'A' + 10;
+
+                        temp.append( (QChar)((a << 4) | b ) );
+                }
+                else
+                {
+                        temp.append( c );
+                }
+
+                ++i;
+        }
+
+        return temp;
 }

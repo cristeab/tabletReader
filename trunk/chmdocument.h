@@ -25,10 +25,7 @@
 #include <QStringList>
 #include <QEventLoop>
 #include "document.h"
-
-struct chmFile;
-class QStandardItemModel;
-class QWebView;
+#include "libchmfile.h"
 
 class CHMDocument : public Document
 {
@@ -37,18 +34,9 @@ public:
     virtual int load(const QString &fileName);
     virtual QImage renderToImage(int page, qreal xres, qreal yres);
     virtual ~CHMDocument();
-private:    
-    int init();
-    int getTOC();
-    int findStringInQuotes (const QString& tag, int offset,
-                                         QString& value, bool firstquote);
-    chmFile *doc_;
-    bool TOCResolved_;
-    QString TOCName_;
-    QStandardItemModel *TOCModel_;
-    QByteArray codecName_;
-    QStringList Spine_;
-    enum {DATA_SIZE = 256};
+private:
+    LCHMFile *doc_;
+    QVector<LCHMParsedEntry> toc_;
     //internal class used to handle requests
     class RequestHandler : public QNetworkAccessManager
     {

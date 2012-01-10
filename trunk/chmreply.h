@@ -23,25 +23,25 @@
 
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
-#include "chm_lib.h"
 
-struct chmFile;
+class LCHMFile;
 
 //reply class returned by createRequest method
 class CHMReply : public QNetworkReply
 {
     Q_OBJECT
 public:
-    CHMReply(QObject *parent, const QNetworkRequest &req,
-             const QNetworkAccessManager::Operation &op, chmFile* file);
+    CHMReply(QObject *parent, const QNetworkRequest &req, const QUrl &url, LCHMFile *doc);
 
     virtual void abort();
     virtual qint64 readData(char *data, qint64 maxlen);
     virtual qint64 bytesAvailable () const;
 private:
-    qint64 bytesavail;
-    struct chmFile* m_file;
-    struct chmUnitInfo cui;
+    QByteArray loadResource(const QUrl &url);
+    QString decodeUrl(const QString &input);
+    QByteArray data_;
+    qint64 length_;
+    LCHMFile *doc_;
 };
 
 #endif // CHMREPLY_H

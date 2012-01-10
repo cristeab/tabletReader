@@ -27,11 +27,12 @@ SOURCES       = documentwidget.cpp \
 
 QT           +=     declarative xml webkit
 INCLUDEPATH  +=     /usr/include/poppler/qt4
+INCLUDEPATH  +=     /usr/local/include/libchmfile
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 LIBS         +=     -L/usr/local/lib -ldjvulibre
-LIBS         +=     -L/usr/local/lib -lchm
+LIBS         +=     -L/usr/local/lib -lchm -lchmfile
 DEFINES      +=     NO_APPUP_AUTH_CODE
-#DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
+DEFINES      +=     QT_NO_DEBUG_OUTPUT QT_NO_WARNING_OUTPUT
 
 CONFIG       +=     mobility
 MOBILITY     +=     systeminfo
