@@ -15,6 +15,7 @@
 ** Street - Fifth Floor, Boston, MA 02110-1301, USA.
 **
 ** Reference: qindle project (http://code.google.com/p/qindle/)
+**            kchmviewer (http://sourceforge.net/projects/kchmviewer/)
 **
 ****************************************************************************/
 
