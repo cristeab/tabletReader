@@ -56,7 +56,8 @@ Item {
                 model: views.length
 
                 delegate: ToolbarItem {
-                    width: toolbarItems.itemWidth > contentWidth ? toolbarItems.itemWidth : contentWidth
+                    //width: toolbarItems.itemWidth > contentWidth ? toolbarItems.itemWidth : contentWidth
+                    width: toolbarItems.itemWidth
                     height: toolbar.minimumItemHeight
                     onDoAction: {
                         sendCommand(btnText)
