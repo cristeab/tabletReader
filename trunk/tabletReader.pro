@@ -28,6 +28,7 @@ SOURCES       = documentwidget.cpp \
 QT           +=     declarative xml webkit
 INCLUDEPATH  +=     /usr/include/poppler/qt4
 INCLUDEPATH  +=     /usr/local/include/libchmfile
+INCLUDEPATH  +=     /usr/local/include/libdjvu
 LIBS         +=     -L/usr/lib -lpoppler-qt4
 LIBS         +=     -L/usr/local/lib -ldjvulibre
 LIBS         +=     -L/usr/local/lib -lchm -lchmfile
