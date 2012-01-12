@@ -18,8 +18,8 @@
 #include <qqueue.h>
 #include <qstring.h>
 
-#include <libdjvu/ddjvuapi.h>
-#include <libdjvu/miniexp.h>
+#include <ddjvuapi.h>
+#include <miniexp.h>
 
 #include <stdio.h>
 
