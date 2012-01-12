@@ -64,8 +64,8 @@ public:
          LONG_PRESS_TIMEOUT_MS = 1000,
          FULL_SCREEN_WIDTH = 1024,
          FULL_SCREEN_HEIGHT = 768,
-         MIN_SCREEN_WIDTH = 800,
-         MIN_SCREEN_HEIGHT = 600,
+         MIN_SCREEN_WIDTH = 900,
+         MIN_SCREEN_HEIGHT = 700,
          WAIT_TIMER_INTERVAL_MS = 1000};
 
 protected:
