@@ -53,7 +53,7 @@ Rectangle {
             text: toolbar.views[index].toolbarItemTitle
             color: "lightgray"
             style: "Raised"
-            font.pointSize: 12
+            font.pointSize: 11
         }
     }
 
