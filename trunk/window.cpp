@@ -53,7 +53,8 @@ Window::Window(QWidget *parent)
       waitTimer_(NULL),
       waitDialog_(NULL),
       batteryInfo_(NULL),
-      isSingleThreaded_(false)
+      isSingleThreaded_(false),
+      pageToLoadNo_(-1)
 {
     eTime_.start();//used to measure the elapsed time since the app is started
 
@@ -685,9 +686,7 @@ bool Window::showNextPage()
         animationFinished_ = false;
         slidingStacked_->slideInNext();
         //emit signal to update the cache after the page has been displayed
-        if (true == document_->invalidatePageCache(currentPage_)) {
-            preloadPage(currentPage_);//preload next page (page no starts from 0)
-        }
+        preloadPage(currentPage_);
         return true;
     }
 
@@ -713,9 +712,7 @@ bool Window::showPrevPage()
         animationFinished_ = false;
         slidingStacked_->slideInPrev();
         //emit signal to update the cache after the page has been displayed
-        if (true == document_->invalidatePageCache(currentPage_-2)) {
-            preloadPage(currentPage_-2);//preload next page (page no starts from 0)
-        }
+        preloadPage(currentPage_-2);
         return true;
     }
 
@@ -745,6 +742,8 @@ void Window::onAnimationFinished()
     qDebug() << "Window::onAnimationFinished";
     animationFinished_ = true;    
     closeWaitDialog();
+    //preload page
+    preloadPageSingleThreaded();
 }
 
 void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
@@ -761,8 +760,10 @@ void Window::gotoPage(int pageNb, int numPages)
 {
     qDebug() << "Window::gotoPage";
     //set current page
-    document_->invalidateCache();
-    document_->setPage(pageNb);
+    if (true == document_->invalidatePageCache(pageNb-1))
+    {
+        document_->setPage(pageNb);
+    }
     //preload next page
     if ((numPages-pageNb) > 0)
     {
@@ -791,8 +792,10 @@ void Window::setZoomFactor(int index)
     //update all pages from circular buffer
     int pageNb = document_->currentPage()+1;
     int numPages = document_->numPages();
-    document_->invalidateCache();
-    document_->showPage(pageNb);
+    if (true == document_->invalidatePageCache(pageNb-1))
+    {
+        document_->showPage(pageNb);
+    }
     //preload next page
     if ((numPages-pageNb) > 0)
     {

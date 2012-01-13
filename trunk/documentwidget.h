@@ -101,15 +101,6 @@ public:
             scroll->setValue(scroll->maximum());
         }
     }
-    void invalidateCache(void)
-    {
-        qDebug() << "DocumentWidget::invalidateCache";
-        cacheMutex_.lock();
-        for (int n = 0; n < CACHE_SIZE; ++n) {
-            pageCache_[n]->valid = false;
-        }
-        cacheMutex_.unlock();
-    }
     bool invalidatePageCache(int page)
     {
         qDebug() << "DocumentWidget::invalidatePageCache" << page;

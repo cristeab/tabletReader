@@ -111,7 +111,29 @@ private:
     void saveSettings();
     void preloadPage(int page)
     {
-        (false == isSingleThreaded_)?(emit updateCache(page)):worker_->onUpdateCache(page);
+        if (false == isSingleThreaded_)
+        {
+            qDebug() << "Window::preloadPageMultiThreaded";
+            if (true == document_->invalidatePageCache(page))
+            {
+                emit updateCache(page);
+            }
+        }
+        else
+        {
+            //the single threaded version of this function is called from onAnimationFinished slot
+            pageToLoadNo_ = page;
+        }
+    }
+    //should be called only from onAnimationFinished slot
+    void preloadPageSingleThreaded()
+    {
+        qDebug() << "Window::preloadPageSingleThreaded";
+        if ((true == isSingleThreaded_) &&
+            (true == document_->invalidatePageCache(pageToLoadNo_)))
+        {
+            worker_->onUpdateCache(pageToLoadNo_);
+        }
     }
 
     SlidingStackedWidget *slidingStacked_;
@@ -139,6 +161,7 @@ private:
     int currentPage_;
     QElapsedTimer eTime_;    
     bool isSingleThreaded_;
+    int pageToLoadNo_;
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif
