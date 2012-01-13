@@ -686,11 +686,7 @@ bool Window::showNextPage()
         slidingStacked_->slideInNext();
         //emit signal to update the cache after the page has been displayed
         if (true == document_->invalidatePageCache(currentPage_)) {
-            qDebug() << "update cache signal";
             preloadPage(currentPage_);//preload next page (page no starts from 0)
-        } else
-        {
-            qDebug() << "no update cache signal";
         }
         return true;
     }
@@ -718,11 +714,7 @@ bool Window::showPrevPage()
         slidingStacked_->slideInPrev();
         //emit signal to update the cache after the page has been displayed
         if (true == document_->invalidatePageCache(currentPage_-2)) {
-            qDebug() << "update cache signal";
             preloadPage(currentPage_-2);//preload next page (page no starts from 0)
-        } else
-        {
-            qDebug() << "no update cache signal";
         }
         return true;
     }
