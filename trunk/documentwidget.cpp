@@ -105,8 +105,6 @@ void DocumentWidget::showPage(int page)
     label->adjustSize();
     qDebug() << "DocumentWidget::showPage: end setPixmap";
     cacheMutex_.unlock();
-
-    emit pageLoaded(page);//change value in the spin box
 }
 
 //factory method

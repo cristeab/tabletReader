@@ -120,6 +120,8 @@ public:
 
     bool loadFromData(const QByteArray &fileContents);
 
+    void showPage(int page = -1);
+
 public slots:
     bool setDocument(const QString &filePath);
     void setPage(int page = -1);
@@ -128,11 +130,6 @@ public slots:
         scaleFactor_ = scale;
     }
 
-signals:
-    void pageLoaded(int currentPage);
-
-public:
-    void showPage(int page = -1);    
 private:
     Window *parent_;
     Document *doc_;
