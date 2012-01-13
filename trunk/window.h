@@ -112,10 +112,10 @@ private:
     void preloadPage(int page)
     {
         if (false == isSingleThreaded_)
-        {
-            qDebug() << "Window::preloadPageMultiThreaded";
+        {            
             if (true == document_->invalidatePageCache(page))
             {
+                qDebug() << "Window::preloadPageMultiThreaded";
                 emit updateCache(page);
             }
         }
@@ -127,11 +127,11 @@ private:
     }
     //should be called only from onAnimationFinished slot
     void preloadPageSingleThreaded()
-    {
-        qDebug() << "Window::preloadPageSingleThreaded";
+    {        
         if ((true == isSingleThreaded_) &&
             (true == document_->invalidatePageCache(pageToLoadNo_)))
         {
+            qDebug() << "Window::preloadPageSingleThreaded";
             worker_->onUpdateCache(pageToLoadNo_);
         }
     }

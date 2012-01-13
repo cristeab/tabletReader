@@ -66,6 +66,7 @@ void DocumentWidget::loadImage(int page)
                       renderToImage(page, scaleFactor_*physicalDpiX_,
                                       scaleFactor_*physicalDpiY_);
     pageCache_[page%CACHE_SIZE]->valid = true;
+    qDebug() << "DocumentWidget::loadImage end";
 }
 
 void DocumentWidget::showPage(int page)
