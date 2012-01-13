@@ -739,11 +739,11 @@ void Window::closeEvent(QCloseEvent *evt)
 
 void Window::onAnimationFinished()
 {
-    qDebug() << "Window::onAnimationFinished";
-    animationFinished_ = true;    
+    qDebug() << "Window::onAnimationFinished";        
     closeWaitDialog();
     //preload page
     preloadPageSingleThreaded();
+    animationFinished_ = true;//must be the last statement
 }
 
 void Window::setupDocDisplay(unsigned int pageNumber, const QString &filePath)
