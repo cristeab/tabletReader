@@ -365,8 +365,10 @@ void Window::closeGotoPage(const QString &pageNb)
                 gotoPage(newPageNb, numPages);
                 if (currentPage < newPageNb)
                 {
+                    document_->showCurrentPageUpper();
                     slidingStacked_->slideInNext();
                 } else {
+                    document_->showCurrentPageLower();
                     slidingStacked_->slideInPrev();
                 }
             } else {
