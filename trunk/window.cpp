@@ -821,10 +821,11 @@ void Window::showHelp(bool slideNext)
         if (document_->loadFromData(file.readAll()))
         {
             setupDocDisplay(1, HELP_FILE);
+            document_->showCurrentPageUpper();
             if (true == slideNext)
             {
                 slidingStacked_->slideInNext();
-            }
+            }            
         } else
         {
             qDebug() << "cannot load from data";
