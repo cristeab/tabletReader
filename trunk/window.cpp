@@ -184,11 +184,9 @@ Window::Window(QWidget *parent)
     }
 
     //battery status
-#ifndef NO_BATTERY_INFO
     batteryInfo_ = new QSystemBatteryInfo(this);
     connect(batteryInfo_, SIGNAL(batteryStatusChanged(QSystemBatteryInfo::BatteryStatus)),
             worker_, SLOT(onBatteryStatusChanged(QSystemBatteryInfo::BatteryStatus)));
-#endif
 
 #ifndef NO_APPUP_AUTH_CODE
     showWaitDialog();//prepare to check appup code
@@ -1004,10 +1002,8 @@ void Window::showPropertiesDialog()
                 msg += tr("<H3>Current page / Number of pages:<br><b>%1 / %2</b></H3>").arg(document_->currentPage()+1).arg(document_->numPages());
                 //time since the application was started
                 msg += tr("<H3>Elapsed time:<br>%1</H3>").arg(elapsedTime());
-#ifndef NO_BATTERY_INFO
                 //battery state
                 msg += tr("<H3>Battery status:<br>%1</H3>").arg(batteryStatus());
-#endif
                 //set message
                 pAboutDlg->setProperty("text", msg);
             } else
