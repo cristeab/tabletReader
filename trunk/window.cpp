@@ -796,6 +796,9 @@ void Window::setZoomFactor(int index)
     {
         document_->showPage(pageNb);
     }
+    //update view
+    document_->showCurrentPageUpper();
+    slidingStacked_->slideInNext();
     //preload next page
     if ((numPages-pageNb) > 0)
     {
@@ -807,9 +810,7 @@ void Window::setZoomFactor(int index)
     {
         qDebug() << "Window::gotoPage: preload previous page";
         preloadPage(pageNb-2);//previous page (index starts from 0)
-    }
-    //update view
-    slidingStacked_->slideInNext();
+    }    
 }
 
 void Window::showHelp(bool slideNext)
