@@ -22,6 +22,7 @@
 #include <QMainWindow>
 #include <QPoint>
 #include <QElapsedTimer>
+#include <QVector>
 #include <qmobilityglobal.h>
 #include "documentwidget.h"
 #include "worker.h"
@@ -122,17 +123,23 @@ private:
         else
         {
             //the single threaded version of this function is called from onAnimationFinished slot
-            pageToLoadNo_ = page;
+            pageToLoadNo_.append(page);//put into queue the page number
         }
     }
     //should be called only from onAnimationFinished slot
     void preloadPageSingleThreaded()
     {        
-        if ((true == isSingleThreaded_) &&
-            (true == document_->invalidatePageCache(pageToLoadNo_)))
+        if (true == isSingleThreaded_)
         {
-            qDebug() << "Window::preloadPageSingleThreaded";
-            worker_->onUpdateCache(pageToLoadNo_);
+            for (int i = 0; i < pageToLoadNo_.size(); ++i)
+            {
+                if (true == document_->invalidatePageCache(pageToLoadNo_[i]))
+                {
+                    qDebug() << "Window::preloadPageSingleThreaded";
+                    worker_->onUpdateCache(pageToLoadNo_[i]);
+                }
+            }
+            pageToLoadNo_.clear();//empty queue
         }
     }
 
@@ -161,7 +168,7 @@ private:
     int currentPage_;
     QElapsedTimer eTime_;    
     bool isSingleThreaded_;
-    int pageToLoadNo_;
+    QVector<int> pageToLoadNo_;
 #ifndef NO_APPUP_AUTH_CODE
 	Application *appupApp_;
 #endif

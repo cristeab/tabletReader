@@ -54,7 +54,7 @@ Window::Window(QWidget *parent)
       waitDialog_(NULL),
       batteryInfo_(NULL),
       isSingleThreaded_(false),
-      pageToLoadNo_(-1)
+      pageToLoadNo_(QVector<int>())
 {
     eTime_.start();//used to measure the elapsed time since the app is started
 
@@ -681,12 +681,12 @@ bool Window::showNextPage()
         waitTimer_->start();
         //load a new page
         document_->setPage(currentPage_);
-        document_->showCurrentPageUpper();
+        document_->showCurrentPageUpper();        
+        //emit signal to update the cache after the page has been displayed
+        preloadPage(currentPage_);
         //make sure that the next page is ready
         animationFinished_ = false;
         slidingStacked_->slideInNext();
-        //emit signal to update the cache after the page has been displayed
-        preloadPage(currentPage_);
         return true;
     }
 
@@ -708,11 +708,12 @@ bool Window::showPrevPage()
         waitTimer_->start();
         //load a new page
         document_->setPage(currentPage_);
-        document_->showCurrentPageLower();
-        animationFinished_ = false;
-        slidingStacked_->slideInPrev();
+        document_->showCurrentPageLower();        
         //emit signal to update the cache after the page has been displayed
         preloadPage(currentPage_-2);
+        //make sure that the prev page is ready
+        animationFinished_ = false;
+        slidingStacked_->slideInPrev();
         return true;
     }
 
