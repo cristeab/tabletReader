@@ -54,7 +54,7 @@ Window::Window(QWidget *parent)
       waitDialog_(NULL),
       batteryInfo_(NULL),
       isSingleThreaded_(false),
-      pageToLoadNo_(QVector<int>())
+      pageToLoadNo_(QQueue<int>())
 {
     eTime_.start();//used to measure the elapsed time since the app is started
 
