@@ -1,4 +1,4 @@
 tabletReader is an e-book reader for touch enabled devices
 It is written into C++ using Qt framework. Initially it has been sought 
 as an e-book reader for Linux OSs, but Windows is also supported. Currently,
-an installer for version 2.0 has been submitted to Intel AppUp (http://www.appup.com/browse-apps/search?keyword=tabletReader&submit-search=).
+an Windows installer for version 2.0 has been submitted to Intel AppUp (http://www.appup.com/browse-apps/search?keyword=tabletReader&submit-search=).
