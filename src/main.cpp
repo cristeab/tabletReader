@@ -21,7 +21,7 @@
 #include "window.h"
 #include "logger.h"
 
-#if defined(WIN32) || defined(WIN64)
+#ifdef _WIN32
 #define _UNICODE
 #include <windows.h>
 #include <tlhelp32.h>
@@ -35,12 +35,11 @@ int main(int argc, char *argv[])
 
 #ifdef QT_DEBUG_ENABLE_LOG
   //in release mode the log file is not created
-  Logger::instance("tabletReader.log");
-  //TODO: should reinstall log and provide an option to use either the file or the default logger
+  Logger::instance("TabletReader.log");
 #endif
   //translation object
   QTranslator translator;
-  if(false == translator.load(":/translations/tabletReader_" + QLocale::system().name().left(2))) {
+  if(false == translator.load(":/translations/TabletReader_" + QLocale::system().name().left(2))) {
     qDebug() << "cannot load translation file" << QLocale::system().name().left(2);
   }
   else {
@@ -51,13 +50,13 @@ int main(int argc, char *argv[])
   Window wnd;
   wnd.show();
   int out = app.exec();
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) && !defined(QT5)
   stopKde4WinDaemons();
 #endif
   return out;
 }
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(_WIN32) && !defined(QT5)
 void stopKde4WinDaemons()
 {
     PROCESSENTRY32 entry;

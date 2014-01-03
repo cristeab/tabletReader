@@ -13,7 +13,7 @@ Rectangle {
     // Selection highlight
     BorderImage {
         id: toolbarItemPressedImage
-        source: ":/toolbar/qml/Toolbar/pics/toolbaritem_p.svg"
+        source: "qrc:/toolbar/qml/Toolbar/pics/toolbaritem_p.svg"
         width: parent.width
         height: parent.height
         border.left: 10; border.top: 10

@@ -21,10 +21,18 @@
 
 #include <QDebug>
 #include <QEventLoop>
+#ifdef QT5
+#include <QQuickImageProvider>
+#else
 #include <QDeclarativeImageProvider>
+#endif
 #include "okulardocument.h"
 
+#ifdef QT5
+class PageProvider : public QObject, public QQuickImageProvider
+#else
 class PageProvider : public QObject, public QDeclarativeImageProvider
+#endif
 {
   Q_OBJECT
 
@@ -32,12 +40,16 @@ signals:
   void pageRequest(int page, qreal factor);
 
 public slots:
-  void onPixmapReady(int page, const QPixmap *pix);
+  void onPageReady(int page, const OkularDocument::PageContentType *pix);
 
 public:
   PageProvider();
   ~PageProvider();
+#ifdef POPPLER_BACKEND
+  QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+#else
   QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+#endif
   bool setDocument(const QString &filePath);
   void setScale(qreal scale, int index) {
     scaleFactor_ = scale;
@@ -52,7 +64,7 @@ public:
   int currentPage() const {
     return currentPage_;
   }
-  int numPages() const {
+  uint numPages() const {
     return (NULL != doc_) ? doc_->numPages() : 0;
   }
   const QString& filePath() const {
@@ -66,42 +78,35 @@ public:
       return false;
     }
     for (int n = 0; n < cacheSize_; ++n) {
-      if (PAGE_CACHE_VALID != pageCache_[n]->status) {
+      if (PageCache::VALID != pageCache_[n].status) {
         return false;
       }
     }
     return true;
   }
   void setWinWidth(int width) {
-    qDebug() << "PageProvider::setWinWidth";
     if (NULL != doc_) {
-      qDebug() << "win width" << width;
       doc_->setWinWidth(width);
-    } else {
-      qDebug() << "cannot set win width";
     }
   }
   const QStringList& supportedFilePatterns() const {
-    return doc_->supportedFilePatterns();
+    return (NULL != doc_)?doc_->supportedFilePatterns():emptyStringList_;
   }
-  void gotoPage(int page);
+  void gotoPage(uint page);
 private:
-  bool invalidatePageCache(int page) {
-    qDebug() << "PageProvider::invalidatePageCache" << page;
-
-    if((0 > page) || (numPages() <= page)) {
-      qDebug() << "nothing to do";
+  bool invalidatePageCache(uint page) {
+    if((NULL == doc_) || (numPages() <= page)) {
       return false;//operation failed
     }
-    doc_->deletePixmap(pageCache_[page % CACHE_SIZE]->pPixmap);
-    pageCache_[page % CACHE_SIZE]->pPixmap = NULL;
-    pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_INVALID;
+    doc_->deletePage(pageCache_[page % CACHE_SIZE].page);
+    pageCache_[page % CACHE_SIZE].page = NULL;
+    pageCache_[page % CACHE_SIZE].status = PageCache::INVALID;
     return true;//operation successful
   }
   enum {CACHE_SIZE = 3};
-  void sendPageRequest(int page) {
+  void sendPageRequest(uint page) {
     if (true == invalidatePageCache(page)) {
-      pageCache_[page % CACHE_SIZE]->status = PAGE_CACHE_PENDING;
+      pageCache_[page % CACHE_SIZE].status = PageCache::PENDING;
       emit pageRequest(page, scaleFactor_);
     }
   }
@@ -111,16 +116,21 @@ private:
   int prevPage_;
   qreal scaleFactor_;
   int scaleIndex_;
-  enum PageCacheStatus {PAGE_CACHE_INVALID, PAGE_CACHE_VALID, PAGE_CACHE_PENDING};
   struct PageCache {
-    const QPixmap *pPixmap;
-    PageCacheStatus status;
+	PageCache() : page(NULL), status(INVALID) {}
+	enum Status {INVALID, VALID, PENDING};
+	const OkularDocument::PageContentType *page;
+    Status status;
+	~PageCache() {
+	  delete page;
+	}
   };
-  QVector<PageCache*> pageCache_;
+  QVector<PageCache> pageCache_;
   QString filePath_;
   bool requestingPixmap_;//needed to block pixmap requests when inside pixmapRequest method
   QEventLoop evt_;//used for synchronous page requests
   int cacheSize_;//depends on the default cache size and the number of pages of the document
+  QStringList emptyStringList_;
 };
 
 #endif

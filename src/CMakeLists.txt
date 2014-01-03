@@ -1,65 +1,67 @@
-project ( tabletReader )
+file(GLOB HDRS *.h)
+file(GLOB SRCS *.cpp)
 
-include_directories ( ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
-	${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR} ${QT_QTXML_INCLUDE_DIR} ${QT_QTWEBKIT_INCLUDE_DIR}
-	${OKULAR_INCLUDE_DIR}/okular )
-set ( LIBS ${LIBS}
-	${QT_QTNETWORK_LIBRARY}
-	${QT_MOBILITY_SYSTEMINFO_LIBRARY}
-	${OKULAR_CORE_LIBRARY} 
-	${KDE4_KDECORE_LIBRARY} )
-
-file ( GLOB tabletReader_HDRS *.h )
-
-file ( GLOB tabletReader_SRCS *.cpp)
-
-set ( tabletReader_RSCS images.qrc )
-QT4_ADD_RESOURCES(RSCS ${tabletReader_RSCS})
-
-set ( tabletReader_MOCS
-  okulardocument.h
-	pageprovider.h
-	window.h
-  filebrowsermodel.h
-  qmlcppmediator.h
-	)
-QT4_WRAP_CPP(MOCS ${tabletReader_MOCS})
+if(QT5)
 
 if (NOT WIN32)
   #don't generate translations on Windows (use the existing ones)
-  set ( tabletReader_QML
-    qml/main.qml
-    qml/zoompage.qml
-    qml/ModalDialog/ModalDialog.qml
-    qml/gotopage.qml
-    qml/Core/calculator.js
-    qml/maintoolbar.qml )
-  set ( tabletReader_TRANS ${tabletReader_HDRS} ${tabletReader_SRCS} ${tabletReader_QML} )
-  set ( tabletReader_TS
-    ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.ts
-    ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.ts
-	  )
-  QT4_CREATE_TRANSLATION(QMS ${tabletReader_TRANS} ${tabletReader_TS})
+  find_package(Qt5LinguistTools REQUIRED)
+  file(GLOB QML qml/qt5_*.qml)
+  set(FILES_TO_TRANSLATE ${HDRS} ${SRCS} ${QML})
+  set(TRANSLATION_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Qt5_TabletReader_fr.ts 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Qt5_TabletReader_ro.ts)
+  qt5_create_translation(QMS ${FILES_TO_TRANSLATE} ${TRANSLATION_FILES})
 endif()
 
-add_executable ( tabletReader ${tabletReader_SRCS} ${RSCS} ${MOCS} ${QMS} )
-target_link_libraries ( tabletReader  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTWEBKIT_LIBRARY} ${LIBS} )
+add_definitions(-DNO_QTMOBILITY -DPOPPLER_BACKEND -DQT5)
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${POPPLER_QT5_INCLUDE_DIR})
+qt5_add_resources(RSCS resources.qrc)
+add_executable (${CMAKE_PROJECT_NAME} ${SRCS} ${RSCS} ${QMS})
+qt5_use_modules (${CMAKE_PROJECT_NAME} Core Widgets Quick)
+target_link_libraries(${CMAKE_PROJECT_NAME} ${POPPLER_QT5_LIBRARY})
+
+else(QT5)
+
+QT4_ADD_RESOURCES(RSCS images.qrc)
+QT4_WRAP_CPP(MOCS okulardocument.h pageprovider.h window.h filebrowsermodel.h qmlcppmediator.h)
+
+if (NOT WIN32)
+  #don't generate translations on Windows (use the existing ones)
+  set(QML qml/main.qml qml/zoompage.qml qml/ModalDialog/ModalDialog.qml qml/gotopage.qml
+    qml/Core/calculator.js qml/maintoolbar.qml)
+  set(FILES_TO_TRANSLATE ${HDRS} ${SRCS} ${QML})
+  set(TRANSLATION_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}_fr.ts 
+    ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}_ro.ts)
+  QT4_CREATE_TRANSLATION(QMS ${FILES_TO_TRANSLATE} ${TRANSLATION_FILES})
+endif()
+
+include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+  ${QT_QTCORE_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR} ${QT_QTDECLARATIVE_INCLUDE_DIR}
+	${OKULAR_INCLUDE_DIR} ${OKULAR_INCLUDE_DIR}/okular)
+add_executable(${CMAKE_PROJECT_NAME} ${SRCS} ${RSCS} ${MOCS} ${QMS})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
+  ${QT_QTDECLARATIVE_LIBRARY} ${QT_MOBILITY_SYSTEMINFO_LIBRARY} ${OKULAR_CORE_LIBRARY} ${KDE4_KDECORE_LIBRARY})
+endif(QT5)
+
 if (WIN32)
-  set_target_properties(tabletReader PROPERTIES WIN32_EXECUTABLE TRUE)
-  target_link_libraries ( tabletReader ${QT_QTMAIN_LIBRARY} )
+  set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+  target_link_libraries(${CMAKE_PROJECT_NAME} ${QT_QTMAIN_LIBRARY})
 endif()
 
-install ( TARGETS tabletReader RUNTIME DESTINATION bin )
-install ( FILES ${CMAKE_SOURCE_DIR}/tabletReader.desktop DESTINATION share/applications/kde4 )
-install ( DIRECTORY ${CMAKE_SOURCE_DIR}/src/hicolor DESTINATION share/icons )
+install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION bin)
+install(FILES ${CMAKE_SOURCE_DIR}/tabletReader.desktop DESTINATION share/applications/kde4)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/hicolor DESTINATION share/icons)
 
-if (EXISTS ${CMAKE_BINARY_DIR}/src/tabletReader_ro.qm)
-  configure_file(${CMAKE_BINARY_DIR}/src/tabletReader_ro.qm ${CMAKE_SOURCE_DIR}/src/tabletReader_ro.qm COPYONLY)
+if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/TabletReader_ro.qm)
+  configure_file(${CMAKE_CURRENT_BINARY_DIR}/TabletReader_ro.qm 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TabletReader_ro.qm COPYONLY)
 endif()
-if (EXISTS ${CMAKE_BINARY_DIR}/src/tabletReader_fr.qm)
-  configure_file(${CMAKE_BINARY_DIR}/src/tabletReader_fr.qm ${CMAKE_SOURCE_DIR}/src/tabletReader_fr.qm COPYONLY)
+if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/TabletReader_fr.qm)
+  configure_file(${CMAKE_CURRENT_BINARY_DIR}/TabletReader_fr.qm 
+    ${CMAKE_CURRENT_SOURCE_DIR}/TabletReader_fr.qm COPYONLY)
 endif()
 
+if (NOT QT5)
 #setup installers
 set(CPACK_PACKAGE_NAME "TabletReader")
 set(CPACK_PACKAGE_VENDOR "Bogdan Cristea")
@@ -71,7 +73,7 @@ if (WIN32)
     set(DEPS_FILE "${CMAKE_SOURCE_DIR}/win/file_loc.txt")
   endif()
   if (NOT KDE_ROOT)
-    set(KDE_ROOT "C:\\\\kderoot")
+    set(KDE_ROOT "${OKULAR_INCLUDE_DIR}/../")
   endif()
   if (NOT EXISTS ${DEPS_FILE})
     message(FATAL_ERROR "Please provide the dependences file in DEPS_FILE")
@@ -89,16 +91,16 @@ if (WIN32)
   endforeach()
   install(FILES ${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico DESTINATION bin)
   set(CPACK_GENERATOR "NSIS")
-  set(CPACK_NSIS_MUI_FINISHPAGE_RUN "tabletReader.exe")
+  set(CPACK_NSIS_MUI_FINISHPAGE_RUN "${PROJECT_NAME}.exe")
   set(CPACK_NSIS_CONTACT "cristeab@gmail.com")
-  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tabletReader.exe")
+  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\${PROJECT_NAME}.exe")
   set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico")
   set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/src/icons/tabletReader.ico")
   set(CPACK_NSIS_URL_INFO_ABOUT "https://projects.kde.org/projects/playground/edu/ebookreader")
   set(CPACK_NSIS_CONTACT "Bogdan Cristea <cristeab\@gmail.com>")
   set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\kbuildsycoca4.exe\\\"'
-  CreateShortCut \\\"$DESKTOP\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"
-  CreateShortCut \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"")
+  CreateShortCut \\\"$DESKTOP\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\${PROJECT_NAME}.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"
+  CreateShortCut \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\" \\\"$INSTDIR\\\\bin\\\\${PROJECT_NAME}.exe\\\" \\\"\\\" \\\"$INSTDIR\\\\bin\\\\tabletReader.ico\\\"")
   set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "Delete \\\"$DESKTOP\\\\tabletReader.lnk\\\"
   Delete \\\"$SMPROGRAMS\\\\tabletReader.lnk\\\"")
 
@@ -107,3 +109,5 @@ elseif (UNIX)
 endif()
 
 include(CPack)
+
+endif(NOT QT5)

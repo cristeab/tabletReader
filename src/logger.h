@@ -31,13 +31,15 @@ public:
 private:
   Logger(const QString &fileLogName);
   ~Logger();
-  Logger(const Logger&);//copy constructor
-  const Logger& operator=(const Logger&);//copy assignment operator
+  Q_DISABLE_COPY(Logger);
+#ifndef QT5
   static void debugMessageHandler(QtMsgType type, const char *msg);
-  static QTextStream ts_;
-  static QFile *pOutFile_;
-  static QMutex *loggerMutex_;
-  static Logger *instance_;
+#else
+  static void debugMessageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString &msg);
+#endif
+  QTextStream ts_;
+  QFile *outFile_;
+  QMutex *loggerMutex_;
 };
 
 #endif // LOGGER_H

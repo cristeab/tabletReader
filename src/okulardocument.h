@@ -20,6 +20,13 @@
 #define OKULAR_DOCUMENT_H
 
 #include <QPixmap>
+#ifdef POPPLER_BACKEND
+namespace Poppler
+{
+  class Document;
+  class Page;
+}
+#else
 #include <kmimetype.h>
 #include <core/document.h>
 #include <core/observer.h>
@@ -31,41 +38,56 @@ namespace Okular
   class DocumentObserver;
 }
 class PagePainter;
+#endif
 
+#ifndef POPPLER_BACKEND
 class OkularDocument : public QObject, public Okular::DocumentObserver
+#else
+class OkularDocument : public QObject
+#endif
 {
   Q_OBJECT
 
-signals:
-  void pixmapReady(int page, const QPixmap *pix);
-
-public slots:
-  void onPageRequest(int page, qreal factor);
-
 public:
+#ifdef POPPLER_BACKEND
+  typedef QImage PageContentType;
+#else
+  typedef QPixmap PageContentType;
+#endif
   OkularDocument();
   bool load(const QString &fileName);
-  uint numPages() const {
-    return (NULL != doc_)?doc_->pages():0;
-  }
-  void deletePixmap(const QPixmap *p) {
-    delete p;//TODO: remove this method
+  uint numPages() const;
+  void deletePage(const PageContentType *p) {
+    delete p;
   }
   void setWinWidth(int width) {
     winWidth_ = width;
   }
   ~OkularDocument();
+#ifndef POPPLER_BACKEND
   void notifyPageChanged(int page, int flags);
+#endif
   const QStringList& supportedFilePatterns();
+signals:
+  void pageReady(int page, const OkularDocument::PageContentType *pageContent);
+
+public slots:
+  void onPageRequest(int page, qreal factor);
+
 private:
-  void preProcessPage(int &width, int &height, const Okular::Page *page);
-  const QPixmap* postProcessPage(const QPixmap *pixmap);
-  Okular::Document *doc_;
-  PagePainter *painter_;
+  const PageContentType* postProcessPage(const PageContentType *pageContent);
   int winWidth_;
   qreal zoomFactor_;
-  KMimeType::Ptr mimeType_;
   QStringList supportedFilePatterns_;
+#ifdef POPPLER_BACKEND
+  Poppler::Document *doc_;
+  void preProcessPage(int &width, int &height, const Poppler::Page *page);
+#else
+  void preProcessPage(int &width, int &height, const Okular::Page *page);
+  Okular::Document *doc_;
+  PagePainter *painter_;
+  KMimeType::Ptr mimeType_;
+#endif
 };
 
 #endif // OKULAR_DOCUMENT_H

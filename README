@@ -32,10 +32,6 @@ Notes:
  * Debug or Debugfull: application is compiled in debug mode with support for
    Plasma notebook. A log file (tabletReader.log) is created in the 
    home folder of the current user
-- Compilation on desktop systems:
- * In order to compile the application on a desktop system running Linux, please set to true 
- the DESKTOP_APP switch:
- 'cmake .. -DDESKTOP_APP=true'
 - Installation path:
  * Default installation path is '/usr/local/bin'
  * Change the installation path with 'cmake .. -DCMAKE_INSTALL_PREFIX=/usr' 

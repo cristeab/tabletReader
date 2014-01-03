@@ -20,8 +20,13 @@
 #define WINDOW_H
 
 #include <QElapsedTimer>
+#ifdef QT5
+#include <QQuickView>
+#include <QQuickItem>
+#else
 #include <QtDeclarative>
 #include <QDeclarativeView>
+#endif
 #include "config.h"
 
 #ifndef NO_QTMOBILITY
@@ -37,7 +42,11 @@ class QSystemBatteryInfo;
 QTM_END_NAMESPACE
 #endif
 
+#ifdef QT5
+class Window : public QQuickView
+#else
 class Window : public QDeclarativeView
+#endif
 {
   Q_OBJECT
 
@@ -56,7 +65,11 @@ public:
       };
 
 protected:
+#ifdef QT5
+  virtual bool event(QEvent *);
+#else
   void closeEvent(QCloseEvent *);
+#endif
 
 signals:
   void wait();
@@ -89,7 +102,7 @@ private:
       refreshPage();
     }
   }
-  void loadSettings(QString &filePath, int &page, qreal &scale, int &index);
+  bool loadSettings();
   void saveSettings();
   void setCurrentPage(int page, int numPages) {
     qDebug() << "Window::setCurrentPage" << page << "/" << numPages;
@@ -136,19 +149,26 @@ private:
 
   PageProvider *document_;
   FileBrowserModel *fileBrowserModel_;
-#ifndef NO_QTMOBILITY
-  QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
-#endif
   QElapsedTimer eTime_;
   bool fullScreen_;
   QRect normScrGeometry_;
-  struct {
-    QString fileName;
-    int page;
-  } prev_;//used by showHelp to restore the previous document
-  QString helpFile_;
+  const QString helpFile_;
+#ifdef QT5
+  QQuickItem *rootObj_;
+#else
   QGraphicsObject *rootObj_;
+#endif
   QmlCppMediator *mediator_;
+  uint requestedPage_;
+#ifndef NO_QTMOBILITY
+  QTM_NAMESPACE::QSystemBatteryInfo *batteryInfo_;
+#endif
+  //used by showHelp to restore the previous document
+  struct PrevStruct {
+	  PrevStruct() : page(0) {}
+	  QString fileName;
+	  int page;
+  } prev_;
 };
 
 #endif

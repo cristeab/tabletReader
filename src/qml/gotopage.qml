@@ -17,8 +17,8 @@
 ****************************************************************************/
 
 import QtQuick 1.1
-import "Core"
-import "Core/calculator.js" as CalcEngine
+import "GotoPage"
+import "GotoPage/calculator.js" as CalcEngine
 import "ModalDialog" as Comp
 
 Rectangle

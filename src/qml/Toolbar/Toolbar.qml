@@ -17,7 +17,7 @@ Item {
 
     BorderImage {
         id: toolbarImage
-        source: ":/qml/icons/wood-table-top.svg"
+        source: "qrc:/qml/icons/wood-table-top.svg"
         width: parent.width
 
         height: toolbar.height

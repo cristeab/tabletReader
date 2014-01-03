@@ -34,13 +34,24 @@ public:
   void setCurrentDir(const QString &filePath);
   void setFavorites(bool f);
   const QString closeFileBrowserText() const {
-    return favorites_?tr("Close Favorites Browser"):tr("Close File Browser");
+    return tr(favorites_?"Close Favorites Browser":"Close File Browser");
   }
 
 signals:
   void quit();
 public slots:
   void changeCurrentDir(int index);
+
+protected:
+  virtual QHash<int, QByteArray> roleNames() const {
+    QHash<int, QByteArray> roles;
+    roles[TITLE] = "title";
+    roles[PAGE] = "page";
+    roles[IMAGE] = "image";
+    roles[IS_FILE] = "file";
+    roles[PATH] = "path";
+    return roles;
+  }
 
 private:
   void searchSupportedFiles();

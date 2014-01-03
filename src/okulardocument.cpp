@@ -16,16 +16,17 @@
 **
 ****************************************************************************/
 
-#include <QDebug>
-#include <QPixmap>
-#include <QPainter>
-#include <QtCore/qmath.h>
+#ifdef POPPLER_BACKEND
+#include <poppler-qt5.h>
+#else
 #include <core/generator.h>
 #include <core/settings_core.h>
 #include <core/page.h>
+#endif
 #include "window.h"
 #include "okulardocument.h"
 
+#ifndef POPPLER_BACKEND
 //main entry point into okular core libray
 class PagePainter
 {
@@ -65,38 +66,79 @@ private:
   QLinkedList<Okular::PixmapRequest*> req_;
   OkularDocument *obs_;
 };
+#endif
 
 OkularDocument::OkularDocument() :
   doc_(NULL),
+#ifndef POPPLER_BACKEND
   painter_(NULL),
+#endif
   winWidth_(0),
   zoomFactor_(0)
-{
+  {
+#ifndef POPPLER_BACKEND
   Okular::SettingsCore::instance("");//need to call this before creating the documnent
   doc_ = new Okular::Document(NULL);
   painter_ = new PagePainter(doc_, this);
   if(NULL != doc_) {
     doc_->addObserver(this);
   }
+#endif
 }
 
 OkularDocument::~OkularDocument()
 {
   delete doc_;
+#ifndef POPPLER_BACKEND
   delete painter_;
+#endif
 }
 
 bool OkularDocument::load(const QString &fileName)
 {
   bool res = false;
+#ifdef POPPLER_BACKEND
+  delete doc_;//release previous document if any
+  doc_ = Poppler::Document::load(fileName);
+  if ((NULL == doc_) || doc_->isLocked()) {
+    qDebug() << "Cannot load document or document is locked" << fileName;
+    delete doc_;
+	doc_ = NULL;
+  } else {
+    res = true;
+  }
+#else
   if (NULL != doc_) {
     doc_->closeDocument();//close previous document if any
     mimeType_ = KMimeType::findByPath(fileName);
     res = doc_->openDocument(fileName, KUrl::fromPath(fileName), mimeType_);
   }
+#endif
   return res;
 }
 
+uint OkularDocument::numPages() const {
+#ifdef POPPLER_BACKEND
+  return (NULL != doc_)?static_cast<uint>(doc_->numPages()):0;
+#else
+  return (NULL != doc_)?doc_->pages():0;
+#endif
+}
+
+#ifdef POPPLER_BACKEND
+void OkularDocument::preProcessPage(int &width, int &height, const Poppler::Page *page)
+{
+  qreal factor = 0;
+  if (Window::FIT_WIDTH_ZOOM_FACTOR == zoomFactor_) {
+    //adjust scale factor to occupy the entire window width
+    factor = qreal(winWidth_)/page->pageSize().width();
+  } else {
+    factor = zoomFactor_;
+  }
+  width = int(factor*(page->pageSize().width()));
+  height = int(factor*(page->pageSize().height()));
+}
+#else
 void OkularDocument::preProcessPage(int &width, int &height, const Okular::Page *page)
 {
   qreal factor = 0;
@@ -120,14 +162,18 @@ void OkularDocument::preProcessPage(int &width, int &height, const Okular::Page 
     height = int(height*factor2);
   }
 }
+#endif
 
-const QPixmap* OkularDocument::postProcessPage(const QPixmap *pixmap)
+const OkularDocument::PageContentType* OkularDocument::postProcessPage(const OkularDocument::PageContentType *pixmap)
 {
-  QPixmap *out = NULL;
+  PageContentType *out = NULL;
+#ifdef POPPLER_BACKEND
+  out = new PageContentType(*pixmap);//this copy is needed for the upper layer
+#else
   if(mimeType_->is("application/epub+zip") ||
       mimeType_->is("application/vnd.oasis.opendocument.text")) {
     //TODO: check if this can be done from okular core library
-    out = new QPixmap(pixmap->width(), pixmap->height());
+    out = new PageContentType(pixmap->width(), pixmap->height());
     if(NULL != out) {
       out->fill(Qt::white);
       QPainter p;
@@ -136,23 +182,21 @@ const QPixmap* OkularDocument::postProcessPage(const QPixmap *pixmap)
       p.drawPixmap(0, 0, *pixmap);
       p.end();
     }
-  }
-  else if (mimeType_->is("application/vnd.ms-htmlhelp") ||
+  } else if (mimeType_->is("application/vnd.ms-htmlhelp") ||
     mimeType_->is("application/x-chm")) {
     //apply zoom on the obtained pixmap
     if (Window::FIT_WIDTH_ZOOM_FACTOR == zoomFactor_) {
-      out = new QPixmap(pixmap->scaledToWidth(winWidth_, Qt::SmoothTransformation));
-    }
-    else {
+      out = new PageContentType(pixmap->scaledToWidth(winWidth_, Qt::SmoothTransformation));
+    } else {
       int width = int(pixmap->width()*zoomFactor_);
       int height = int(pixmap->height()*zoomFactor_);
-      out = new QPixmap(pixmap->scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+      out = new PageContentType(pixmap->scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
-  }
-  else {
+  } else {
     //just copy the pixmap
-    out = new QPixmap(*pixmap);
+    out = new PageContentType(*pixmap);
   }
+#endif
   return out;
 }
 
@@ -160,11 +204,35 @@ const QPixmap* OkularDocument::postProcessPage(const QPixmap *pixmap)
 void OkularDocument::onPageRequest(int page, qreal factor)
 {
   qDebug() << "OkularDocument::onPageRequest: pageNb" << page << ", scaleFactor" << factor;
-
+#ifdef POPPLER_BACKEND
+  if (NULL == doc_) {
+    return;
+  }
+  zoomFactor_ = factor;
+  const Poppler::Page *p = doc_->page(page);
+  if (NULL != p) {
+    int width = 0;
+    int height = 0;
+    preProcessPage(width, height, p);
+    QSize pageSize = p->pageSize();
+#ifdef POPPLER_BACKEND
+    QImage tmpPageContent = p->renderToImage(width*72.0/pageSize.width(), height*72.0/pageSize.height(), -1, -1, -1, -1);
+#else
+    QPixmap tmpPageContent = QPixmap::fromImage(img);
+#endif
+    if (!tmpPageContent.isNull()) {
+      const PageContentType *pageContent = postProcessPage(&tmpPageContent);
+      emit pageReady(page, pageContent);
+    } else {
+      qDebug() << "page content is empty";
+    }
+  } else {
+    qDebug() << "Cannot get page from doc";
+  }
+#else
   if((NULL == doc_) || (NULL == painter_)) {
     return;
   }
-
   zoomFactor_ = factor;
   const Okular::Page *p = doc_->page(page);
   if(NULL != p) {
@@ -173,8 +241,10 @@ void OkularDocument::onPageRequest(int page, qreal factor)
     preProcessPage(width, height, p);
     painter_->sendRequest(p, width, height);
   }
+#endif
 }
 
+#ifndef POPPLER_BACKEND
 void OkularDocument::notifyPageChanged(int page, int flags)
 {
   if(flags & DocumentObserver::Pixmap) {
@@ -188,7 +258,7 @@ void OkularDocument::notifyPageChanged(int page, int flags)
       if (NULL != p) {
         p->deletePixmap(this);
       }
-      emit pixmapReady(page, pix);
+      emit pageReady(page, pix);
     }
   }
   else if(flags & DocumentObserver::Bookmark) {
@@ -213,10 +283,14 @@ void OkularDocument::notifyPageChanged(int page, int flags)
     qDebug() << "Unknown notification" << flags << " for page" << page;
   }
 }
+#endif
 
 const QStringList& OkularDocument::supportedFilePatterns()
 {
-  if ((NULL != doc_) && (true == supportedFilePatterns_.isEmpty())) {
+  if ((NULL != doc_) && supportedFilePatterns_.isEmpty()) {
+#ifdef POPPLER_BACKEND
+  supportedFilePatterns_ << "*.pdf";
+#else
     //shall be called only once
     QStringList supportedMimeTypes = doc_->supportedMimeTypes();
     QStringList::ConstIterator it;
@@ -228,6 +302,7 @@ const QStringList& OkularDocument::supportedFilePatterns()
     }
     supportedFilePatterns_.removeDuplicates();
     supportedFilePatterns_.sort();
+#endif
   }
   return supportedFilePatterns_;
 }

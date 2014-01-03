@@ -40,14 +40,14 @@
     </qresource>
     <qresource prefix="/qml">
         <file>qml/gotopage.qml</file>
-        <file>qml/Core/Button.qml</file>
-        <file>qml/Core/calculator.js</file>
-        <file>qml/Core/Display.qml</file>
-        <file>qml/Core/images/button-.png</file>
-        <file>qml/Core/images/button-blue.png</file>
-        <file>qml/Core/images/button-green.png</file>
-        <file>qml/Core/images/button-purple.png</file>
-        <file>qml/Core/images/display.png</file>
+        <file>qml/GotoPage/Button.qml</file>
+        <file>qml/GotoPage/calculator.js</file>
+        <file>qml/GotoPage/Display.qml</file>
+        <file>qml/GotoPage/images/button-.png</file>
+        <file>qml/GotoPage/images/button-blue.png</file>
+        <file>qml/GotoPage/images/button-green.png</file>
+        <file>qml/GotoPage/images/button-purple.png</file>
+        <file>qml/GotoPage/images/display.png</file>
         <file>qml/filebrowser.qml</file>
         <file>qml/maintoolbar.qml</file>
         <file>qml/Toolbar/toolbar.js</file>
@@ -72,12 +72,12 @@
         <file>qml/WaitDialog/gfx/rotation_icon.png</file>
         <file>qml/waitdialog.qml</file>
         <file>qml/main.qml</file>
-        <file>qml/content/Spinner.qml</file>
+        <file>qml/MainPage/Spinner.qml</file>
         <file>icons/wood-table-top.svg</file>
     </qresource>
     <qresource prefix="/translations">
-        <file>tabletReader_fr.qm</file>
-        <file>tabletReader_ro.qm</file>
+        <file>TabletReader_fr.qm</file>
+        <file>TabletReader_ro.qm</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/arrow_left.png</file>

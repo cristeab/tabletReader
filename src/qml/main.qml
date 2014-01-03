@@ -17,7 +17,7 @@
 ****************************************************************************/
 
 import QtQuick 1.1
-import "content"
+import "MainPage"
 
 Rectangle {
   id: book
@@ -318,7 +318,7 @@ Rectangle {
       z: 1
       smooth: true
       fillMode: Image.PreserveAspectFit
-      source: ":/icons/icons/arrow_left.png"
+      source: "qrc:/icons/icons/arrow_left.png"
       visible: false
     }
   }
@@ -340,7 +340,7 @@ Rectangle {
       smooth: true
       fillMode: Image.PreserveAspectFit
       rotation: 180
-      source: ":/icons/icons/arrow_left.png"
+      source: "qrc:/icons/icons/arrow_left.png"
       visible: false
     }
   }

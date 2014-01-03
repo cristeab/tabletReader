@@ -4,9 +4,6 @@
 //use to disable the use of functions from Qt Mobility
 #cmakedefine NO_QTMOBILITY
 
-//compile application as desktop application
-#cmakedefine DESKTOP_APP
-
 //version number
 #cmakedefine TR_VERSION "@TR_VERSION@"
 

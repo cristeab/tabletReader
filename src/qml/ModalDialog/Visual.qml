@@ -11,14 +11,14 @@ Item {
     property Component buttonComponent: Component {
         BorderImage {
             border { top: 8; bottom: 8; left: 8; right: 8 }
-            source: "gfx/button.png"
+            source: "qrc:/qml/qml/zoompage/gfx/button.png"
         }
     }
 
     property Component buttonPressedComponent: Component {
         BorderImage {
             border { top: 8; bottom: 8; left: 8; right: 8 }
-            source: "gfx/button_pressed.png"
+            source: "qrc:/qml/qml/zoompage/gfx/button_pressed.png"
         }
     }
 }

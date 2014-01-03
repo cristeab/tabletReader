@@ -19,7 +19,9 @@
 #include <QMainWindow>
 #include <QDir>
 #include <QDebug>
+#ifndef POPPLER_BACKEND
 #include <kmimetype.h>
+#endif
 #include <QSettings>
 #include "filebrowsermodel.h"
 #include "pageprovider.h"
@@ -32,14 +34,6 @@ FileBrowserModel::FileBrowserModel(QObject *parent, const PageProvider *doc, con
   favorites_(false),
   doc_(doc)
 {
-  QHash<int, QByteArray> roles;
-  roles[TITLE] = "title";
-  roles[PAGE] = "page";
-  roles[IMAGE] = "image";
-  roles[IS_FILE] = "file";
-  roles[PATH] = "path";
-  setRoleNames(roles);
-
   currentDir_ = QDir::homePath();
   searchSupportedFiles();
 }
@@ -55,6 +49,7 @@ void FileBrowserModel::changeCurrentDir(int index)
     emit quit();
   }
   else {
+    beginResetModel();
     if(index >= dirs_.count()) {
       return;
     }
@@ -67,7 +62,7 @@ void FileBrowserModel::changeCurrentDir(int index)
       currentDir_ += "/" +  dirs_[index];
     }
     searchSupportedFiles();
-    reset();
+    endResetModel();
   }
 }
 
@@ -137,70 +132,80 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
       return title;
     }
     case PAGE:
-      return favorites_?filesPage_[fileRow]:0;
+	  {
+		uint pageNo = 0;
+	    if (favorites_ && (fileRow < filesPage_.size())) {
+		  pageNo = filesPage_[fileRow];
+	    }
+        return pageNo;
+	  }
     case IMAGE:
       if(((fileRow + 1) == files_.count()) &&
           (closeFileBrowserText() == files_[fileRow])) {
-        return QString(":/filebrowser/icons/Apps-session-quit-icon.svg");
+        return QString("qrc:/filebrowser/icons/Apps-session-quit-icon.svg");
       }
       else {
         QString iconFileName;
+#ifndef POPPLER_BACKEND
         KMimeType::Ptr ptr = KMimeType::findByPath(files_[fileRow]);
         if(ptr->is("application/pdf")) {
-          iconFileName = QString(":/filebrowser/icons/Adobe-PDF-Document-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/Adobe-PDF-Document-icon.png");
         }
         else if(ptr->is("image/vnd.djvu")) {
-          iconFileName = QString(":/filebrowser/icons/Djvu-document-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/Djvu-document-icon.png");
         }
         else if(ptr->is("application/vnd.ms-htmlhelp") ||
           ptr->is("application/x-chm")) {
-          iconFileName = QString(":/filebrowser/icons/Chm-document-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/Chm-document-icon.png");
         }
         else if(ptr->is("application/epub+zip")) {
-          iconFileName = QString(":/filebrowser/icons/Epub-document-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/Epub-document-icon.png");
         }
         else if(ptr->is("application/x-fictionbook+xml")) {
-          iconFileName = QString(":/filebrowser/icons/fb2-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/fb2-icon.png");
         }
         else if(ptr->is("application/x-cbr")) {
-          iconFileName = QString(":/filebrowser/icons/cbr-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/cbr-icon.png");
         }
         else if(ptr->is("image/bmp")) {
-          iconFileName = QString(":/filebrowser/icons/bmp-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/bmp-icon.png");
         }
         else if(ptr->is("application/x-dvi")) {
-          iconFileName = QString(":/filebrowser/icons/dvi-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/dvi-icon.png");
         }
         else if(ptr->is("image/x-eps")) {
-          iconFileName = QString(":/filebrowser/icons/eps-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/eps-icon.png");
         }
         else if(ptr->is("image/jpeg")) {
-          iconFileName = QString(":/filebrowser/icons/jpg-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/jpg-icon.png");
         }
         else if(ptr->is("image/png")) {
-          iconFileName = QString(":/filebrowser/icons/png-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/png-icon.png");
         }
         else if(ptr->is("application/vnd.oasis.opendocument.text")) {
-          iconFileName = QString(":/filebrowser/icons/odt-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/odt-icon.png");
         }
         else if(ptr->is("image/gif")) {
-          iconFileName = QString(":/filebrowser/icons/gif-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/gif-icon.png");
         }
         else if(ptr->is("image/vnd.microsoft.icon")) {
-          iconFileName = QString(":/filebrowser/icons/ico-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/ico-icon.png");
         }
         else if(ptr->is("image/tiff")) {
-          iconFileName = QString(":/filebrowser/icons/tif-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/tif-icon.png");
         }
         else if(ptr->is("application/postscript")) {
-          iconFileName = QString(":/filebrowser/icons/ps-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/ps-icon.png");
         }
         else if(ptr->is("image/vnd.adobe.photoshop")) {
-          iconFileName = QString(":/filebrowser/icons/psd-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/psd-icon.png");
         }
         else {
-          iconFileName = QString(":/filebrowser/icons/Document-icon.png");
+          iconFileName = QString("qrc:/filebrowser/icons/Document-icon.png");
         }
+#else
+        iconFileName = QString("qrc:/filebrowser/icons/Adobe-PDF-Document-icon.png");
+#endif
         return iconFileName;
       }
     case IS_FILE:
@@ -215,10 +220,10 @@ QVariant FileBrowserModel::data(const QModelIndex &index, int role) const
       return dirs_[dirRow];
     case IMAGE:
       if(dirRow == 0) {
-        return favorites_?QString(":/filebrowser/icons/Actions-list-add-icon.svg"):QString(":/filebrowser/icons/Button-Upload-icon.svg");
+        return QString(favorites_?"qrc:/filebrowser/icons/Actions-list-add-icon.svg":"qrc:/filebrowser/icons/Button-Upload-icon.svg");
       }
       else {
-        return QString(":/filebrowser/icons/My-Ebooks-icon.png");
+        return QString("qrc:/filebrowser/icons/My-Ebooks-icon.png");
       }
     case IS_FILE:
       return 0;

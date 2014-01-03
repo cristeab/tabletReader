@@ -17,6 +17,13 @@
 ****************************************************************************/
 
 #include "config.h"
+#ifdef QT5
+#include <QGuiApplication>
+#include <QQmlContext>
+#include <QScreen>
+#include <QWidget>
+#include <QSettings>
+#endif
 #ifndef NO_QTMOBILITY
 #include <QtSystemInfo/QSystemDeviceInfo>
 #include <QtSystemInfo/QSystemBatteryInfo>
@@ -33,57 +40,49 @@ QTM_USE_NAMESPACE
 #endif
 
 Window::Window()
-  : document_(NULL),
-    fileBrowserModel_(NULL),
+  : document_(NULL)
+    , fileBrowserModel_(NULL)
+    , fullScreen_(false)
+    , helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE))
+    , rootObj_(NULL)
+    , mediator_(NULL)
+	, requestedPage_(0)
 #ifndef NO_QTMOBILITY
-    batteryInfo_(NULL),
+	, batteryInfo_(new QSystemBatteryInfo(this))
 #endif
-    fullScreen_(false),
-    helpFile_(QCoreApplication::applicationDirPath()+QString(HELP_FILE)),
-    rootObj_(NULL),
-    mediator_(NULL)
 {
-  prev_.fileName = "";
-  prev_.page = 0;
-
+#ifdef QT5
+  setResizeMode(QQuickView::SizeRootObjectToView);
+#else  
   setResizeMode(QDeclarativeView::SizeRootObjectToView);
+#endif
 
   eTime_.start();//used to measure the elapsed time since the app was started
+#ifdef QT5
+  QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+#else
   QApplication::setOverrideCursor(Qt::WaitCursor);
-
-#ifndef NO_QTMOBILITY
-  //battery status
-  batteryInfo_ = new QSystemBatteryInfo(this);
 #endif
-
-  //get settings if any
-  QString filePath;
-  int page = -1;
-  qreal scaleFactor = 0;
-  int scaleIndex = 0;
-  loadSettings(filePath, page, scaleFactor, scaleIndex);
-  bool foundDoc = true;
-  if (NULL == filePath) {
-    filePath = helpFile_;
-    foundDoc = false;
-  }
 
   //load previous document if any or the help
   document_ = new PageProvider();//deleted by QDeclarativeView
-  bool loadRes = document_->setDocument(filePath);
-  document_->setScale(scaleFactor, scaleIndex);
+  bool loadRes = loadSettings();
 
   normalScreen();//need to set early the window width in order to use the fit width zoom factor
 
   //create file browser (uses supported file types given by OkularDocument)
   const QStringList &formats = document_->supportedFilePatterns();
   fileBrowserModel_ = new FileBrowserModel(this, document_, formats);
-  if (foundDoc) {
-    fileBrowserModel_->setCurrentDir(filePath);
+  if (loadRes && (0 != helpFile_.compare(document_->filePath()))) {
+    fileBrowserModel_->setCurrentDir(document_->filePath());
   }
 
   //add page provider before setting the source
+#ifdef QT5
+  QQmlEngine *eng = engine();
+#else
   QDeclarativeEngine *eng = engine();
+#endif
   if (NULL != eng) {
     eng->addImageProvider("pageprovider", document_);
     eng->rootContext()->setContextProperty("pdfPreviewModel", fileBrowserModel_);
@@ -93,13 +92,16 @@ Window::Window()
   mediator_ = new QmlCppMediator(document_, fileBrowserModel_);
   setWindowSize(normScrGeometry_.width(), normScrGeometry_.height());
   rootContext()->setContextProperty("mediator", mediator_);
-
+#ifdef QT5
+  setSource(QUrl("qrc:/qml/qml/qt5_main.qml"));
+#else
   setSource(QUrl("qrc:/qml/qml/main.qml"));
-  rootObj_ = rootObject();
+#endif
 
+  rootObj_ = rootObject();
   if (NULL != rootObj_) {
     //setup GUI
-    setZoomIndex(scaleIndex);
+    setZoomIndex(document_->scaleIndex());
     //set about props
     if (false == rootObj_->setProperty("version", TR_VERSION)) {
       qDebug() << "cannot set version";
@@ -131,7 +133,7 @@ Window::Window()
   }
 
   if (true == loadRes) {
-    gotoPage(page, document_->numPages());
+    gotoPage(requestedPage_, document_->numPages());
     onQuit();
     refreshPage();
   }
@@ -140,14 +142,17 @@ Window::Window()
     emit warning(tr("No document found"));
   }
 
-  Qt::WindowFlags winFlags = Qt::Window | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint;
-#ifndef DESKTOP_APP
-  winFlags |= Qt::X11BypassWindowManagerHint;
-#endif
+  Qt::WindowFlags winFlags = Qt::Window | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint |
+                             Qt::WindowCloseButtonHint;
+#ifdef QT5
+  setFlags(winFlags);
+  setTitle("TabletReader " TR_VERSION);
+  QGuiApplication::restoreOverrideCursor();
+#else
   setWindowFlags(winFlags);
   setWindowTitle("TabletReader " TR_VERSION);
-
   QApplication::restoreOverrideCursor();
+#endif
 }
 
 Window::~Window()
@@ -230,13 +235,22 @@ void Window::onFullScreen()
   normScrGeometry_ = geometry();//store current geometry
 
   if(true == hasTouchScreen()) {
+#ifdef QT5
+    QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+#else
     QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+#endif
   }
+#ifdef QT5
+  int width = QGuiApplication::primaryScreen()->size().width();
+  int height = QGuiApplication::primaryScreen()->size().height();
+#else
   int width = QApplication::desktop()->width();
   int height = QApplication::desktop()->height();
+#endif
   qDebug() << "width " << width << ", height " << height;
-#ifndef _MSC_VER
-  setGeometry(QRect(0, 0, width, height));//TODO: meant only for AP
+#ifndef _WIN32
+  setGeometry(QRect(0, 0, width, height));//TODO: meant only for PA
 #endif
   //set QML size
   setWindowSize(width, height);
@@ -259,8 +273,13 @@ void Window::normalScreen()
 
   if (false == normScrGeometry_.isValid()) {
     //compute a geometry if none available
+#ifdef QT5
+    int desktopWidth = QGuiApplication::primaryScreen()->size().width();
+    int desktopHeight = QGuiApplication::primaryScreen()->size().height();
+#else
     int desktopWidth = QApplication::desktop()->width();
     int desktopHeight = QApplication::desktop()->height();
+#endif
   	int width = 0;
 	  int height = 0;
     if((MIN_SCREEN_WIDTH >= desktopWidth) && (MIN_SCREEN_HEIGHT >= desktopHeight)) {
@@ -269,7 +288,11 @@ void Window::normalScreen()
 	  height = desktopHeight;
       showFullScreen();
       if(true == hasTouchScreen()) {
+#ifdef QT5
+        QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+#else
         QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+#endif
       }
     }
     else {
@@ -278,9 +301,18 @@ void Window::normalScreen()
       height = (MIN_SCREEN_HEIGHT < desktopHeight) ? MIN_SCREEN_HEIGHT : desktopHeight;
       showNormal();
       if(true == hasTouchScreen()) {
+#ifdef QT5
+        QGuiApplication::restoreOverrideCursor();
+#else
         QApplication::restoreOverrideCursor();
+#endif
       }
-	  move((desktopWidth-width)/2, (desktopHeight-height)/2);
+#ifdef QT5
+	  resize(width, height);
+      setPosition((desktopWidth-width)/2, (desktopHeight-height)/2);
+#else
+      move((desktopWidth-width)/2, (desktopHeight-height)/2);
+#endif
     }
     normScrGeometry_.setWidth(width);
     normScrGeometry_.setHeight(height);
@@ -338,14 +370,23 @@ void Window::showPrevPage()
   }
 }
 
+#ifdef QT5
+bool Window::event(QEvent *evt)
+{
+  if ((NULL != evt) && (QEvent::Close == evt->type())) {
+    saveSettings();
+  }
+
+  return QQuickView::event(evt);
+}
+#else
 void Window::closeEvent(QCloseEvent *evt)
 {
   qDebug() << "Window::closeEvent";
-
   saveSettings();
-
   QWidget::closeEvent(evt);
 }
+#endif
 
 void Window::gotoPage(int pageNb, int numPages)
 {
@@ -481,18 +522,30 @@ QString Window::elapsedTime()
   return msg;
 }
 
-void Window::loadSettings(QString &filePath, int &page, qreal &scaleFactor, int &scaleIndex)
+bool Window::loadSettings()
 {
   qDebug() << "Window::loadSettings";
-
-  QSettings settings(ORGANIZATION, APPLICATION);
-  filePath = settings.value(KEY_FILE_PATH).toString();
-  page = settings.value(KEY_PAGE, 0).toInt();
-  if (page < 0) {
-    page = 0;
+  if (NULL == document_) {
+	  qDebug() << "Document object not created";
+	  return false;
   }
-  scaleFactor = settings.value(KEY_ZOOM_LEVEL, FIT_WIDTH_ZOOM_FACTOR).toFloat();
-  scaleIndex = settings.value(KEY_ZOOM_INDEX, FIT_WIDTH_ZOOM_INDEX).toInt();
+  QSettings settings(ORGANIZATION, APPLICATION);
+  QString filePath = settings.value(KEY_FILE_PATH).toString();
+  if (filePath.isEmpty()) {
+	  filePath = helpFile_;
+  }
+  bool rc = document_->setDocument(filePath);
+  if (false == rc) {
+	  qDebug() << "Cannot load document" << filePath;
+  }
+  requestedPage_ = settings.value(KEY_PAGE, 0).toInt();
+  if (requestedPage_ >= document_->numPages()) {
+    requestedPage_ = 0;//make sure that this is a valid value
+  }
+  qreal scaleFactor = settings.value(KEY_ZOOM_LEVEL, FIT_WIDTH_ZOOM_FACTOR).toFloat();
+  int scaleIndex = settings.value(KEY_ZOOM_INDEX, FIT_WIDTH_ZOOM_INDEX).toInt();
+  document_->setScale(scaleFactor, scaleIndex);
+  return rc;
 }
 
 void Window::saveSettings()
@@ -529,7 +582,7 @@ void Window::onQuitApp()
 {
   qDebug() << "Window::onQuitApp";
   saveSettings();
-  qApp->quit();
+  close();
 }
 
 void Window::onSetProperties()

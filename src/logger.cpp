@@ -19,51 +19,46 @@
 #include <QDir>
 #include <QDateTime>
 #include <QThread>
-#include <stdlib.h>
-#include <QDebug>
 #include <QMutex>
 #include <iostream>
 #include "logger.h"
 
-QTextStream Logger::ts_;
-QFile *Logger::pOutFile_ = NULL;
-QMutex *Logger::loggerMutex_ = NULL;
-Logger *Logger::instance_ = NULL;
-
 Logger* Logger::instance(const QString &fileLogName)
 {
-  if(NULL == instance_) {
-    instance_ = new Logger(fileLogName);
-  }
-  return instance_;
+  static Logger instance(fileLogName);
+  return &instance;
 }
 
-Logger::Logger(const QString &fileLogName)
+Logger::Logger(const QString &fileLogName) :
+	outFile_(new QFile(QDir::homePath() + QDir::separator() +
+	QDir::toNativeSeparators(fileLogName)))
+	, loggerMutex_(new QMutex())
 {
-  pOutFile_ = new QFile(QDir::homePath() + QDir::separator() +
-                        QDir::toNativeSeparators(fileLogName));
-  if(false == pOutFile_->open(QIODevice::WriteOnly | QIODevice::Append)) {
+  if(false == outFile_->open(QIODevice::WriteOnly | QIODevice::Append)) {
     std::cerr << "Cannot open log file " << std::endl;
+	return;
   }
-  ts_.setDevice(pOutFile_);
-  loggerMutex_ = new QMutex;
+  ts_.setDevice(outFile_);
+#ifndef QT5
   qInstallMsgHandler(debugMessageHandler);
+#else
+  qInstallMessageHandler(debugMessageHandler);
+#endif
   ts_ << "\n\n\t\t\t\tSTART on " << QDateTime::currentDateTime().toString("dd/MM/yyyy") << "\n\n";
 }
 
 Logger::~Logger()
 {
-  delete pOutFile_;
-  pOutFile_ = NULL;
+  delete outFile_;
   delete loggerMutex_;
-  loggerMutex_ = NULL;
-  delete instance_;
-  instance_ = NULL;
 }
-
+#ifndef QT5
 void Logger::debugMessageHandler(QtMsgType type, const char *msg)
+#else
+void Logger::debugMessageHandler(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
+#endif
 {
-  loggerMutex_->lock();
+  QMutexLocker locker(Logger::instance("")->loggerMutex_);
   QString txt;
   switch(type) {
   case QtDebugMsg:
@@ -79,8 +74,7 @@ void Logger::debugMessageHandler(QtMsgType type, const char *msg)
     txt = QString("Fatal: %1").arg(msg);
     abort();
   }
-  ts_ << QDateTime::currentDateTime().toString("hh:mm:ss.zzz")
+  Logger::instance("")->ts_ << QDateTime::currentDateTime().toString("hh:mm:ss.zzz")
       << "\tTID: 0x" << QString::number(int(QThread::currentThreadId()), 16)
       << "\t" << txt << endl;
-  loggerMutex_->unlock();
 }

@@ -30,7 +30,7 @@ Rectangle {
     Image {
       id: background
       anchors.fill: parent
-      source: ":/filebrowser/qml/filebrowser/img/wooden-empty-shelf.svg"
+      source: "qrc:/filebrowser/qml/filebrowser/img/wooden-empty-shelf.svg"
     }
     property int rowCount: 5
     property int lineCount: 2
@@ -101,7 +101,7 @@ Rectangle {
                 clip: true
                 BorderImage {
                   id: itemPressedImage
-                  source: ":/toolbar/qml/Toolbar/pics/toolbaritem_p.svg"
+                  source: "qrc:/toolbar/qml/Toolbar/pics/toolbaritem_p.svg"
                   width: parent.width
                   height: parent.height
                   border.left: 10; border.top: 10

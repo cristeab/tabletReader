@@ -1,0 +1,85 @@
+<RCC>
+    <qresource prefix="/toolbar">
+        <file>qml/Toolbar/pics/Actions-go-previous-view-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-document-open-folder-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-go-jump-locationbar-icon.svg</file>
+        <file>qml/Toolbar/pics/toolbaritem_p.svg</file>
+        <file>qml/Toolbar/pics/Actions-view-fullscreen-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-view-close-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-page-zoom-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-help-contents-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-help-about-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-application-exit-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-document-properties-icon.svg</file>
+        <file>qml/Toolbar/pics/Actions-bookmark-new-list-icon.svg</file>
+    </qresource>
+    <qresource prefix="/filebrowser">
+        <file>icons/Adobe-PDF-Document-icon.png</file>
+        <file>icons/Button-Upload-icon.svg</file>
+        <file>icons/Actions-list-add-icon.svg</file>
+        <file>icons/My-Ebooks-icon.png</file>
+        <file>icons/Apps-session-quit-icon.svg</file>
+        <file>icons/Djvu-document-icon.png</file>
+        <file>icons/Chm-document-icon.png</file>
+        <file>icons/Epub-document-icon.png</file>
+        <file>icons/Document-icon.png</file>
+        <file>icons/fb2-icon.png</file>
+        <file>icons/cbr-icon.png</file>
+        <file>icons/bmp-icon.png</file>
+        <file>icons/dvi-icon.png</file>
+        <file>icons/eps-icon.png</file>
+        <file>icons/jpg-icon.png</file>
+        <file>icons/png-icon.png</file>
+        <file>icons/odt-icon.png</file>
+        <file>icons/gif-icon.png</file>
+        <file>icons/ico-icon.png</file>
+        <file>icons/tif-icon.png</file>
+        <file>icons/ps-icon.png</file>
+        <file>icons/psd-icon.png</file>
+        <file>qml/filebrowser/img/wooden-empty-shelf.svg</file>
+    </qresource>
+    <qresource prefix="/qml">
+        <file>qml/qt5_gotopage.qml</file>
+        <file>qml/GotoPage/Qt5_Button.qml</file>
+        <file>qml/GotoPage/calculator.js</file>
+        <file>qml/GotoPage/Qt5_Display.qml</file>
+        <file>qml/GotoPage/images/button-.png</file>
+        <file>qml/GotoPage/images/button-blue.png</file>
+        <file>qml/GotoPage/images/button-green.png</file>
+        <file>qml/GotoPage/images/button-purple.png</file>
+        <file>qml/GotoPage/images/display.png</file>
+        <file>qml/qt5_filebrowser.qml</file>
+        <file>qml/qt5_maintoolbar.qml</file>
+        <file>qml/Toolbar/toolbar.js</file>
+        <file>qml/Toolbar/Qt5_Toolbar.qml</file>
+        <file>qml/Toolbar/Qt5_ToolbarItem.qml</file>
+        <file>qml/Toolbar/Qt5_ToolbarView.qml</file>
+        <file>qml/qt5_zoompage.qml</file>
+        <file>qml/zoompage/gfx/button.png</file>
+        <file>qml/zoompage/gfx/button_pressed.png</file>
+        <file>qml/zoompage/Qt5_Button.qml</file>
+        <file>qml/zoompage/Qt5_Reel.qml</file>
+        <file>qml/zoompage/Qt5_ZoomReel.qml</file>
+        <file>qml/qt5_aboutdialog.qml</file>
+        <file>qml/ModalDialog/Qt5_Button.qml</file>
+        <file>qml/ModalDialog/Qt5_Fader.qml</file>
+        <file>qml/ModalDialog/Qt5_ModalDialog.qml</file>
+        <file>qml/ModalDialog/Qt5_Visual.qml</file>
+        <file>qml/ModalDialog/gfx/button.png</file>
+        <file>qml/ModalDialog/gfx/button_active.png</file>
+        <file>qml/ModalDialog/gfx/button_pressed.png</file>
+        <file>qml/WaitDialog/Qt5_WaitIndicator.qml</file>
+        <file>qml/WaitDialog/gfx/rotation_icon.png</file>
+        <file>qml/qt5_waitdialog.qml</file>
+        <file>qml/qt5_main.qml</file>
+        <file>qml/MainPage/Qt5_Spinner.qml</file>
+        <file>icons/wood-table-top.svg</file>
+    </qresource>
+    <qresource prefix="/translations">
+        <file>TabletReader_fr.qm</file>
+        <file>TabletReader_ro.qm</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>icons/arrow_left.png</file>
+    </qresource>
+</RCC>
