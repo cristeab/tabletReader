@@ -281,7 +281,7 @@ void Window::normalScreen()
     int desktopHeight = QApplication::desktop()->height();
 #endif
   	int width = 0;
-	  int height = 0;
+	int height = 0;
     if((MIN_SCREEN_WIDTH >= desktopWidth) && (MIN_SCREEN_HEIGHT >= desktopHeight)) {
       qDebug() << "using full screen mode with toolbar";
 	  width = desktopWidth;
