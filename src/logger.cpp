@@ -75,6 +75,6 @@ void Logger::debugMessageHandler(QtMsgType type, const QMessageLogContext &ctx, 
     abort();
   }
   Logger::instance("")->ts_ << QDateTime::currentDateTime().toString("hh:mm:ss.zzz")
-      << "\tTID: 0x" << QString::number(int(QThread::currentThreadId()), 16)
+      << "\tTID: 0x" << QString::number(reinterpret_cast<qulonglong>(QThread::currentThreadId()), 16)
       << "\t" << txt << endl;
 }

@@ -6,15 +6,23 @@ option(QT5 "Compile using Qt5 framework" on)
 
 if (QT5)
 
-set(CMAKE_PREFIX_PATH "/home/bogdan/Build/qt5/qtbase")
+if (NOT CMAKE_PREFIX_PATH)
+  set(CMAKE_PREFIX_PATH "/home/bogdan/Build/qt5/qtbase")
+endif()
 set(CMAKE_AUTOMOC on)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Quick REQUIRED)
 #set manually the path to poppler library
-set(POPPLER_INSTALL_PREFIX "c:/poppler")
-set(POPPLER_QT5_INCLUDE_DIR "${POPPLER_INSTALL_PREFIX}/include/poppler/qt5")
-set(POPPLER_QT5_LIBRARY "${POPPLER_INSTALL_PREFIX}/lib/poppler-qt5.lib")
+if (WIN32)
+  set(POPPLER_INSTALL_PREFIX "c:/poppler")
+  set(POPPLER_QT5_INCLUDE_DIR "${POPPLER_INSTALL_PREFIX}/include/poppler/qt5")
+  set(POPPLER_QT5_LIBRARY "${POPPLER_INSTALL_PREFIX}/lib/poppler-qt5.lib")
+elseif(APPLE)
+  set(POPPLER_INSTALL_PREFIX "/usr/local")
+  set(POPPLER_QT5_INCLUDE_DIR "${POPPLER_INSTALL_PREFIX}/include/poppler/qt5")
+  set(POPPLER_QT5_LIBRARY "${POPPLER_INSTALL_PREFIX}/lib/libpoppler-qt5.dylib")
+endif()
 
 else(QT5)
 

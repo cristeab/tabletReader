@@ -100,6 +100,7 @@ bool OkularDocument::load(const QString &fileName)
 #ifdef POPPLER_BACKEND
   delete doc_;//release previous document if any
   doc_ = Poppler::Document::load(fileName);
+  doc_->setRenderHint(Poppler::Document::TextAntialiasing);
   if ((NULL == doc_) || doc_->isLocked()) {
     qDebug() << "Cannot load document or document is locked" << fileName;
     delete doc_;
