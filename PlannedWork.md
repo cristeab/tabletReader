@@ -1,0 +1,6 @@
+- redesign the UI to support latest features from Qt/QML
+- make the UI design adapt to the platform type: desktop, TVs or mobile
+- update the backend to the latest Okular release
+- provide installers for major desktop systems: Windows, Linux, macOS
+- provide installers for tablets: iPadOS, Android, HarmonyOS
+- provide an installer for TV Oss, e.g. tvOS
